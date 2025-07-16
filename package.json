@@ -1,0 +1,34 @@
+{
+  "name": "scotaccount-tech-docs",
+  "version": "1.0.0",
+  "description": "ScotAccount Technical Documentation - Scottish Government Style",
+  "main": "index.js",
+  "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy",
+    "clean": "rm -rf _site",
+    "dev": "eleventy --serve --watch",
+    "build:production": "NODE_ENV=production eleventy"
+  },
+  "keywords": [
+    "documentation",
+    "eleventy",
+    "scottish-government",
+    "scotaccount"
+  ],
+  "author": "Scottish Government",
+  "license": "MIT",
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "@11ty/eleventy-navigation": "^0.3.5",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
+    "markdown-it": "^13.0.2",
+    "markdown-it-anchor": "^8.6.7",
+    "markdown-it-table-of-contents": "^0.6.0",
+    "sass": "^1.69.5",
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 

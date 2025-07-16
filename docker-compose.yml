@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  scotaccount-docs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.scotaccount-docs.rule=Host(`scotaccount-docs.local`)"
+      - "traefik.http.services.scotaccount-docs.loadbalancer.server.port=8080"
+      - "traefik.http.routers.scotaccount-docs.tls=true"
+
+  # Development service for live reloading
+  scotaccount-docs-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./.eleventy.js:/app/.eleventy.js
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+    profiles:
+      - dev
+
+networks:
+  default:
+    driver: bridge

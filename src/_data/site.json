@@ -1,0 +1,40 @@
+{
+  "title": "ScotAccount Technical Documentation",
+  "description": "Technical documentation for ScotAccount - Scottish Government digital identity service",
+  "url": "https://scotaccount-tech-docs.gov.scot",
+  "author": "Scottish Government",
+  "language": "en-GB",
+  "locale": "en_GB",
+  "organization": {
+    "name": "Scottish Government",
+    "url": "https://www.gov.scot",
+    "logo": "/images/scottish-government-logo.png"
+  },
+  "navigation": [
+    {
+      "text": "Home",
+      "url": "/",
+      "key": "home"
+    },
+    {
+      "text": "Getting Started",
+      "url": "/getting-started/",
+      "key": "getting-started"
+    },
+    {
+      "text": "Architecture",
+      "url": "/architecture/",
+      "key": "architecture"
+    },
+    {
+      "text": "Complete Guide",
+      "url": "/scotaccount-complete-guide/",
+      "key": "complete-guide"
+    },
+    {
+      "text": "Token Validation",
+      "url": "/scotaccount-token-validation-module/",
+      "key": "token-validation"
+    }
+  ]
+} 
