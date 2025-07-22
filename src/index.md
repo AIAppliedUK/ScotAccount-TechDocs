@@ -20,19 +20,19 @@ All authentication is verified to **GPG45 Medium assurance level** through compr
 
 ## Get Started Quickly
 
-### 🚀 For Developers
+### For Developers
 
 - **[Quick Start Guide](/getting-started/)** - Get a working integration in 30 minutes
 - **[Complete Guide](/scotaccount-complete-guide/)** - Comprehensive implementation guide
 - **[Token Validation](/scotaccount-token-validation-module/)** - Secure token handling
 
-### 📋 For Project Managers
+### For Project Managers
 
 - **[Architecture Overview](/architecture/)** - Understand the service structure and components
 - **[Planning Your Integration](/getting-started/)** - Requirements and preparation steps
 - **[Modular Structure](/scotaccount-modular-structure/)** - Service organisation and modules
 
-### 🔧 For Technical Architects
+### For Technical Architects
 
 - **[Authentication Implementation](/scotaccount-complete-guide/)** - Complete technical integration guide
 - **[Token Validation Module](/scotaccount-token-validation-module/)** - Secure token verification

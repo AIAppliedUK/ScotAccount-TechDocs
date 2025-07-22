@@ -97,6 +97,7 @@ Submit these details to the ScotAccount team:
 - `scotaccount.email` - Verified email address
 - `scotaccount.address` - Verified postal address
 - `scotaccount.identity` - Verified identity information
+- `scotaccount.mobile` - Verified mobile phone number
 
 ### Registration Response
 

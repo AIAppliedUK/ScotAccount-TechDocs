@@ -6,7 +6,7 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/.bin/eleventy",
-      "args": ["--serve", "--watch"],
+      "args": ["--serve", "--watch", "--port=8000"],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "env": {
@@ -32,7 +32,7 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/.bin/http-server",
-      "args": ["_site", "-p", "8080", "-o"],
+      "args": ["_site", "-p", "8000", "-o"],
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "Build Site"

@@ -1,0 +1,32 @@
+---
+title: Search results
+layout: base.njk
+description: Search the ScotAccount technical documentation
+---
+
+<main class="main" id="main-content" role="main" tabindex="-1">
+  <div id="search-results-page"></div>
+</main>
+
+<script src="/js/search.js"></script>
+<script>
+// On /search, run search from query param and render results in #search-results-page
+function getQueryParam(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name) || '';
+}
+document.addEventListener('DOMContentLoaded', function() {
+  const q = getQueryParam('q');
+  if (q.length >= 2) {
+    // Wait for DocumentationSearch to be ready
+    setTimeout(function() {
+      if (window.__docSearchInstance) {
+        window.__docSearchInstance.performSearch(q, true);
+      }
+    }, 100);
+  }
+  // Hide dropdown on /search
+  const dropdown = document.getElementById('search-results');
+  if (dropdown) dropdown.style.display = 'none';
+});
+</script> 

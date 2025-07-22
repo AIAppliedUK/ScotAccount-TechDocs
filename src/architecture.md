@@ -15,74 +15,9 @@ ScotAccount is part of the Digital Identity Scotland (DIS) ecosystem, providing 
 
 ### High-Level Architecture
 
-```mermaid
-flowchart LR
+![ScotAccount High-Level Architecture](/assets/diagrams/architecture-context.png)
 
-    %% Person
-    Citizen["Citizen
-[Person]
-Individual wishing to access digital public services"]
-
-    %% Internal Systems
-    subgraph "Digital Identity Scotland [Software System]"
-        ScotAccount["ScotAccount
-[Software System]
-Authentication Services"]
-
-        VerifyYourIdentity["VerifyYourIdentity
-[Software System]
-ID&V Services"]
-
-        mySafe["mySafe
-[Software System]
-Locker Services"]
-    end
-
-    %% External Systems
-    RelyingParty["Relying Party
-[Software System]
-Public body using the DIS service"]
-
-    ExperianIDV["Experian ID&V Service
-[Software System]
-External ID verification"]
-
-    ExperianMitek["Experian Mitek Service
-[Software System]
-External biometric service"]
-
-    ExperianPEPS["Experian PEPS Service
-[Software System]
-External PEP & Sanctions"]
-
-    ViaEuropa["ViaEuropa
-[Software System]
-Address Lookup Gateway"]
-
-    GovUKNotify["Gov.UK NOTIFY
-[Software System]
-SMS & Email Gateway"]
-
-    SGSOC["SG SOC
-[Software System]
-SG Shared SOC"]
-
-    %% Flows
-    Citizen -->|"Account registration, manage consents, authenticate, self-service"| ScotAccount
-    Citizen -->|"Access protected resource"| RelyingParty
-
-    RelyingParty -->|"Request authentication, identity proofing, access data"| ScotAccount
-    ScotAccount --> mySafe
-    VerifyYourIdentity --> mySafe
-
-    VerifyYourIdentity -->|"Identity proofing, retrieve data"| ExperianIDV
-    VerifyYourIdentity -->|"Take selfies, scan documents"| ExperianMitek
-    VerifyYourIdentity -->|"PEP & sanctions lookup"| ExperianPEPS
-
-    mySafe -->|"Address lookup"| ViaEuropa
-    mySafe -->|"Send notifications via SMS/Email"| GovUKNotify
-    mySafe -->|"Audit logs & events"| SGSOC
-```
+_Figure: High-level architecture of ScotAccount and its integration with core DIS components._
 
 ## Core Components
 

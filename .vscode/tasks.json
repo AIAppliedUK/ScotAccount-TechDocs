@@ -63,7 +63,7 @@
     {
       "label": "Build and Serve Production",
       "type": "shell",
-      "command": "npm run build:production && npx http-server _site -p 8080",
+      "command": "npm run build:production && npx http-server _site -p 8000",
       "group": "build",
       "problemMatcher": [],
       "options": {
