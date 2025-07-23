@@ -1,82 +1,23 @@
 ---
 layout: base.njk
-title: "Implementation Gaps Analysis"
-description: "Analysis of implementation gaps and solutions for ScotAccount integration challenges"
+title: "Integration Examples and Best Practices"
+description: "Practical integration examples and solutions for ScotAccount implementation challenges"
 eleventyNavigation:
-  key: missing-content-analysis
+  key: integration-examples
   order: 7
 ---
 
-This analysis identifies common implementation gaps encountered during ScotAccount integration and provides practical solutions to address them.
+This page provides practical integration examples and best practices for ScotAccount, helping you implement secure, robust, and production-ready solutions.
 
-## Common Implementation Gaps
+## Example: Complete Authentication Flow
 
-### Authentication Flow Gaps
+**Implementing PKCE (Proof Key for Code Exchange):**
 
-**Missing PKCE Implementation**:
-
-- **Problem**: Many developers skip PKCE implementation, creating security vulnerabilities
-- **Impact**: Susceptible to authorization code interception attacks
-- **Solution**: Always implement PKCE with SHA256 method as shown in our guides
-
-**Inadequate State Validation**:
-
-- **Problem**: State parameters not properly validated on callback
-- **Impact**: CSRF vulnerabilities and security breaches
-- **Solution**: Generate unique state values and validate them strictly
-
-**Poor Error Handling**:
-
-- **Problem**: Generic error handling that doesn't help users or developers
-- **Impact**: Poor user experience and difficult debugging
-- **Solution**: Implement specific error handling for different authentication scenarios
-
-### Token Management Gaps
-
-**Missing Token Validation**:
-
-- **Problem**: ID tokens used without proper signature verification
-- **Impact**: Security vulnerabilities and potential data breaches
-- **Solution**: Implement comprehensive token validation as detailed in our guides
-
-**Improper Token Storage**:
-
-- **Problem**: Tokens stored insecurely in client-side storage
-- **Impact**: Token theft and unauthorized access
-- **Solution**: Use secure server-side session storage
-
-**No Token Refresh Logic**:
-
-- **Problem**: No handling of token expiration
-- **Impact**: Users forced to re-authenticate frequently
-- **Solution**: Implement proper token refresh mechanisms
-
-### Session Management Gaps
-
-**Insecure Session Storage**:
-
-- **Problem**: Session data stored without encryption
-- **Impact**: Sensitive user data exposure
-- **Solution**: Encrypt session data and use secure storage mechanisms
-
-**No Session Timeout Handling**:
-
-- **Problem**: Sessions persist indefinitely
-- **Impact**: Security risk from abandoned sessions
-- **Solution**: Implement proper session timeout and cleanup
-
-**Missing Logout Implementation**:
-
-- **Problem**: Local logout only, not federated logout
-- **Impact**: Users remain logged in to ScotAccount
-- **Solution**: Implement proper RP-initiated logout
-
-## Solutions and Best Practices
-
-### Comprehensive Authentication Implementation
+- **Why:** Enhances security by preventing interception attacks
+- **How:** Always implement PKCE with the SHA256 method as shown below
 
 ```javascript
-// Complete authentication flow with proper error handling
+// Complete authentication flow with PKCE and error handling
 async function handleAuthentication(req, res) {
   try {
     // Generate secure parameters
@@ -87,8 +28,8 @@ async function handleAuthentication(req, res) {
     // Store securely for validation
     await storeAuthState(state, { nonce, codeVerifier: pkce.codeVerifier });
 
-    // Build authorization URL
-    const authUrl = buildAuthorizationUrl({
+    // Build authorisation URL
+    const authUrl = buildAuthorisationUrl({
       clientId: CLIENT_ID,
       redirectUri: REDIRECT_URI,
       scope: "openid",
@@ -105,10 +46,15 @@ async function handleAuthentication(req, res) {
 }
 ```
 
-### Robust Token Validation
+## Example: Token Validation
+
+**Verifying ID Tokens:**
+
+- **Why:** Ensures tokens are valid and not tampered with
+- **How:** Always validate tokens as shown below
 
 ```javascript
-// Comprehensive token validation
+// Token validation example
 async function validateTokens(tokens, expectedState, expectedNonce) {
   // Validate state first
   const storedAuth = await getAuthState(expectedState);
@@ -134,10 +80,15 @@ async function validateTokens(tokens, expectedState, expectedNonce) {
 }
 ```
 
-### Secure Session Management
+## Example: Secure Session Management
+
+**Storing Sessions Securely:**
+
+- **Why:** Protects user data and prevents unauthorised access
+- **How:** Use encrypted, server-side session storage
 
 ```javascript
-// Secure session implementation
+// Secure session implementation example
 class SecureSession {
   constructor(sessionData) {
     this.userId = sessionData.userId;
@@ -181,14 +132,15 @@ class SecureSession {
 }
 ```
 
-## Missing Implementation Patterns
+## Example: Multi-Environment Configuration
 
-### Multi-Environment Configuration
+**Configuring for Different Environments:**
 
-Many implementations lack proper environment separation:
+- **Why:** Ensures correct settings for development, integration, and production
+- **How:** Use environment-specific configuration as shown below
 
 ```javascript
-// Environment-specific configuration
+// Environment-specific configuration example
 const config = {
   development: {
     scotAccountBaseUrl:
@@ -214,10 +166,15 @@ const config = {
 const currentConfig = config[process.env.NODE_ENV || "development"];
 ```
 
-### Comprehensive Error Handling
+## Example: Error Handling
+
+**Handling Authentication Errors:**
+
+- **Why:** Improves user experience and simplifies debugging
+- **How:** Implement detailed error handling for different scenarios
 
 ```javascript
-// Detailed error handling for different scenarios
+// Error handling example
 function handleAuthError(error, req, res) {
   const errorCode = req.query.error;
   const errorDescription = req.query.error_description;
@@ -261,10 +218,15 @@ function handleAuthError(error, req, res) {
 }
 ```
 
-### Monitoring and Logging
+## Example: Monitoring and Logging
+
+**Tracking Authentication Events:**
+
+- **Why:** Enables auditing and monitoring of authentication flows
+- **How:** Log events and metrics as shown below
 
 ```javascript
-// Comprehensive monitoring implementation
+// Monitoring and logging example
 class AuthMonitoring {
   static logAuthEvent(event, userId, details = {}) {
     const logEntry = {
@@ -311,14 +273,15 @@ AuthMonitoring.logAuthEvent("auth_success", userInfo.userId, {
 AuthMonitoring.trackMetric("auth_duration", authDuration);
 ```
 
-## Testing Gaps and Solutions
+## Example: Integration and Security Testing
 
-### Missing Test Coverage
+**Testing Authentication and Security:**
 
-**Integration Tests**:
+- **Why:** Ensures your integration is robust and secure
+- **How:** Use integration and security tests as shown below
 
 ```javascript
-// Example integration test
+// Integration test example
 describe("ScotAccount Integration", () => {
   it("should complete full authentication flow", async () => {
     // Start authentication
@@ -328,7 +291,7 @@ describe("ScotAccount Integration", () => {
     const redirectUrl = new URL(authResponse.headers.location);
     const state = redirectUrl.searchParams.get("state");
 
-    // Simulate callback with mock authorization code
+    // Simulate callback with mock authorisation code
     const callbackResponse = await request(app)
       .get("/auth/callback")
       .query({
@@ -341,12 +304,8 @@ describe("ScotAccount Integration", () => {
     expect(callbackResponse.headers.location).toBe("/dashboard");
   });
 });
-```
 
-**Security Tests**:
-
-```javascript
-// Security test examples
+// Security test example
 describe("Security Tests", () => {
   it("should reject invalid state parameter", async () => {
     await request(app)
@@ -363,15 +322,13 @@ describe("Security Tests", () => {
 
     const response = await request(app)
       .get("/api/user")
-      .set("Authorization", `Bearer ${expiredToken}`)
+      .set("Authorisation", `Bearer ${expiredToken}`)
       .expect(401);
   });
 });
 ```
 
 ## Production Readiness Checklist
-
-### Missing Production Configurations
 
 - [ ] **HTTPS enforcement** in all environments
 - [ ] **Security headers** implementation
@@ -384,39 +341,16 @@ describe("Security Tests", () => {
 - [ ] **Graceful shutdown** handling
 - [ ] **Database connection pooling** configuration
 
-### Performance Optimization Gaps
-
-```javascript
-// Performance optimizations often missing
-const performanceOptimizations = {
-  // JWT key caching
-  jwtKeyCache: new Map(),
-
-  // Connection pooling
-  httpAgent: new https.Agent({
-    keepAlive: true,
-    maxSockets: 50,
-  }),
-
-  // Redis connection pooling
-  redisPool: new RedisPool({
-    max: 10,
-    min: 2,
-  }),
-
-  // Request timeout configuration
-  requestTimeout: 5000,
-};
-```
+- [ ] **Performance optimisations** (e.g., JWT key caching, connection pooling, request timeouts)
 
 ## Next Steps
 
-<div class="callout callout--warning">
-<strong>Found implementation gaps?</strong> Use this analysis to identify and address security and functionality issues in your integration.
+<div class="callout callout--success">
+<strong>Ready to integrate?</strong> Use these examples and best practices to build a secure, robust ScotAccount integration.
 </div>
 
-<div class="callout callout--success">
-<strong>Need implementation help?</strong> Follow the <a href="/scotaccount-complete-guide/">Complete Implementation Guide</a> for comprehensive solutions.
+<div class="callout callout--info">
+<strong>Need more help?</strong> Follow the <a href="/scotaccount-complete-guide/">Complete Implementation Guide</a> for comprehensive solutions.
 </div>
 
 <div class="callout callout--info">

@@ -2,7 +2,7 @@
 
 Modern technical documentation for ScotAccount - Scotland's digital identity service, built with Eleventy and styled with Scottish Government design principles.
 
-## 🏴󠁧󠁢󠁳󠁣󠁴󠁿 Features
+## Features
 
 - **Scottish Government Design System** - Authentic gov.scot styling and branding
 - **Optimized for Web Reading** - Following Nielsen Norman Group guidelines for scannable content
@@ -11,7 +11,7 @@ Modern technical documentation for ScotAccount - Scotland's digital identity ser
 - **Fast and Secure** - Static site generation with security headers
 - **Container Ready** - Docker and docker-compose for easy deployment
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -32,7 +32,7 @@ Modern technical documentation for ScotAccount - Scotland's digital identity ser
    npm run dev
    ```
 
-3. **Open your browser** to `http://localhost:8080`
+3. **Open your browser** to `http://localhost:8000`
 
 The site will automatically reload when you make changes to files in the `src/` directory.
 
@@ -47,10 +47,10 @@ The site will automatically reload when you make changes to files in the `src/` 
 2. **Serve locally** (optional):
    ```bash
    npm run build:production
-   npx http-server _site -p 8080
+   npx http-server _site -p 8000
    ```
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ### Using Docker Compose (Recommended)
 
@@ -60,7 +60,7 @@ The site will automatically reload when you make changes to files in the `src/` 
    docker-compose up -d
    ```
 
-2. **View the site** at `http://localhost:8080`
+2. **View the site** at `http://localhost:8000`
 
 ### Using Docker directly
 
@@ -72,10 +72,10 @@ The site will automatically reload when you make changes to files in the `src/` 
 
 2. **Run the container**:
    ```bash
-   docker run -p 8080:8080 scotaccount-docs
+   docker run -p 8000:8000 scotaccount-docs
    ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ├── src/                          # Source content and templates
@@ -97,7 +97,7 @@ The site will automatically reload when you make changes to files in the `src/` 
 └── README.md                 # This file
 ```
 
-## 🎨 Scottish Government Design
+## Scottish Government Design
 
 The site implements a design system inspired by [gov.scot](https://www.gov.scot) with:
 
@@ -107,7 +107,7 @@ The site implements a design system inspired by [gov.scot](https://www.gov.scot)
 - **Scannable content** with bulleted lists and highlighted keywords
 - **Accessible design** with proper contrast ratios and focus indicators
 
-## 📝 Content Guidelines
+## Content Guidelines
 
 Content follows web reading best practices:
 
@@ -117,7 +117,7 @@ Content follows web reading best practices:
 - **Inverted pyramid** - Key information first, details later
 - **Half the word count** - Concise writing optimized for web reading
 
-## 🔧 Development
+## Development
 
 ### VSCode Integration
 
@@ -168,7 +168,7 @@ npm run build:production  # Build with production optimizations
    ```
 3. Add the page to navigation in `src/_data/site.json`
 
-## 🚀 Deployment Options
+## Deployment Options
 
 ### Static Hosting
 
@@ -197,7 +197,7 @@ Deploy the Docker container to:
    - Publish directory: `_site`
 3. **Deploy** - Netlify will build and deploy automatically
 
-## 🔒 Security Features
+## Security Features
 
 - **Security headers** - CSP, HSTS, X-Frame-Options, etc.
 - **Content Security Policy** - Prevents XSS attacks
@@ -205,7 +205,7 @@ Deploy the Docker container to:
 - **No sensitive data** - Static site with no server-side secrets
 - **Regular updates** - Dependencies kept current
 
-## 📊 Performance
+## Performance
 
 - **Static site generation** - Fast loading times
 - **Minimal JavaScript** - Only essential functionality
@@ -213,7 +213,7 @@ Deploy the Docker container to:
 - **Gzip compression** - Reduced transfer sizes
 - **CDN-ready** - Optimized for global content delivery
 
-## 🆘 Support
+## Support
 
 ### Common Issues
 
@@ -227,8 +227,8 @@ npm install
 **Port already in use**:
 
 ```bash
-# Kill process using port 8080
-lsof -ti:8080 | xargs kill -9
+# Kill process using port 8000
+lsof -ti:8000 | xargs kill -9
 ```
 
 **Docker build fails**:
@@ -244,11 +244,11 @@ docker system prune -a
 - **ScotAccount integration** - Contact the ScotAccount team
 - **Technical support** - Refer to the complete implementation guides
 
-## 📄 License
+## License
 
 This documentation is available under the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
 
-## 🏗️ Built With
+## Built With
 
 - **[Eleventy](https://www.11ty.dev/)** - Static site generator
 - **[Nunjucks](https://mozilla.github.io/nunjucks/)** - Template engine

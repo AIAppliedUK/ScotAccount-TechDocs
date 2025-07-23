@@ -57,10 +57,10 @@ class DocumentationSearch {
           "Modular architecture design patterns components separation concerns implementation structure",
       },
       {
-        title: "Missing Content Analysis",
-        url: "/scotaccount-missing-content-analysis/",
+        title: "Integration Examples",
+        url: "/integration-examples/",
         content:
-          "Content gaps analysis missing documentation areas improvement recommendations",
+          "Integration examples, practical implementation scenarios, documentation improvement recommendations, real-world use cases, step-by-step guides.",
       },
     ];
     this.searchData = pages;
