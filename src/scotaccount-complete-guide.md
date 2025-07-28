@@ -116,7 +116,7 @@ Always retrieve current configuration dynamically:
 ```javascript
 async function getOidcConfiguration() {
   const response = await fetch(
-    "https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration"
+    "https://authz.scotaccount.service.gov.scot/.well-known/openid-configuration"
   );
   return await response.json();
 }
@@ -399,7 +399,7 @@ Update endpoints for production:
 const config = {
   integration: {
     discoveryUrl:
-      "https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration",
+      "https://authz.scotaccount.service.gov.scot/.well-known/openid-configuration",
   },
   production: {
     discoveryUrl:
