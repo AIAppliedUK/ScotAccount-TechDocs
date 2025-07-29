@@ -17,17 +17,26 @@ This guide provides step-by-step instructions for transferring the ScotAccount T
 
 3. **Build Configuration**: Eleventy configuration in `.eleventy.js` is properly set up
 
-## Transfer Steps
+## Transfer Workflow
 
-### Step 1: Prepare the Repository
+### Current Status
 
-1. **Ensure all changes are committed**:
+- ✅ **Repository**: `https://github.com/AIAppliedUK/ScotAccount-TechDocs`
+- ✅ **Changes Pushed**: Site URL updated for Scottish Government GitHub account
+- ✅ **Build Tested**: Local build working correctly
+- ✅ **GitHub Actions**: Configured for automatic deployment
+
+### Transfer Steps
+
+1. **Ensure all changes are committed and pushed to AIApplied repository**:
 
    ```bash
    git add .
    git commit -m "Update site URL for Scottish Government GitHub account"
    git push origin main
    ```
+
+   ✅ **Completed**: Changes have been pushed to `https://github.com/AIAppliedUK/ScotAccount-TechDocs`
 
 2. **Create a backup branch** (optional):
    ```bash
