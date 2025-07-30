@@ -91,9 +91,9 @@
     <div class="site-nav__wrapper">
       <ul class="site-nav__list" id="nav-menu">
         {% for item in site.navigation %}
-        <li class="site-nav__item">
-          <a href="{{ item.url }}" class="site-nav__link{% if item.url == page.url %} site-nav__link--active{% endif %}">{{ item.text }}</a>
-        </li>
+          <li class="site-nav__item">
+            <a href="{{ item.url | url }}" class="site-nav__link{% if item.url == page.url %} site-nav__link--active{% endif %}">{{ item.text }}</a>
+          </li>
         {% endfor %}
       </ul>
     </div>
