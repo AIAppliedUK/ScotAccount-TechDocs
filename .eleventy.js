@@ -97,5 +97,8 @@ module.exports = function (eleventyConfig) {
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
     dataTemplateEngine: "njk",
+
+    // Add this for GitHub Pages subdirectory
+    pathPrefix: "/sg-identity-techdocs/"
   };
 };
