@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "eleventy --serve",
-    "build": "eleventy",
+    "build": "eleventy --pathprefix=/sg-identity-techdocs/",
     "clean": "rm -rf _site",
     "dev": "eleventy --serve --watch",
-    "build:production": "NODE_ENV=production eleventy"
+    "build:production": "NODE_ENV=production eleventy",
+    "watch": "eleventy --watch"
   },
   "keywords": [
     "documentation",
