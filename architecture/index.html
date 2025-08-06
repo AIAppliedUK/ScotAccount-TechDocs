@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScotAccount Architecture Overview | ScotAccount Technical Documentation</title>
+  <meta name="description" content="Technical architecture and system components of ScotAccount - Scotland&#39;s digital identity service">
+  <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/architecture/">
+  
+  <!-- Scottish Government favicons -->
+  <link rel="icon" type="image/x-icon" href="/sg-identity-techdocs/sg-identity-techdocs/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/sg-identity-techdocs/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/sg-identity-techdocs/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/sg-identity-techdocs/favicon-16x16.png">
+  <link rel="mask-icon" href="/sg-identity-techdocs/safari-pinned-tab.svg" color="#0065bd">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/sg-identity-techdocs/sg-identity-techdocs/css/main.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="ScotAccount Architecture Overview">
+  <meta property="og:description" content="Technical architecture and system components of ScotAccount - Scotland&#39;s digital identity service">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://scotaccount.github.io/sg-identity-techdocs/architecture/">
+  <meta property="og:image" content="https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png">
+  
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "ScotAccount Architecture Overview",
+    "description": "Technical architecture and system components of ScotAccount - Scotland&#39;s digital identity service",
+    "author": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Cookie Banner (Scottish Government Style) -->
+  <div class="cookie-banner" id="cookie-banner" role="region" aria-labelledby="cookie-banner-heading">
+    <div class="cookie-banner__container">
+      <div class="cookie-banner__content">
+        <h2 id="cookie-banner-heading" class="cookie-banner__heading">Information</h2>
+        <p class="cookie-banner__text">We use <a href="#cookies" class="cookie-banner__link">cookies</a> to collect anonymous data to help us improve your site browsing experience.</p>
+        <p class="cookie-banner__text">Click 'Accept all cookies' to agree to all cookies that collect anonymous data. To only allow the cookies that make the site work, click 'Use essential cookies only.' Visit 'Set cookie preferences' to control specific cookies.</p>
+      </div>
+      <div class="cookie-banner__actions">
+        <button type="button" class="cookie-banner__button cookie-banner__button--primary" onclick="acceptAllCookies()">Accept all cookies</button>
+        <button type="button" class="cookie-banner__button cookie-banner__button--secondary" onclick="useEssentialCookies()">Use essential cookies only</button>
+        <button type="button" class="cookie-banner__button cookie-banner__button--link" onclick="setCookiePreferences()">Set cookie preferences</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Scottish Government Identity Header (blue) -->
+  <header class="sg-header" role="banner">
+    <div class="sg-header__wrapper">
+      <div class="sg-header__branding">
+        <a href="/sg-identity-techdocs/" class="sg-header__logo">
+          <img src="/sg-identity-techdocs/sg-identity-techdocs/assets/scotgovlogo.svg" alt="Scottish Government">
+        </a>
+      </div>
+      <div class="sg-header__search">
+        <form class="sg-header__search-form" role="search" action="/sg-identity-techdocs/sg-identity-techdocs/search" method="get">
+          <label for="search-input" class="sg-header__search-label">Search</label>
+          <input type="search" id="search-input" name="q" class="sg-header__search-input" placeholder="Search">
+          <button type="submit" class="sg-header__search-button">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+              <path fill="currentColor" d="M15.504 13.616l-3.79-3.223c-0.392-0.353-0.811-0.514-1.149-0.499 0.895-1.048 1.435-2.407 1.435-3.893 0-3.314-2.686-6-6-6s-6 2.686-6 6 2.686 6 6 6c1.486 0 2.845-0.54 3.893-1.435-0.016 0.338 0.146 0.757 0.499 1.149l3.223 3.79c0.552 0.613 1.453 0.665 2.003 0.115s0.498-1.452-0.115-2.003zM6 10c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"></path>
+            </svg>
+            <span class="sg-visually-hidden">Search</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+  <!-- Site Navigation Header (white) -->
+  <nav class="site-nav" role="navigation" aria-label="Main navigation">
+    <div class="site-nav__wrapper">
+      <ul class="site-nav__list" id="nav-menu">
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/" class="site-nav__link">Home</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/getting-started/" class="site-nav__link">Getting Started</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/architecture/" class="site-nav__link site-nav__link--active">Architecture</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">Token Validation</a>
+          </li>
+        
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main layout container -->
+  <div class="container">
+    <!-- Sidebar with page-specific navigation -->
+    
+    <aside class="sidebar" role="complementary" aria-label="Page navigation">
+      <h2 class="sidebar__title">On this page</h2>
+      <nav class="sidebar__nav" aria-label="Page contents">
+        <ul class="sidebar__nav">
+          <!-- Table of contents will be injected here via JavaScript -->
+          <li class="sidebar__nav-item">
+            <a href="#" class="sidebar__nav-link" id="toc-placeholder">
+              Contents loading...
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      
+      <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--sg-border-grey);">
+      <h3 class="sidebar__title">All pages</h3>
+      <ul class="sidebar__nav">
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/architecture/" class="sidebar__nav-link">
+              ScotAccount Architecture Overview
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/getting-started/" class="sidebar__nav-link">
+              Getting Started with ScotAccount
+            </a>
+          </li>
+          
+        
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/integration-examples/" class="sidebar__nav-link">
+              Integration Examples and Best Practices
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-complete-guide/" class="sidebar__nav-link">
+              Complete Implementation Guide
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-modular-structure/" class="sidebar__nav-link">
+              ScotAccount Modular Structure
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-token-validation-module/" class="sidebar__nav-link">
+              Token Validation Module
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/search/" class="sidebar__nav-link">
+              Search results
+            </a>
+          </li>
+          
+        
+      </ul>
+      
+    </aside>
+    
+
+    <!-- Main content -->
+    <main class="main" id="main-content" role="main" tabindex="-1">
+      
+        <h1>ScotAccount Architecture Overview</h1>
+      
+      
+      
+        <p class="lead">Technical architecture and system components of ScotAccount - Scotland&#39;s digital identity service</p>
+      
+
+      <!-- Page content -->
+      <p>Understanding the ScotAccount architecture is essential for successful integration. This page provides an overview of system components, data flows, and integration points.</p>
+<h2 id="system-overview" tabindex="-1"><a class="header-anchor" href="#system-overview"><span>System Overview</span></a></h2>
+<p>ScotAccount is part of the Digital Identity Scotland (DIS) ecosystem, providing centralised authentication and verified attribute services for Scottish Government digital services.</p>
+<h3 id="high-level-architecture" tabindex="-1"><a class="header-anchor" href="#high-level-architecture"><span>High-Level Architecture</span></a></h3>
+<p><img src="/sg-identity-techdocs/assets/diagrams/architecture-context.png" alt="ScotAccount High-Level Architecture"></p>
+<p><em>Figure: High-level architecture of ScotAccount and its integration with core DIS components.</em></p>
+<h2 id="core-components" tabindex="-1"><a class="header-anchor" href="#core-components"><span>Core Components</span></a></h2>
+<h3 id="scotaccount-authentication-services" tabindex="-1"><a class="header-anchor" href="#scotaccount-authentication-services"><span>ScotAccount (Authentication Services)</span></a></h3>
+<p><strong>Purpose</strong>: Provides secure user authentication and session management</p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>OpenID Connect authentication provider</li>
+<li>User account management and registration</li>
+<li>Session handling and logout</li>
+<li>Multi-factor authentication support</li>
+<li>Consent management for data sharing</li>
+</ul>
+<p><strong>Integration Points</strong>:</p>
+<ul>
+<li><strong>Relying Parties</strong>: Government services requiring authentication</li>
+<li><strong>Citizens</strong>: User registration and authentication interface</li>
+<li><strong>mySafe</strong>: Integration for verified attribute retrieval</li>
+</ul>
+<h3 id="verifyyouridentity-id-and-v-services" tabindex="-1"><a class="header-anchor" href="#verifyyouridentity-id-and-v-services"><span>VerifyYourIdentity (ID&amp;V Services)</span></a></h3>
+<p><strong>Purpose</strong>: Handles identity verification processes to GPG45 Medium assurance level</p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Document scanning and verification</li>
+<li>Biometric selfie capture and matching</li>
+<li>PEP (Politically Exposed Person) and sanctions checks</li>
+<li>Multi-step verification workflows</li>
+<li>Cross-device verification support</li>
+</ul>
+<p><strong>External Dependencies</strong>:</p>
+<ul>
+<li><strong>Experian ID&amp;V</strong>: Primary identity verification service</li>
+<li><strong>Experian Mitek</strong>: Biometric verification and document scanning</li>
+<li><strong>Experian PEPS</strong>: PEP and sanctions screening</li>
+</ul>
+<h3 id="mysafe-locker-services" tabindex="-1"><a class="header-anchor" href="#mysafe-locker-services"><span>mySafe (Locker Services)</span></a></h3>
+<p><strong>Purpose</strong>: Secure storage and management of verified user attributes</p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Encrypted storage of verified identity data</li>
+<li>Address verification and lookup services</li>
+<li>Email verification and management</li>
+<li>Consent tracking for data sharing</li>
+<li>Audit logging for compliance</li>
+</ul>
+<p><strong>External Dependencies</strong>:</p>
+<ul>
+<li><strong>ViaEuropa</strong>: Address lookup and verification</li>
+<li><strong><a href="http://Gov.UK">Gov.UK</a> Notify</strong>: SMS and email delivery services</li>
+<li><strong>SG SOC</strong>: Security monitoring and audit logging</li>
+</ul>
+<h2 id="data-flow-patterns" tabindex="-1"><a class="header-anchor" href="#data-flow-patterns"><span>Data Flow Patterns</span></a></h2>
+<h3 id="basic-authentication-flow" tabindex="-1"><a class="header-anchor" href="#basic-authentication-flow"><span>Basic Authentication Flow</span></a></h3>
+<ol>
+<li><strong>User Access Request</strong>: Citizen attempts to access a protected resource</li>
+<li><strong>Authentication Redirect</strong>: Relying party redirects to ScotAccount</li>
+<li><strong>User Authentication</strong>: Citizen provides credentials to ScotAccount</li>
+<li><strong>Token Generation</strong>: ScotAccount generates and returns authentication tokens</li>
+<li><strong>Resource Access</strong>: Relying party validates tokens and grants access</li>
+</ol>
+<h3 id="verified-attribute-flow" tabindex="-1"><a class="header-anchor" href="#verified-attribute-flow"><span>Verified Attribute Flow</span></a></h3>
+<ol>
+<li><strong>Attribute Request</strong>: Relying party requests verified attributes with user consent</li>
+<li><strong>Verification Check</strong>: ScotAccount checks if verification is required</li>
+<li><strong>Verification Process</strong>: If needed, user is directed to VerifyYourIdentity</li>
+<li><strong>Data Retrieval</strong>: Verified attributes are retrieved from mySafe</li>
+<li><strong>Attribute Delivery</strong>: Verified data is securely provided to relying party</li>
+</ol>
+<h3 id="identity-verification-process" tabindex="-1"><a class="header-anchor" href="#identity-verification-process"><span>Identity Verification Process</span></a></h3>
+<ol>
+<li><strong>Verification Initiation</strong>: User starts identity verification in VerifyYourIdentity</li>
+<li><strong>Document Capture</strong>: User provides identity documents via Experian Mitek</li>
+<li><strong>Identity Checks</strong>: Documents verified against Experian ID&amp;V database</li>
+<li><strong>Biometric Verification</strong>: Selfie capture and matching via Experian Mitek</li>
+<li><strong>Sanctions Screening</strong>: PEP and sanctions checks via Experian PEPS</li>
+<li><strong>Result Storage</strong>: Verification results stored securely in mySafe</li>
+</ol>
+<h2 id="security-architecture" tabindex="-1"><a class="header-anchor" href="#security-architecture"><span>Security Architecture</span></a></h2>
+<h3 id="authentication-security" tabindex="-1"><a class="header-anchor" href="#authentication-security"><span>Authentication Security</span></a></h3>
+<ul>
+<li><strong>OpenID Connect</strong> standard implementation with PKCE</li>
+<li><strong>RSA 3072-bit or EC P-256</strong> key pairs for client authentication</li>
+<li><strong>JWT tokens</strong> with short expiration times</li>
+<li><strong>State parameter validation</strong> for CSRF protection</li>
+<li><strong>Nonce verification</strong> for replay attack prevention</li>
+</ul>
+<h3 id="data-protection" tabindex="-1"><a class="header-anchor" href="#data-protection"><span>Data Protection</span></a></h3>
+<ul>
+<li><strong>Encryption at rest</strong> for all stored user data</li>
+<li><strong>TLS 1.3</strong> for all data in transit</li>
+<li><strong>Zero-knowledge architecture</strong> - ScotAccount doesn’t store verification documents</li>
+<li><strong>Minimal data retention</strong> with automated deletion policies</li>
+<li><strong>Consent-based data sharing</strong> with granular user control</li>
+</ul>
+<h3 id="infrastructure-security" tabindex="-1"><a class="header-anchor" href="#infrastructure-security"><span>Infrastructure Security</span></a></h3>
+<ul>
+<li><strong>Cloud-native architecture</strong> with built-in resilience</li>
+<li><strong>Security monitoring</strong> via SG SOC integration</li>
+<li><strong>Penetration testing</strong> and security audits</li>
+<li><strong>Compliance</strong> with UK government security standards</li>
+<li><strong>Incident response</strong> procedures and monitoring</li>
+</ul>
+<h2 id="integration-environments" tabindex="-1"><a class="header-anchor" href="#integration-environments"><span>Integration Environments</span></a></h2>
+<h3 id="integration-environment" tabindex="-1"><a class="header-anchor" href="#integration-environment"><span>Integration Environment</span></a></h3>
+<ul>
+<li><strong>Purpose</strong>: Development and testing</li>
+<li><strong>Base URL</strong>: <code>https://authz.integration.scotaccount.service.gov.scot</code></li>
+<li><strong>Features</strong>: Full feature set with test data</li>
+<li><strong>Limitations</strong>: Not for production use</li>
+</ul>
+<h3 id="production-environment" tabindex="-1"><a class="header-anchor" href="#production-environment"><span>Production Environment</span></a></h3>
+<ul>
+<li><strong>Purpose</strong>: Live service delivery</li>
+<li><strong>Base URL</strong>: <code>https://authz.scotaccount.service.gov.scot</code></li>
+<li><strong>Features</strong>: Full production capabilities</li>
+<li><strong>Requirements</strong>: Formal onboarding and security review</li>
+</ul>
+<h2 id="technical-standards" tabindex="-1"><a class="header-anchor" href="#technical-standards"><span>Technical Standards</span></a></h2>
+<h3 id="supported-standards" tabindex="-1"><a class="header-anchor" href="#supported-standards"><span>Supported Standards</span></a></h3>
+<ul>
+<li><strong>OpenID Connect 1.0</strong> - Core authentication protocol</li>
+<li><strong>OAuth 2.0</strong> - Authorization framework</li>
+<li><strong>RFC 7636 (PKCE)</strong> - Security extension for public clients</li>
+<li><strong>RFC 7523</strong> - JWT client assertion authentication</li>
+<li><strong>GPG45</strong> - UK government identity verification standard</li>
+</ul>
+<h3 id="token-formats" tabindex="-1"><a class="header-anchor" href="#token-formats"><span>Token Formats</span></a></h3>
+<ul>
+<li><strong>ID Tokens</strong>: JWT format with user identity claims</li>
+<li><strong>Access Tokens</strong>: Opaque tokens for API access</li>
+<li><strong>Refresh Tokens</strong>: Encrypted tokens for session extension</li>
+</ul>
+<h3 id="cryptographic-requirements" tabindex="-1"><a class="header-anchor" href="#cryptographic-requirements"><span>Cryptographic Requirements</span></a></h3>
+<ul>
+<li><strong>Signing Algorithms</strong>: RS256, ES256</li>
+<li><strong>Key Lengths</strong>: RSA 3072-bit minimum, EC P-256</li>
+<li><strong>Token Expiration</strong>: 15 minutes for access tokens, 8 hours for sessions</li>
+<li><strong>Certificate Management</strong>: Automatic rotation and validation</li>
+</ul>
+<h2 id="scalability-and-performance" tabindex="-1"><a class="header-anchor" href="#scalability-and-performance"><span>Scalability and Performance</span></a></h2>
+<h3 id="service-availability" tabindex="-1"><a class="header-anchor" href="#service-availability"><span>Service Availability</span></a></h3>
+<ul>
+<li><strong>99.9% uptime</strong> target for production services</li>
+<li><strong>Load balancing</strong> across multiple availability zones</li>
+<li><strong>Auto-scaling</strong> based on demand</li>
+<li><strong>Disaster recovery</strong> with data replication</li>
+</ul>
+<h3 id="performance-characteristics" tabindex="-1"><a class="header-anchor" href="#performance-characteristics"><span>Performance Characteristics</span></a></h3>
+<ul>
+<li><strong>Authentication latency</strong>: &lt; 500ms for standard flows</li>
+<li><strong>Throughput</strong>: Supports high-volume government services</li>
+<li><strong>Caching</strong>: Intelligent caching for improved response times</li>
+<li><strong>Monitoring</strong>: Real-time performance tracking</li>
+</ul>
+<h2 id="compliance-and-governance" tabindex="-1"><a class="header-anchor" href="#compliance-and-governance"><span>Compliance and Governance</span></a></h2>
+<h3 id="regulatory-compliance" tabindex="-1"><a class="header-anchor" href="#regulatory-compliance"><span>Regulatory Compliance</span></a></h3>
+<ul>
+<li><strong>UK GDPR</strong> compliance for data protection</li>
+<li><strong>Government Security Standards</strong> adherence</li>
+<li><strong>Accessibility</strong> compliance (WCAG 2.1 AA)</li>
+<li><strong>Open Government Licence</strong> for documentation</li>
+</ul>
+<h3 id="audit-and-monitoring" tabindex="-1"><a class="header-anchor" href="#audit-and-monitoring"><span>Audit and Monitoring</span></a></h3>
+<ul>
+<li><strong>Comprehensive logging</strong> of all authentication events</li>
+<li><strong>Real-time monitoring</strong> via SG SOC integration</li>
+<li><strong>Regular security assessments</strong> and penetration testing</li>
+<li><strong>Incident response</strong> procedures and escalation</li>
+</ul>
+<h2 id="next-steps" tabindex="-1"><a class="header-anchor" href="#next-steps"><span>Next Steps</span></a></h2>
+<div class="callout callout--info">
+<strong>Ready to implement?</strong> Review the <a href="/sg-identity-techdocs/getting-started/">Getting Started guide</a> for step-by-step integration instructions.
+</div>
+<div class="callout callout--success">
+<strong>Need detailed technical guidance?</strong> See the <a href="/sg-identity-techdocs/scotaccount-complete-guide/">Complete Implementation Guide</a> for comprehensive technical details.
+</div>
+<div class="callout callout--warning">
+<strong>Planning token validation?</strong> Check out the <a href="/sg-identity-techdocs/scotaccount-token-validation-module/">Token Validation Module</a> documentation.
+</div>
+
+
+      <!-- Last updated -->
+      
+      <footer class="content-footer">
+        <p><small>Last updated: 6 August 2025</small></p>
+      </footer>
+      
+    </main>
+  </div>
+
+  <!-- Site footer (Scottish Government Style) -->
+  <footer class="sg-footer" role="contentinfo">
+    <div class="sg-footer__container">
+      <div class="sg-footer__content">
+        <div class="sg-footer__section">
+          <h3 class="sg-footer__heading">ScotAccount</h3>
+          <ul class="sg-footer__links">
+            <li><a href="/sg-identity-techdocs/" class="sg-footer__link">Documentation home</a></li>
+            <li><a href="/sg-identity-techdocs/sg-identity-techdocs/getting-started/" class="sg-footer__link">Getting started</a></li>
+            <li><a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-complete-guide/" class="sg-footer__link">Complete guide</a></li>
+          </ul>
+        </div>
+        
+        <div class="sg-footer__section">
+          <h3 class="sg-footer__heading">Scottish Government</h3>
+          <ul class="sg-footer__links">
+            <li><a href="https://www.gov.scot" target="_blank" rel="noopener" class="sg-footer__link">gov.scot</a></li>
+            <li><a href="https://www.gov.scot/about/how-government-is-run/directorates/digital-directorate/" target="_blank" rel="noopener" class="sg-footer__link">Digital Directorate</a></li>
+            <li><a href="https://www.gov.scot/publications/" target="_blank" rel="noopener" class="sg-footer__link">Publications</a></li>
+          </ul>
+        </div>
+        
+        <div class="sg-footer__section">
+          <h3 class="sg-footer__heading">Help and support</h3>
+          <ul class="sg-footer__links">
+            <li><a href="https://www.gov.scot/about/contact-information/" target="_blank" rel="noopener" class="sg-footer__link">Contact us</a></li>
+            <li><a href="https://www.gov.scot/accessibility/" target="_blank" rel="noopener" class="sg-footer__link">Accessibility</a></li>
+            <li><a href="https://www.gov.scot/privacy/" target="_blank" rel="noopener" class="sg-footer__link">Privacy</a></li>
+            <li><a href="https://www.gov.scot/cookies/" target="_blank" rel="noopener" class="sg-footer__link">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="sg-footer__legal">
+        <p class="sg-footer__copyright">&copy; Crown Copyright. All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener" class="sg-footer__link">Open Government Licence v3.0</a>, except where otherwise stated.</p>
+        <p class="sg-footer__site">
+          <a href="https://gov.scot" class="sg-footer__link">gov.scot</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript for table of contents generation -->
+  <script>
+    // Generate table of contents for better scannable structure
+    document.addEventListener('DOMContentLoaded', function() {
+      const headings = document.querySelectorAll('main h2, main h3, main h4');
+      const tocContainer = document.querySelector('.sidebar__nav');
+      const placeholder = document.getElementById('toc-placeholder');
+      
+      if (headings.length > 0 && tocContainer && placeholder) {
+        // Remove placeholder
+        placeholder.remove();
+        
+        // Generate TOC
+        headings.forEach(function(heading, index) {
+          // Add ID to heading if it doesn't have one
+          if (!heading.id) {
+            heading.id = 'heading-' + index;
+          }
+          
+          // Create TOC item
+          const li = document.createElement('li');
+          li.className = 'sidebar__nav-item';
+          
+          const a = document.createElement('a');
+          a.href = '#' + heading.id;
+          a.className = 'sidebar__nav-link';
+          a.textContent = heading.textContent;
+          
+          // Add visual hierarchy for different heading levels
+          if (heading.tagName === 'H3') {
+            a.style.paddingLeft = '2rem';
+          } else if (heading.tagName === 'H4') {
+            a.style.paddingLeft = '3rem';
+          }
+          
+          li.appendChild(a);
+          tocContainer.appendChild(li);
+        });
+      } else if (placeholder) {
+        placeholder.textContent = 'No headings found';
+      }
+      
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    });
+
+    // Cookie banner functionality (Scottish Government style)
+    function acceptAllCookies() {
+      localStorage.setItem('cookiePreference', 'all');
+      hideCookieBanner();
+    }
+
+    function useEssentialCookies() {
+      localStorage.setItem('cookiePreference', 'essential');
+      hideCookieBanner();
+    }
+
+    function setCookiePreferences() {
+      // In a real implementation, this would open a preferences modal
+      localStorage.setItem('cookiePreference', 'essential');
+      hideCookieBanner();
+      alert('Cookie preferences saved. Only essential cookies will be used.');
+    }
+
+    function hideCookieBanner() {
+      const banner = document.getElementById('cookie-banner');
+      if (banner) {
+        banner.style.display = 'none';
+      }
+    }
+
+    // Check if user has already made a cookie preference
+    document.addEventListener('DOMContentLoaded', function() {
+      const cookiePreference = localStorage.getItem('cookiePreference');
+      if (cookiePreference) {
+        hideCookieBanner();
+      }
+    });
+
+    // Mobile navigation toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const navToggle = document.querySelector('.sg-nav__toggle');
+      const navMenu = document.querySelector('.sg-nav__list');
+      
+      if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+          const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+          navToggle.setAttribute('aria-expanded', !isExpanded);
+          navMenu.classList.toggle('sg-nav__list--open');
+        });
+      }
+    });
+  </script>
+
+  <!-- Search functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <script src="/sg-identity-techdocs/sg-identity-techdocs/js/search.js"></script>
+</body>
+</html> 

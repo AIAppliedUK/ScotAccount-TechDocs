@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Token Validation Module | ScotAccount Technical Documentation</title>
+  <meta name="description" content="Secure validation of ID tokens and access tokens from ScotAccount with implementation examples">
+  <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-token-validation-module/">
+  
+  <!-- Scottish Government favicons -->
+  <link rel="icon" type="image/x-icon" href="/sg-identity-techdocs/sg-identity-techdocs/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/sg-identity-techdocs/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/sg-identity-techdocs/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/sg-identity-techdocs/favicon-16x16.png">
+  <link rel="mask-icon" href="/sg-identity-techdocs/safari-pinned-tab.svg" color="#0065bd">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/sg-identity-techdocs/sg-identity-techdocs/css/main.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Token Validation Module">
+  <meta property="og:description" content="Secure validation of ID tokens and access tokens from ScotAccount with implementation examples">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-token-validation-module/">
+  <meta property="og:image" content="https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png">
+  
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Token Validation Module",
+    "description": "Secure validation of ID tokens and access tokens from ScotAccount with implementation examples",
+    "author": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Cookie Banner (Scottish Government Style) -->
+  <div class="cookie-banner" id="cookie-banner" role="region" aria-labelledby="cookie-banner-heading">
+    <div class="cookie-banner__container">
+      <div class="cookie-banner__content">
+        <h2 id="cookie-banner-heading" class="cookie-banner__heading">Information</h2>
+        <p class="cookie-banner__text">We use <a href="#cookies" class="cookie-banner__link">cookies</a> to collect anonymous data to help us improve your site browsing experience.</p>
+        <p class="cookie-banner__text">Click 'Accept all cookies' to agree to all cookies that collect anonymous data. To only allow the cookies that make the site work, click 'Use essential cookies only.' Visit 'Set cookie preferences' to control specific cookies.</p>
+      </div>
+      <div class="cookie-banner__actions">
+        <button type="button" class="cookie-banner__button cookie-banner__button--primary" onclick="acceptAllCookies()">Accept all cookies</button>
+        <button type="button" class="cookie-banner__button cookie-banner__button--secondary" onclick="useEssentialCookies()">Use essential cookies only</button>
+        <button type="button" class="cookie-banner__button cookie-banner__button--link" onclick="setCookiePreferences()">Set cookie preferences</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Scottish Government Identity Header (blue) -->
+  <header class="sg-header" role="banner">
+    <div class="sg-header__wrapper">
+      <div class="sg-header__branding">
+        <a href="/sg-identity-techdocs/" class="sg-header__logo">
+          <img src="/sg-identity-techdocs/sg-identity-techdocs/assets/scotgovlogo.svg" alt="Scottish Government">
+        </a>
+      </div>
+      <div class="sg-header__search">
+        <form class="sg-header__search-form" role="search" action="/sg-identity-techdocs/sg-identity-techdocs/search" method="get">
+          <label for="search-input" class="sg-header__search-label">Search</label>
+          <input type="search" id="search-input" name="q" class="sg-header__search-input" placeholder="Search">
+          <button type="submit" class="sg-header__search-button">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+              <path fill="currentColor" d="M15.504 13.616l-3.79-3.223c-0.392-0.353-0.811-0.514-1.149-0.499 0.895-1.048 1.435-2.407 1.435-3.893 0-3.314-2.686-6-6-6s-6 2.686-6 6 2.686 6 6 6c1.486 0 2.845-0.54 3.893-1.435-0.016 0.338 0.146 0.757 0.499 1.149l3.223 3.79c0.552 0.613 1.453 0.665 2.003 0.115s0.498-1.452-0.115-2.003zM6 10c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"></path>
+            </svg>
+            <span class="sg-visually-hidden">Search</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+  <!-- Site Navigation Header (white) -->
+  <nav class="site-nav" role="navigation" aria-label="Main navigation">
+    <div class="site-nav__wrapper">
+      <ul class="site-nav__list" id="nav-menu">
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/" class="site-nav__link">Home</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/getting-started/" class="site-nav__link">Getting Started</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/architecture/" class="site-nav__link">Architecture</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link site-nav__link--active">Token Validation</a>
+          </li>
+        
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main layout container -->
+  <div class="container">
+    <!-- Sidebar with page-specific navigation -->
+    
+    <aside class="sidebar" role="complementary" aria-label="Page navigation">
+      <h2 class="sidebar__title">On this page</h2>
+      <nav class="sidebar__nav" aria-label="Page contents">
+        <ul class="sidebar__nav">
+          <!-- Table of contents will be injected here via JavaScript -->
+          <li class="sidebar__nav-item">
+            <a href="#" class="sidebar__nav-link" id="toc-placeholder">
+              Contents loading...
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      
+      <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--sg-border-grey);">
+      <h3 class="sidebar__title">All pages</h3>
+      <ul class="sidebar__nav">
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/architecture/" class="sidebar__nav-link">
+              ScotAccount Architecture Overview
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/getting-started/" class="sidebar__nav-link">
+              Getting Started with ScotAccount
+            </a>
+          </li>
+          
+        
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/integration-examples/" class="sidebar__nav-link">
+              Integration Examples and Best Practices
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-complete-guide/" class="sidebar__nav-link">
+              Complete Implementation Guide
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-modular-structure/" class="sidebar__nav-link">
+              ScotAccount Modular Structure
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-token-validation-module/" class="sidebar__nav-link">
+              Token Validation Module
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/search/" class="sidebar__nav-link">
+              Search results
+            </a>
+          </li>
+          
+        
+      </ul>
+      
+    </aside>
+    
+
+    <!-- Main content -->
+    <main class="main" id="main-content" role="main" tabindex="-1">
+      
+        <h1>Token Validation Module</h1>
+      
+      
+      
+        <p class="lead">Secure validation of ID tokens and access tokens from ScotAccount with implementation examples</p>
+      
+
+      <!-- Page content -->
+      <p>Proper token validation is critical for security. This guide shows you how to validate ID tokens and access tokens from ScotAccount to ensure they’re authentic and intended for your service.</p>
+<p></p><div class="table-of-contents"><ul><li><a href="#security-overview">Security Overview</a><ul><li><a href="#what-you-must-validate">What You Must Validate</a></li></ul></li><li><a href="#id-token-validation">ID Token Validation</a><ul><li><a href="#id-token-structure">ID Token Structure</a></li><li><a href="#complete-validation-implementation">Complete Validation Implementation</a><ul><li><a href="#step-1-set-up-jwks-client">Step 1: Set Up JWKS Client</a></li><li><a href="#step-2-implement-validation-function">Step 2: Implement Validation Function</a></li><li><a href="#step-3-additional-security-validations">Step 3: Additional Security Validations</a></li><li><a href="#step-4-extract-and-store-user-information">Step 4: Extract and Store User Information</a></li></ul></li></ul></li><li><a href="#verified-attributes-validation">Verified Attributes Validation</a><ul><li><a href="#email-attributes-validation">Email Attributes Validation</a></li><li><a href="#address-attributes-validation">Address Attributes Validation</a></li><li><a href="#identity-attributes-validation">Identity Attributes Validation</a></li></ul></li><li><a href="#access-token-validation">Access Token Validation</a><ul><li><a href="#introspection-endpoint">Introspection Endpoint</a></li></ul></li><li><a href="#complete-validation-example">Complete Validation Example</a></li><li><a href="#error-handling">Error Handling</a><ul><li><a href="#common-validation-errors">Common Validation Errors</a></li><li><a href="#security-best-practices">Security Best Practices</a></li></ul></li><li><a href="#testing-token-validation">Testing Token Validation</a><ul><li><a href="#unit-test-example">Unit Test Example</a></li></ul></li><li><a href="#production-considerations">Production Considerations</a><ul><li><a href="#performance-optimization">Performance Optimization</a></li><li><a href="#monitoring-and-alerts">Monitoring and Alerts</a></li></ul></li><li><a href="#next-steps">Next Steps</a></li></ul></div><p></p>
+<h2 id="security-overview" tabindex="-1"><a class="header-anchor" href="#security-overview"><span>Security Overview</span></a></h2>
+<p>ScotAccount issues JSON Web Tokens (JWTs) that must be validated before trusting their contents. This ensures tokens haven’t been tampered with and were genuinely issued by ScotAccount.</p>
+<div class="callout callout--error">
+<strong>Critical Security Warning</strong>: Never trust token contents without proper validation. Always verify signatures and claims to prevent security vulnerabilities.
+</div>
+<h3 id="what-you-must-validate" tabindex="-1"><a class="header-anchor" href="#what-you-must-validate"><span>What You Must Validate</span></a></h3>
+<ol>
+<li><strong>Token signature</strong> - Verify the token was signed by ScotAccount</li>
+<li><strong>Issuer claim</strong> - Confirm the token was issued by ScotAccount</li>
+<li><strong>Audience claim</strong> - Ensure the token is intended for your service</li>
+<li><strong>Expiration</strong> - Check the token hasn’t expired</li>
+<li><strong>Nonce</strong> - Prevent replay attacks (for ID tokens)</li>
+</ol>
+<h2 id="id-token-validation" tabindex="-1"><a class="header-anchor" href="#id-token-validation"><span>ID Token Validation</span></a></h2>
+<p>ID tokens contain user identity information and must be validated immediately after receiving them from the token endpoint.</p>
+<h3 id="id-token-structure" tabindex="-1"><a class="header-anchor" href="#id-token-structure"><span>ID Token Structure</span></a></h3>
+<p><strong>Example ID Token Payload</strong> (after validation):</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"4f6893f4-6fbe-423e-a5cc-d3c93e5a7c41"</span><span class="token punctuation">,</span>
+  <span class="token property">"aud"</span><span class="token operator">:</span> <span class="token string">"your-client-id"</span><span class="token punctuation">,</span>
+  <span class="token property">"iss"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot"</span><span class="token punctuation">,</span>
+  <span class="token property">"exp"</span><span class="token operator">:</span> <span class="token number">1678932662</span><span class="token punctuation">,</span>
+  <span class="token property">"iat"</span><span class="token operator">:</span> <span class="token number">1678931762</span><span class="token punctuation">,</span>
+  <span class="token property">"nonce"</span><span class="token operator">:</span> <span class="token string">"BdHLDWPRmY8WBYN6BEtFfI2RVoJmyCRppGFIt2hGy7A"</span><span class="token punctuation">,</span>
+  <span class="token property">"jti"</span><span class="token operator">:</span> <span class="token string">"fP_X_2w65iU"</span><span class="token punctuation">,</span>
+  <span class="token property">"sid"</span><span class="token operator">:</span> <span class="token string">"yxZ2VpOnydV0CT8j1SblfztRYDrkq-SJ3OH7ejF7GQg"</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Key Claims Explained</strong>:</p>
+<ul>
+<li><code>sub</code> - <strong>Persistent user identifier</strong> (UUID that never changes)</li>
+<li><code>aud</code> - <strong>Your client ID</strong> (ensures token is for your service)</li>
+<li><code>iss</code> - <strong>ScotAccount issuer</strong> (confirms who issued the token)</li>
+<li><code>exp</code> - <strong>Expiration time</strong> (Unix timestamp)</li>
+<li><code>iat</code> - <strong>Issued at time</strong> (Unix timestamp)</li>
+<li><code>nonce</code> - <strong>Replay protection</strong> (must match your original nonce)</li>
+<li><code>jti</code> - <strong>Unique token ID</strong> (prevents duplicate tokens)</li>
+<li><code>sid</code> - <strong>Session ID</strong> (required for logout)</li>
+</ul>
+<h3 id="complete-validation-implementation" tabindex="-1"><a class="header-anchor" href="#complete-validation-implementation"><span>Complete Validation Implementation</span></a></h3>
+<h4 id="step-1-set-up-jwks-client" tabindex="-1"><a class="header-anchor" href="#step-1-set-up-jwks-client"><span>Step 1: Set Up JWKS Client</span></a></h4>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> jwksClient <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jwks-rsa"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> jwt <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jsonwebtoken"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Create JWKS client for public key retrieval</span>
+<span class="token keyword">const</span> client <span class="token operator">=</span> <span class="token function">jwksClient</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">jwksUri</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/jwks.json"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">cache</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">cacheMaxAge</span><span class="token operator">:</span> <span class="token number">600000</span><span class="token punctuation">,</span> <span class="token comment">// Cache keys for 10 minutes</span>
+  <span class="token literal-property property">rateLimit</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">jwksRequestsPerMinute</span><span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h4 id="step-2-implement-validation-function" tabindex="-1"><a class="header-anchor" href="#step-2-implement-validation-function"><span>Step 2: Implement Validation Function</span></a></h4>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">validateIdToken</span><span class="token punctuation">(</span>
+  <span class="token parameter">idToken<span class="token punctuation">,</span>
+  expectedClientId<span class="token punctuation">,</span>
+  expectedNonce<span class="token punctuation">,</span>
+  expectedIssuer</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 1. Decode token to get header information</span>
+    <span class="token keyword">const</span> decodedToken <span class="token operator">=</span> jwt<span class="token punctuation">.</span><span class="token function">decode</span><span class="token punctuation">(</span>idToken<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">complete</span><span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>decodedToken <span class="token operator">||</span> <span class="token operator">!</span>decodedToken<span class="token punctuation">.</span>header<span class="token punctuation">.</span>kid<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Invalid token format or missing key ID"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 2. Get the public key from ScotAccount</span>
+    <span class="token keyword">const</span> key <span class="token operator">=</span> <span class="token keyword">await</span> client<span class="token punctuation">.</span><span class="token function">getSigningKey</span><span class="token punctuation">(</span>decodedToken<span class="token punctuation">.</span>header<span class="token punctuation">.</span>kid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> publicKey <span class="token operator">=</span> key<span class="token punctuation">.</span><span class="token function">getPublicKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 3. Verify signature and standard claims</span>
+    <span class="token keyword">const</span> payload <span class="token operator">=</span> jwt<span class="token punctuation">.</span><span class="token function">verify</span><span class="token punctuation">(</span>idToken<span class="token punctuation">,</span> publicKey<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">issuer</span><span class="token operator">:</span> expectedIssuer<span class="token punctuation">,</span>
+      <span class="token literal-property property">audience</span><span class="token operator">:</span> expectedClientId<span class="token punctuation">,</span>
+      <span class="token literal-property property">algorithms</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"RS256"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">clockTolerance</span><span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token comment">// Allow 5 seconds for clock skew</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 4. Additional security validations</span>
+    <span class="token function">validateSecurityClaims</span><span class="token punctuation">(</span>payload<span class="token punctuation">,</span> expectedNonce<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> payload<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"Token validation failed:"</span><span class="token punctuation">,</span> error<span class="token punctuation">.</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Invalid ID token: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>error<span class="token punctuation">.</span>message<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="step-3-additional-security-validations" tabindex="-1"><a class="header-anchor" href="#step-3-additional-security-validations"><span>Step 3: Additional Security Validations</span></a></h4>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">validateSecurityClaims</span><span class="token punctuation">(</span><span class="token parameter">payload<span class="token punctuation">,</span> expectedNonce</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Validate nonce to prevent replay attacks</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>payload<span class="token punctuation">.</span>nonce <span class="token operator">||</span> payload<span class="token punctuation">.</span>nonce <span class="token operator">!==</span> expectedNonce<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Invalid or missing nonce - possible replay attack"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Ensure required claims are present</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>payload<span class="token punctuation">.</span>sub<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Missing subject (sub) claim"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>payload<span class="token punctuation">.</span>sid<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Missing session ID (sid) claim"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Validate token age (additional security measure)</span>
+  <span class="token keyword">const</span> now <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> tokenAge <span class="token operator">=</span> now <span class="token operator">-</span> payload<span class="token punctuation">.</span>iat<span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>tokenAge <span class="token operator">></span> <span class="token number">900</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 15 minutes</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Token is too old"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="step-4-extract-and-store-user-information" tabindex="-1"><a class="header-anchor" href="#step-4-extract-and-store-user-information"><span>Step 4: Extract and Store User Information</span></a></h4>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">extractUserInfo</span><span class="token punctuation">(</span><span class="token parameter">validatedPayload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">userId</span><span class="token operator">:</span> validatedPayload<span class="token punctuation">.</span>sub<span class="token punctuation">,</span>
+    <span class="token literal-property property">sessionId</span><span class="token operator">:</span> validatedPayload<span class="token punctuation">.</span>sid<span class="token punctuation">,</span>
+    <span class="token literal-property property">authenticatedAt</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>validatedPayload<span class="token punctuation">.</span>iat <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>validatedPayload<span class="token punctuation">.</span>exp <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">tokenId</span><span class="token operator">:</span> validatedPayload<span class="token punctuation">.</span>jti<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Usage in your application</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">handleTokenValidation</span><span class="token punctuation">(</span><span class="token parameter">idToken<span class="token punctuation">,</span> expectedNonce<span class="token punctuation">,</span> clientId</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> issuer <span class="token operator">=</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot"</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> payload <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">validateIdToken</span><span class="token punctuation">(</span>
+      idToken<span class="token punctuation">,</span>
+      clientId<span class="token punctuation">,</span>
+      expectedNonce<span class="token punctuation">,</span>
+      issuer
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> userInfo <span class="token operator">=</span> <span class="token function">extractUserInfo</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Store in session or database</span>
+    <span class="token keyword">return</span> userInfo<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Handle validation errors appropriately</span>
+    <span class="token keyword">throw</span> error<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="verified-attributes-validation" tabindex="-1"><a class="header-anchor" href="#verified-attributes-validation"><span>Verified Attributes Validation</span></a></h2>
+<p>When using verified attributes, additional claims will be present in the ID token that require validation.</p>
+<h3 id="email-attributes-validation" tabindex="-1"><a class="header-anchor" href="#email-attributes-validation"><span>Email Attributes Validation</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">validateEmailAttributes</span><span class="token punctuation">(</span><span class="token parameter">payload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> emailData <span class="token operator">=</span> payload<span class="token punctuation">[</span><span class="token string">"scotaccount.email"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>emailData<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// No email scope requested</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Validate required fields</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>emailData<span class="token punctuation">.</span>email <span class="token operator">||</span> <span class="token keyword">typeof</span> emailData<span class="token punctuation">.</span>email <span class="token operator">!==</span> <span class="token string">"string"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Invalid email attribute format"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Check verification status</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>emailData<span class="token punctuation">.</span>verified<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Email not verified for user:"</span><span class="token punctuation">,</span> payload<span class="token punctuation">.</span>sub<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">email</span><span class="token operator">:</span> emailData<span class="token punctuation">.</span>email<span class="token punctuation">,</span>
+    <span class="token literal-property property">verified</span><span class="token operator">:</span> emailData<span class="token punctuation">.</span>verified <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">verifiedAt</span><span class="token operator">:</span> emailData<span class="token punctuation">.</span>verified_at <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>emailData<span class="token punctuation">.</span>verified_at<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="address-attributes-validation" tabindex="-1"><a class="header-anchor" href="#address-attributes-validation"><span>Address Attributes Validation</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">validateAddressAttributes</span><span class="token punctuation">(</span><span class="token parameter">payload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> addressData <span class="token operator">=</span> payload<span class="token punctuation">[</span><span class="token string">"scotaccount.address"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>addressData<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// No address scope requested</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Validate required fields</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>addressData<span class="token punctuation">.</span>formatted <span class="token operator">||</span> <span class="token keyword">typeof</span> addressData<span class="token punctuation">.</span>formatted <span class="token operator">!==</span> <span class="token string">"string"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Invalid address attribute format"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Check verification status</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>addressData<span class="token punctuation">.</span>verified<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Address not verified for user:"</span><span class="token punctuation">,</span> payload<span class="token punctuation">.</span>sub<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">formatted</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>formatted<span class="token punctuation">,</span>
+    <span class="token literal-property property">streetAddress</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>street_address<span class="token punctuation">,</span>
+    <span class="token literal-property property">locality</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>locality<span class="token punctuation">,</span>
+    <span class="token literal-property property">postalCode</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>postal_code<span class="token punctuation">,</span>
+    <span class="token literal-property property">country</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>country<span class="token punctuation">,</span>
+    <span class="token literal-property property">verified</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>verified <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">verifiedAt</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>verified_at
+      <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>addressData<span class="token punctuation">.</span>verified_at<span class="token punctuation">)</span>
+      <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="identity-attributes-validation" tabindex="-1"><a class="header-anchor" href="#identity-attributes-validation"><span>Identity Attributes Validation</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">validateIdentityAttributes</span><span class="token punctuation">(</span><span class="token parameter">payload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> identityData <span class="token operator">=</span> payload<span class="token punctuation">[</span><span class="token string">"scotaccount.identity"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>identityData<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// No identity scope requested</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Validate required fields</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>identityData<span class="token punctuation">.</span>given_name <span class="token operator">||</span> <span class="token operator">!</span>identityData<span class="token punctuation">.</span>family_name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Missing required identity fields"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Check assurance level</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>identityData<span class="token punctuation">.</span>assurance_level <span class="token operator">!==</span> <span class="token string">"GPG45_MEDIUM"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Unexpected assurance level:"</span><span class="token punctuation">,</span> identityData<span class="token punctuation">.</span>assurance_level<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">givenName</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>given_name<span class="token punctuation">,</span>
+    <span class="token literal-property property">familyName</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>family_name<span class="token punctuation">,</span>
+    <span class="token literal-property property">birthdate</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>birthdate<span class="token punctuation">,</span>
+    <span class="token literal-property property">verified</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>verified <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">verifiedAt</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>verified_at
+      <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>identityData<span class="token punctuation">.</span>verified_at<span class="token punctuation">)</span>
+      <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">assuranceLevel</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>assurance_level<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="access-token-validation" tabindex="-1"><a class="header-anchor" href="#access-token-validation"><span>Access Token Validation</span></a></h2>
+<p>Access tokens are used for API calls and have a different validation process since they are opaque tokens.</p>
+<h3 id="introspection-endpoint" tabindex="-1"><a class="header-anchor" href="#introspection-endpoint"><span>Introspection Endpoint</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">validateAccessToken</span><span class="token punctuation">(</span><span class="token parameter">accessToken<span class="token punctuation">,</span> clientAssertion</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> introspectionUrl <span class="token operator">=</span>
+    <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/introspect"</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>introspectionUrl<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">method</span><span class="token operator">:</span> <span class="token string">"POST"</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">"Content-Type"</span><span class="token operator">:</span> <span class="token string">"application/x-www-form-urlencoded"</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">body</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">URLSearchParams</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">token</span><span class="token operator">:</span> accessToken<span class="token punctuation">,</span>
+      <span class="token literal-property property">client_assertion_type</span><span class="token operator">:</span>
+        <span class="token string">"urn:ietf:params:oauth:client-assertion-type:jwt-bearer"</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">client_assertion</span><span class="token operator">:</span> clientAssertion<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>response<span class="token punctuation">.</span>ok<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Token introspection failed: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>response<span class="token punctuation">.</span>status<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>result<span class="token punctuation">.</span>active<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Access token is not active"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="complete-validation-example" tabindex="-1"><a class="header-anchor" href="#complete-validation-example"><span>Complete Validation Example</span></a></h2>
+<p>Here’s a complete example showing validation in an Express.js application:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> express <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"express"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> jwt <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jsonwebtoken"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> jwksClient <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jwks-rsa"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token function">express</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// JWKS client setup</span>
+<span class="token keyword">const</span> client <span class="token operator">=</span> <span class="token function">jwksClient</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">jwksUri</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/jwks.json"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">cache</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">cacheMaxAge</span><span class="token operator">:</span> <span class="token number">600000</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Validation middleware</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">validateScotAccountToken</span><span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> idToken<span class="token punctuation">,</span> nonce <span class="token punctuation">}</span> <span class="token operator">=</span> req<span class="token punctuation">.</span>session<span class="token punctuation">.</span>authData<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> clientId <span class="token operator">=</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">SCOTACCOUNT_CLIENT_ID</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> issuer <span class="token operator">=</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot"</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Validate the ID token</span>
+    <span class="token keyword">const</span> payload <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">validateIdToken</span><span class="token punctuation">(</span>idToken<span class="token punctuation">,</span> clientId<span class="token punctuation">,</span> nonce<span class="token punctuation">,</span> issuer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Extract user information</span>
+    req<span class="token punctuation">.</span>user <span class="token operator">=</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">id</span><span class="token operator">:</span> payload<span class="token punctuation">.</span>sub<span class="token punctuation">,</span>
+      <span class="token literal-property property">sessionId</span><span class="token operator">:</span> payload<span class="token punctuation">.</span>sid<span class="token punctuation">,</span>
+      <span class="token literal-property property">email</span><span class="token operator">:</span> <span class="token function">validateEmailAttributes</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">address</span><span class="token operator">:</span> <span class="token function">validateAddressAttributes</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">identity</span><span class="token operator">:</span> <span class="token function">validateIdentityAttributes</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"Token validation failed:"</span><span class="token punctuation">,</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    res<span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token number">401</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">error</span><span class="token operator">:</span> <span class="token string">"Invalid authentication"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Protected route example</span>
+app<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"/api/user"</span><span class="token punctuation">,</span> validateScotAccountToken<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  res<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">user</span><span class="token operator">:</span> req<span class="token punctuation">.</span>user<span class="token punctuation">,</span>
+    <span class="token literal-property property">message</span><span class="token operator">:</span> <span class="token string">"Successfully authenticated with ScotAccount"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h2 id="error-handling" tabindex="-1"><a class="header-anchor" href="#error-handling"><span>Error Handling</span></a></h2>
+<h3 id="common-validation-errors" tabindex="-1"><a class="header-anchor" href="#common-validation-errors"><span>Common Validation Errors</span></a></h3>
+<p><strong>Invalid Signature</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Token has been tampered with or not from ScotAccount</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>error<span class="token punctuation">.</span>name <span class="token operator">===</span> <span class="token string">"JsonWebTokenError"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"Token signature invalid"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// Redirect to login</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Expired Token</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Token has expired (normal after 15 minutes)</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>error<span class="token punctuation">.</span>name <span class="token operator">===</span> <span class="token string">"TokenExpiredError"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Token expired, refresh needed"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// Attempt token refresh or redirect to login</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Wrong Audience</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Token not intended for your service</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>error<span class="token punctuation">.</span>message<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">"audience"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"Token audience mismatch"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// This is a serious security issue</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="security-best-practices" tabindex="-1"><a class="header-anchor" href="#security-best-practices"><span>Security Best Practices</span></a></h3>
+<ol>
+<li><strong>Always validate tokens</strong> before trusting their contents</li>
+<li><strong>Use the latest token</strong> after refresh operations</li>
+<li><strong>Log validation failures</strong> for security monitoring</li>
+<li><strong>Implement rate limiting</strong> on validation endpoints</li>
+<li><strong>Cache public keys</strong> but refresh periodically</li>
+<li><strong>Handle clock skew</strong> with appropriate tolerance</li>
+<li><strong>Validate all custom claims</strong> from verified attributes</li>
+</ol>
+<h2 id="testing-token-validation" tabindex="-1"><a class="header-anchor" href="#testing-token-validation"><span>Testing Token Validation</span></a></h2>
+<h3 id="unit-test-example" tabindex="-1"><a class="header-anchor" href="#unit-test-example"><span>Unit Test Example</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> assert <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"assert"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">"Token Validation"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"should reject tokens with invalid signatures"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> invalidToken <span class="token operator">=</span> <span class="token string">"invalid.jwt.token"</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      <span class="token keyword">await</span> <span class="token function">validateIdToken</span><span class="token punctuation">(</span>invalidToken<span class="token punctuation">,</span> <span class="token string">"client-id"</span><span class="token punctuation">,</span> <span class="token string">"nonce"</span><span class="token punctuation">,</span> <span class="token string">"issuer"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      assert<span class="token punctuation">.</span><span class="token function">fail</span><span class="token punctuation">(</span><span class="token string">"Should have thrown error"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">assert</span><span class="token punctuation">(</span>error<span class="token punctuation">.</span>message<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">"Invalid"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"should validate correct nonce"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> validToken <span class="token operator">=</span> <span class="token string">"valid.jwt.token"</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> correctNonce <span class="token operator">=</span> <span class="token string">"expected-nonce"</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">const</span> payload <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">validateIdToken</span><span class="token punctuation">(</span>
+      validToken<span class="token punctuation">,</span>
+      <span class="token string">"client-id"</span><span class="token punctuation">,</span>
+      correctNonce<span class="token punctuation">,</span>
+      <span class="token string">"issuer"</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>payload<span class="token punctuation">.</span>nonce<span class="token punctuation">,</span> correctNonce<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h2 id="production-considerations" tabindex="-1"><a class="header-anchor" href="#production-considerations"><span>Production Considerations</span></a></h2>
+<h3 id="performance-optimization" tabindex="-1"><a class="header-anchor" href="#performance-optimization"><span>Performance Optimization</span></a></h3>
+<ul>
+<li><strong>Cache JWKS keys</strong> with appropriate TTL</li>
+<li><strong>Implement connection pooling</strong> for HTTP requests</li>
+<li><strong>Use asynchronous validation</strong> to avoid blocking</li>
+<li><strong>Consider token validation libraries</strong> for your platform</li>
+</ul>
+<h3 id="monitoring-and-alerts" tabindex="-1"><a class="header-anchor" href="#monitoring-and-alerts"><span>Monitoring and Alerts</span></a></h3>
+<ul>
+<li><strong>Track validation failures</strong> and investigate patterns</li>
+<li><strong>Monitor token expiration rates</strong> to detect issues</li>
+<li><strong>Alert on signature validation failures</strong> as potential attacks</li>
+<li><strong>Log all validation events</strong> for audit purposes</li>
+</ul>
+<h2 id="next-steps" tabindex="-1"><a class="header-anchor" href="#next-steps"><span>Next Steps</span></a></h2>
+<div class="callout callout--success">
+<strong>Validation implemented?</strong> Review the <a href="/sg-identity-techdocs/architecture/">Architecture Overview</a> to understand the complete system design.
+</div>
+<div class="callout callout--info">
+<strong>Need implementation help?</strong> See the <a href="/sg-identity-techdocs/scotaccount-complete-guide/">Complete Implementation Guide</a> for full integration patterns.
+</div>
+<div class="callout callout--warning">
+<strong>Security questions?</strong> Contact the ScotAccount team for security review and production deployment guidance.
+</div>
+
+
+      <!-- Last updated -->
+      
+      <footer class="content-footer">
+        <p><small>Last updated: 6 August 2025</small></p>
+      </footer>
+      
+    </main>
+  </div>
+
+  <!-- Site footer (Scottish Government Style) -->
+  <footer class="sg-footer" role="contentinfo">
+    <div class="sg-footer__container">
+      <div class="sg-footer__content">
+        <div class="sg-footer__section">
+          <h3 class="sg-footer__heading">ScotAccount</h3>
+          <ul class="sg-footer__links">
+            <li><a href="/sg-identity-techdocs/" class="sg-footer__link">Documentation home</a></li>
+            <li><a href="/sg-identity-techdocs/sg-identity-techdocs/getting-started/" class="sg-footer__link">Getting started</a></li>
+            <li><a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-complete-guide/" class="sg-footer__link">Complete guide</a></li>
+          </ul>
+        </div>
+        
+        <div class="sg-footer__section">
+          <h3 class="sg-footer__heading">Scottish Government</h3>
+          <ul class="sg-footer__links">
+            <li><a href="https://www.gov.scot" target="_blank" rel="noopener" class="sg-footer__link">gov.scot</a></li>
+            <li><a href="https://www.gov.scot/about/how-government-is-run/directorates/digital-directorate/" target="_blank" rel="noopener" class="sg-footer__link">Digital Directorate</a></li>
+            <li><a href="https://www.gov.scot/publications/" target="_blank" rel="noopener" class="sg-footer__link">Publications</a></li>
+          </ul>
+        </div>
+        
+        <div class="sg-footer__section">
+          <h3 class="sg-footer__heading">Help and support</h3>
+          <ul class="sg-footer__links">
+            <li><a href="https://www.gov.scot/about/contact-information/" target="_blank" rel="noopener" class="sg-footer__link">Contact us</a></li>
+            <li><a href="https://www.gov.scot/accessibility/" target="_blank" rel="noopener" class="sg-footer__link">Accessibility</a></li>
+            <li><a href="https://www.gov.scot/privacy/" target="_blank" rel="noopener" class="sg-footer__link">Privacy</a></li>
+            <li><a href="https://www.gov.scot/cookies/" target="_blank" rel="noopener" class="sg-footer__link">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="sg-footer__legal">
+        <p class="sg-footer__copyright">&copy; Crown Copyright. All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener" class="sg-footer__link">Open Government Licence v3.0</a>, except where otherwise stated.</p>
+        <p class="sg-footer__site">
+          <a href="https://gov.scot" class="sg-footer__link">gov.scot</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript for table of contents generation -->
+  <script>
+    // Generate table of contents for better scannable structure
+    document.addEventListener('DOMContentLoaded', function() {
+      const headings = document.querySelectorAll('main h2, main h3, main h4');
+      const tocContainer = document.querySelector('.sidebar__nav');
+      const placeholder = document.getElementById('toc-placeholder');
+      
+      if (headings.length > 0 && tocContainer && placeholder) {
+        // Remove placeholder
+        placeholder.remove();
+        
+        // Generate TOC
+        headings.forEach(function(heading, index) {
+          // Add ID to heading if it doesn't have one
+          if (!heading.id) {
+            heading.id = 'heading-' + index;
+          }
+          
+          // Create TOC item
+          const li = document.createElement('li');
+          li.className = 'sidebar__nav-item';
+          
+          const a = document.createElement('a');
+          a.href = '#' + heading.id;
+          a.className = 'sidebar__nav-link';
+          a.textContent = heading.textContent;
+          
+          // Add visual hierarchy for different heading levels
+          if (heading.tagName === 'H3') {
+            a.style.paddingLeft = '2rem';
+          } else if (heading.tagName === 'H4') {
+            a.style.paddingLeft = '3rem';
+          }
+          
+          li.appendChild(a);
+          tocContainer.appendChild(li);
+        });
+      } else if (placeholder) {
+        placeholder.textContent = 'No headings found';
+      }
+      
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    });
+
+    // Cookie banner functionality (Scottish Government style)
+    function acceptAllCookies() {
+      localStorage.setItem('cookiePreference', 'all');
+      hideCookieBanner();
+    }
+
+    function useEssentialCookies() {
+      localStorage.setItem('cookiePreference', 'essential');
+      hideCookieBanner();
+    }
+
+    function setCookiePreferences() {
+      // In a real implementation, this would open a preferences modal
+      localStorage.setItem('cookiePreference', 'essential');
+      hideCookieBanner();
+      alert('Cookie preferences saved. Only essential cookies will be used.');
+    }
+
+    function hideCookieBanner() {
+      const banner = document.getElementById('cookie-banner');
+      if (banner) {
+        banner.style.display = 'none';
+      }
+    }
+
+    // Check if user has already made a cookie preference
+    document.addEventListener('DOMContentLoaded', function() {
+      const cookiePreference = localStorage.getItem('cookiePreference');
+      if (cookiePreference) {
+        hideCookieBanner();
+      }
+    });
+
+    // Mobile navigation toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const navToggle = document.querySelector('.sg-nav__toggle');
+      const navMenu = document.querySelector('.sg-nav__list');
+      
+      if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+          const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+          navToggle.setAttribute('aria-expanded', !isExpanded);
+          navMenu.classList.toggle('sg-nav__list--open');
+        });
+      }
+    });
+  </script>
+
+  <!-- Search functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <script src="/sg-identity-techdocs/sg-identity-techdocs/js/search.js"></script>
+</body>
+</html> 

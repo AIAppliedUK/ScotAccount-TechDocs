@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started with ScotAccount | ScotAccount Technical Documentation</title>
+  <meta name="description" content="Quick start guide for developers integrating with ScotAccount - Scotland&#39;s digital identity service">
+  <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/getting-started/">
+  
+  <!-- Scottish Government favicons -->
+  <link rel="icon" type="image/x-icon" href="/sg-identity-techdocs/sg-identity-techdocs/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/sg-identity-techdocs/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/sg-identity-techdocs/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/sg-identity-techdocs/favicon-16x16.png">
+  <link rel="mask-icon" href="/sg-identity-techdocs/safari-pinned-tab.svg" color="#0065bd">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/sg-identity-techdocs/sg-identity-techdocs/css/main.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Getting Started with ScotAccount">
+  <meta property="og:description" content="Quick start guide for developers integrating with ScotAccount - Scotland&#39;s digital identity service">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://scotaccount.github.io/sg-identity-techdocs/getting-started/">
+  <meta property="og:image" content="https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png">
+  
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Getting Started with ScotAccount",
+    "description": "Quick start guide for developers integrating with ScotAccount - Scotland&#39;s digital identity service",
+    "author": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Cookie Banner (Scottish Government Style) -->
+  <div class="cookie-banner" id="cookie-banner" role="region" aria-labelledby="cookie-banner-heading">
+    <div class="cookie-banner__container">
+      <div class="cookie-banner__content">
+        <h2 id="cookie-banner-heading" class="cookie-banner__heading">Information</h2>
+        <p class="cookie-banner__text">We use <a href="#cookies" class="cookie-banner__link">cookies</a> to collect anonymous data to help us improve your site browsing experience.</p>
+        <p class="cookie-banner__text">Click 'Accept all cookies' to agree to all cookies that collect anonymous data. To only allow the cookies that make the site work, click 'Use essential cookies only.' Visit 'Set cookie preferences' to control specific cookies.</p>
+      </div>
+      <div class="cookie-banner__actions">
+        <button type="button" class="cookie-banner__button cookie-banner__button--primary" onclick="acceptAllCookies()">Accept all cookies</button>
+        <button type="button" class="cookie-banner__button cookie-banner__button--secondary" onclick="useEssentialCookies()">Use essential cookies only</button>
+        <button type="button" class="cookie-banner__button cookie-banner__button--link" onclick="setCookiePreferences()">Set cookie preferences</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Scottish Government Identity Header (blue) -->
+  <header class="sg-header" role="banner">
+    <div class="sg-header__wrapper">
+      <div class="sg-header__branding">
+        <a href="/sg-identity-techdocs/" class="sg-header__logo">
+          <img src="/sg-identity-techdocs/sg-identity-techdocs/assets/scotgovlogo.svg" alt="Scottish Government">
+        </a>
+      </div>
+      <div class="sg-header__search">
+        <form class="sg-header__search-form" role="search" action="/sg-identity-techdocs/sg-identity-techdocs/search" method="get">
+          <label for="search-input" class="sg-header__search-label">Search</label>
+          <input type="search" id="search-input" name="q" class="sg-header__search-input" placeholder="Search">
+          <button type="submit" class="sg-header__search-button">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+              <path fill="currentColor" d="M15.504 13.616l-3.79-3.223c-0.392-0.353-0.811-0.514-1.149-0.499 0.895-1.048 1.435-2.407 1.435-3.893 0-3.314-2.686-6-6-6s-6 2.686-6 6 2.686 6 6 6c1.486 0 2.845-0.54 3.893-1.435-0.016 0.338 0.146 0.757 0.499 1.149l3.223 3.79c0.552 0.613 1.453 0.665 2.003 0.115s0.498-1.452-0.115-2.003zM6 10c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"></path>
+            </svg>
+            <span class="sg-visually-hidden">Search</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+  <!-- Site Navigation Header (white) -->
+  <nav class="site-nav" role="navigation" aria-label="Main navigation">
+    <div class="site-nav__wrapper">
+      <ul class="site-nav__list" id="nav-menu">
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/" class="site-nav__link">Home</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/getting-started/" class="site-nav__link site-nav__link--active">Getting Started</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/architecture/" class="site-nav__link">Architecture</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">Token Validation</a>
+          </li>
+        
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main layout container -->
+  <div class="container">
+    <!-- Sidebar with page-specific navigation -->
+    
+    <aside class="sidebar" role="complementary" aria-label="Page navigation">
+      <h2 class="sidebar__title">On this page</h2>
+      <nav class="sidebar__nav" aria-label="Page contents">
+        <ul class="sidebar__nav">
+          <!-- Table of contents will be injected here via JavaScript -->
+          <li class="sidebar__nav-item">
+            <a href="#" class="sidebar__nav-link" id="toc-placeholder">
+              Contents loading...
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      
+      <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--sg-border-grey);">
+      <h3 class="sidebar__title">All pages</h3>
+      <ul class="sidebar__nav">
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/architecture/" class="sidebar__nav-link">
+              ScotAccount Architecture Overview
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/getting-started/" class="sidebar__nav-link">
+              Getting Started with ScotAccount
+            </a>
+          </li>
+          
+        
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/integration-examples/" class="sidebar__nav-link">
+              Integration Examples and Best Practices
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-complete-guide/" class="sidebar__nav-link">
+              Complete Implementation Guide
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-modular-structure/" class="sidebar__nav-link">
+              ScotAccount Modular Structure
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-token-validation-module/" class="sidebar__nav-link">
+              Token Validation Module
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/sg-identity-techdocs/search/" class="sidebar__nav-link">
+              Search results
+            </a>
+          </li>
+          
+        
+      </ul>
+      
+    </aside>
+    
+
+    <!-- Main content -->
+    <main class="main" id="main-content" role="main" tabindex="-1">
+      
+        <h1>Getting Started with ScotAccount</h1>
+      
+      
+      
+        <p class="lead">Quick start guide for developers integrating with ScotAccount - Scotland&#39;s digital identity service</p>
+      
+
+      <!-- Page content -->
+      <p>Get up and running with ScotAccount in 30 minutes. This guide covers the essential steps to integrate Scotland’s digital identity service into your application.</p>
+<h2 id="prerequisites" tabindex="-1"><a class="header-anchor" href="#prerequisites"><span>Prerequisites</span></a></h2>
+<p>Before you begin, ensure you have:</p>
+<ul>
+<li><strong>Development environment</strong> set up with HTTPS capability</li>
+<li><strong>RSA 3072-bit or EC P-256 key pair</strong> generated using OpenSSL</li>
+<li><strong>Basic understanding</strong> of OpenID Connect and OAuth 2.0</li>
+<li><strong>Access to ScotAccount</strong> integration environment</li>
+</ul>
+<div class="callout callout--info">
+<strong>Need help with key generation?</strong> See our <a href="/sg-identity-techdocs/scotaccount-complete-guide/#key-generation">complete key generation guide</a> for step-by-step instructions.
+</div>
+<h2 id="quick-start-checklist" tabindex="-1"><a class="header-anchor" href="#quick-start-checklist"><span>Quick Start Checklist</span></a></h2>
+<h3 id="phase-1-setup-and-registration" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-and-registration"><span>Phase 1: Setup &amp; Registration</span></a></h3>
+<ul>
+<li>[ ] <strong>Generate key pair</strong> - Create RSA 3072-bit or EC P-256 keys</li>
+<li>[ ] <strong>Store private key securely</strong> - Use a secrets manager (AWS Secrets Manager, Azure Key Vault)</li>
+<li>[ ] <strong>Determine required scopes</strong> - Basic authentication or verified attributes</li>
+<li>[ ] <strong>Define redirect URIs</strong> - Set up callback URLs for your service</li>
+<li>[ ] <strong>Submit registration</strong> - Provide details to ScotAccount team</li>
+<li>[ ] <strong>Receive client_id</strong> - Get your unique client identifier</li>
+</ul>
+<h3 id="phase-2-basic-authentication" tabindex="-1"><a class="header-anchor" href="#phase-2-basic-authentication"><span>Phase 2: Basic Authentication</span></a></h3>
+<ul>
+<li>[ ] <strong>Implement discovery endpoint</strong> - Retrieve current configuration automatically</li>
+<li>[ ] <strong>Build PKCE parameters</strong> - Generate code verifier and challenge</li>
+<li>[ ] <strong>Create authorization request</strong> - Build secure authentication URL</li>
+<li>[ ] <strong>Implement callback handler</strong> - Process authentication response</li>
+<li>[ ] <strong>Build JWT client assertion</strong> - Use your private key for token requests</li>
+<li>[ ] <strong>Complete token exchange</strong> - Get access and ID tokens</li>
+<li>[ ] <strong>Validate ID tokens</strong> - Extract and verify user identity</li>
+</ul>
+<h3 id="phase-3-verified-attributes-optional" tabindex="-1"><a class="header-anchor" href="#phase-3-verified-attributes-optional"><span>Phase 3: Verified Attributes (Optional)</span></a></h3>
+<ul>
+<li>[ ] <strong>Choose additional scopes</strong> - Select identity, address, or email verification</li>
+<li>[ ] <strong>Handle attribute requests</strong> - Manage user consent flow</li>
+<li>[ ] <strong>Process attribute responses</strong> - Parse verified claims data</li>
+<li>[ ] <strong>Validate and store data</strong> - Implement secure data handling</li>
+</ul>
+<h3 id="phase-4-production-deployment" tabindex="-1"><a class="header-anchor" href="#phase-4-production-deployment"><span>Phase 4: Production Deployment</span></a></h3>
+<ul>
+<li>[ ] <strong>Update to production endpoints</strong> - Switch from integration to live URLs</li>
+<li>[ ] <strong>Implement monitoring</strong> - Add logging and error tracking</li>
+<li>[ ] <strong>Add error handling</strong> - Create user-friendly error messages</li>
+<li>[ ] <strong>Complete security review</strong> - Run penetration testing</li>
+</ul>
+<h2 id="core-authentication-flow" tabindex="-1"><a class="header-anchor" href="#core-authentication-flow"><span>Core Authentication Flow</span></a></h2>
+<p>The ScotAccount authentication process follows these key steps:</p>
+<h3 id="1-discovery-configuration" tabindex="-1"><a class="header-anchor" href="#1-discovery-configuration"><span>1. Discovery Configuration</span></a></h3>
+<p>First, retrieve the current configuration:</p>
+<pre class="language-http"><code class="language-http">GET https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration</code></pre>
+<p>This provides all endpoint URLs and supported features.</p>
+<h3 id="2-generate-security-parameters" tabindex="-1"><a class="header-anchor" href="#2-generate-security-parameters"><span>2. Generate Security Parameters</span></a></h3>
+<p>Your application must generate:</p>
+<ul>
+<li><strong>Code verifier</strong> - Random string for PKCE security</li>
+<li><strong>Code challenge</strong> - SHA256 hash of the verifier</li>
+<li><strong>State parameter</strong> - Unique value to prevent CSRF attacks</li>
+<li><strong>Nonce</strong> - Random value for replay protection</li>
+</ul>
+<h3 id="3-redirect-to-scotaccount" tabindex="-1"><a class="header-anchor" href="#3-redirect-to-scotaccount"><span>3. Redirect to ScotAccount</span></a></h3>
+<p>Build the authorization URL and redirect users:</p>
+<pre><code>https://authz.integration.scotaccount.service.gov.scot/authorize?
+    client_id=your-client-id&amp;
+    redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
+    response_type=code&amp;
+    scope=openid&amp;
+    state=your-state-value&amp;
+    nonce=your-nonce-value&amp;
+    code_challenge=your-code-challenge&amp;
+    code_challenge_method=S256
+</code></pre>
+<h3 id="4-handle-callback" tabindex="-1"><a class="header-anchor" href="#4-handle-callback"><span>4. Handle Callback</span></a></h3>
+<p>Users authenticate at ScotAccount and return to your callback URL:</p>
+<pre><code>https://yourservice.gov.scot/auth/callback?
+    code=authorization-code&amp;
+    state=your-state-value
+</code></pre>
+<p><strong>Critical</strong>: Always validate the state parameter matches your original value.</p>
+<h3 id="5-exchange-code-for-tokens" tabindex="-1"><a class="header-anchor" href="#5-exchange-code-for-tokens"><span>5. Exchange Code for Tokens</span></a></h3>
+<p>Create a JWT client assertion and exchange the authorization code:</p>
+<pre class="language-http"><code class="language-http">POST https://authz.integration.scotaccount.service.gov.scot/token
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/x-www-form-urlencoded</span></span>
+
+grant_type=authorization_code&amp;
+code=authorization-code&amp;
+redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
+client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&amp;
+client_assertion=your-jwt-assertion&amp;
+code_verifier=your-code-verifier</code></pre>
+<h3 id="6-validate-and-use-tokens" tabindex="-1"><a class="header-anchor" href="#6-validate-and-use-tokens"><span>6. Validate and Use Tokens</span></a></h3>
+<p>Extract user information from the ID token:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"4f6893f4-6fbe-423e-a5cc-d3c93e5a7c41"</span><span class="token punctuation">,</span>
+  <span class="token property">"aud"</span><span class="token operator">:</span> <span class="token string">"your-client-id"</span><span class="token punctuation">,</span>
+  <span class="token property">"iss"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot"</span><span class="token punctuation">,</span>
+  <span class="token property">"nonce"</span><span class="token operator">:</span> <span class="token string">"your-nonce-value"</span><span class="token punctuation">,</span>
+  <span class="token property">"sid"</span><span class="token operator">:</span> <span class="token string">"session-id-for-logout"</span>
+<span class="token punctuation">}</span></code></pre>
+<p>The <code>sub</code> claim contains the user’s persistent UUID identifier.</p>
+<h2 id="key-security-requirements" tabindex="-1"><a class="header-anchor" href="#key-security-requirements"><span>Key Security Requirements</span></a></h2>
+<h3 id="pkce-proof-key-for-code-exchange" tabindex="-1"><a class="header-anchor" href="#pkce-proof-key-for-code-exchange"><span>PKCE (Proof Key for Code Exchange)</span></a></h3>
+<ul>
+<li><strong>Always required</strong> for all authorization requests</li>
+<li>Protects against authorization code interception attacks</li>
+<li>Must use SHA256 method (<code>S256</code>)</li>
+</ul>
+<h3 id="state-parameter-validation" tabindex="-1"><a class="header-anchor" href="#state-parameter-validation"><span>State Parameter Validation</span></a></h3>
+<ul>
+<li><strong>Generate unique state</strong> for each authorization request</li>
+<li><strong>Validate on callback</strong> - reject if missing or incorrect</li>
+<li><strong>Store securely</strong> during the authentication flow</li>
+</ul>
+<h3 id="jwt-client-assertions" tabindex="-1"><a class="header-anchor" href="#jwt-client-assertions"><span>JWT Client Assertions</span></a></h3>
+<ul>
+<li><strong>Use your private key</strong> to sign assertions</li>
+<li><strong>Include required claims</strong>: <code>iss</code>, <code>sub</code>, <code>aud</code>, <code>exp</code>, <code>iat</code>, <code>jti</code></li>
+<li><strong>Set short expiration</strong> (recommended: 60 seconds)</li>
+</ul>
+<h3 id="id-token-validation" tabindex="-1"><a class="header-anchor" href="#id-token-validation"><span>ID Token Validation</span></a></h3>
+<ul>
+<li><strong>Verify signature</strong> using ScotAccount’s public keys</li>
+<li><strong>Check audience</strong> matches your <code>client_id</code></li>
+<li><strong>Validate issuer</strong> matches ScotAccount’s URL</li>
+<li><strong>Confirm nonce</strong> matches your original value</li>
+</ul>
+<h2 id="common-integration-patterns" tabindex="-1"><a class="header-anchor" href="#common-integration-patterns"><span>Common Integration Patterns</span></a></h2>
+<h3 id="session-management" tabindex="-1"><a class="header-anchor" href="#session-management"><span>Session Management</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Store user session after successful authentication</span>
+<span class="token keyword">const</span> userSession <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">uuid</span><span class="token operator">:</span> idToken<span class="token punctuation">.</span>sub<span class="token punctuation">,</span>
+  <span class="token literal-property property">sessionId</span><span class="token operator">:</span> idToken<span class="token punctuation">.</span>sid<span class="token punctuation">,</span>
+  <span class="token literal-property property">authenticatedAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">8</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">,</span> <span class="token comment">// 8 hours</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<h3 id="logout-implementation" tabindex="-1"><a class="header-anchor" href="#logout-implementation"><span>Logout Implementation</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Redirect to ScotAccount logout</span>
+<span class="token keyword">const</span> logoutUrl <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://authz.integration.scotaccount.service.gov.scot/logout?
+  id_token_hint=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>idToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&amp;
+  post_logout_redirect_uri=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>postLogoutUrl<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span></code></pre>
+<h3 id="error-handling" tabindex="-1"><a class="header-anchor" href="#error-handling"><span>Error Handling</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Handle common error scenarios</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>error <span class="token operator">===</span> <span class="token string">"access_denied"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// User cancelled authentication</span>
+  <span class="token function">showMessage</span><span class="token punctuation">(</span><span class="token string">"Authentication cancelled"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>error <span class="token operator">===</span> <span class="token string">"invalid_request"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Check your parameters</span>
+  <span class="token function">logError</span><span class="token punctuation">(</span><span class="token string">"Invalid request parameters"</span><span class="token punctuation">,</span> errorDescription<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="next-steps" tabindex="-1"><a class="header-anchor" href="#next-steps"><span>Next Steps</span></a></h2>
+<div class="callout callout--success">
+<strong>Ready for detailed implementation?</strong> Move on to the <a href="/sg-identity-techdocs/scotaccount-complete-guide/">Complete Integration Guide</a> for comprehensive technical details.
+</div>
+<div class="callout callout--info">
+<strong>Need verified attributes?</strong> Learn about <a href="/sg-identity-techdocs/scotaccount-token-validation-module/">token validation</a> and attribute handling.
+</div>
+<div class="callout callout--warning">
+<strong>Planning for production?</strong> Review the <a href="/sg-identity-techdocs/architecture/">architecture overview</a> to understand system components and scalability considerations.
+</div>
+<h2 id="support-and-resources" tabindex="-1"><a class="header-anchor" href="#support-and-resources"><span>Support and Resources</span></a></h2>
+<ul>
+<li><strong>Integration support</strong>: Contact the ScotAccount team for technical assistance</li>
+<li><strong>Testing environment</strong>: Use integration endpoints for development and testing</li>
+<li><strong>Documentation</strong>: Refer to the complete guide for detailed implementation patterns</li>
+<li><strong>Security</strong>: Follow all security requirements for production deployment</li>
+</ul>
+
+
+      <!-- Last updated -->
+      
+      <footer class="content-footer">
+        <p><small>Last updated: 6 August 2025</small></p>
+      </footer>
+      
+    </main>
+  </div>
+
+  <!-- Site footer (Scottish Government Style) -->
+  <footer class="sg-footer" role="contentinfo">
+    <div class="sg-footer__container">
+      <div class="sg-footer__content">
+        <div class="sg-footer__section">
+          <h3 class="sg-footer__heading">ScotAccount</h3>
+          <ul class="sg-footer__links">
+            <li><a href="/sg-identity-techdocs/" class="sg-footer__link">Documentation home</a></li>
+            <li><a href="/sg-identity-techdocs/sg-identity-techdocs/getting-started/" class="sg-footer__link">Getting started</a></li>
+            <li><a href="/sg-identity-techdocs/sg-identity-techdocs/scotaccount-complete-guide/" class="sg-footer__link">Complete guide</a></li>
+          </ul>
+        </div>
+        
+        <div class="sg-footer__section">
+          <h3 class="sg-footer__heading">Scottish Government</h3>
+          <ul class="sg-footer__links">
+            <li><a href="https://www.gov.scot" target="_blank" rel="noopener" class="sg-footer__link">gov.scot</a></li>
+            <li><a href="https://www.gov.scot/about/how-government-is-run/directorates/digital-directorate/" target="_blank" rel="noopener" class="sg-footer__link">Digital Directorate</a></li>
+            <li><a href="https://www.gov.scot/publications/" target="_blank" rel="noopener" class="sg-footer__link">Publications</a></li>
+          </ul>
+        </div>
+        
+        <div class="sg-footer__section">
+          <h3 class="sg-footer__heading">Help and support</h3>
+          <ul class="sg-footer__links">
+            <li><a href="https://www.gov.scot/about/contact-information/" target="_blank" rel="noopener" class="sg-footer__link">Contact us</a></li>
+            <li><a href="https://www.gov.scot/accessibility/" target="_blank" rel="noopener" class="sg-footer__link">Accessibility</a></li>
+            <li><a href="https://www.gov.scot/privacy/" target="_blank" rel="noopener" class="sg-footer__link">Privacy</a></li>
+            <li><a href="https://www.gov.scot/cookies/" target="_blank" rel="noopener" class="sg-footer__link">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="sg-footer__legal">
+        <p class="sg-footer__copyright">&copy; Crown Copyright. All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener" class="sg-footer__link">Open Government Licence v3.0</a>, except where otherwise stated.</p>
+        <p class="sg-footer__site">
+          <a href="https://gov.scot" class="sg-footer__link">gov.scot</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript for table of contents generation -->
+  <script>
+    // Generate table of contents for better scannable structure
+    document.addEventListener('DOMContentLoaded', function() {
+      const headings = document.querySelectorAll('main h2, main h3, main h4');
+      const tocContainer = document.querySelector('.sidebar__nav');
+      const placeholder = document.getElementById('toc-placeholder');
+      
+      if (headings.length > 0 && tocContainer && placeholder) {
+        // Remove placeholder
+        placeholder.remove();
+        
+        // Generate TOC
+        headings.forEach(function(heading, index) {
+          // Add ID to heading if it doesn't have one
+          if (!heading.id) {
+            heading.id = 'heading-' + index;
+          }
+          
+          // Create TOC item
+          const li = document.createElement('li');
+          li.className = 'sidebar__nav-item';
+          
+          const a = document.createElement('a');
+          a.href = '#' + heading.id;
+          a.className = 'sidebar__nav-link';
+          a.textContent = heading.textContent;
+          
+          // Add visual hierarchy for different heading levels
+          if (heading.tagName === 'H3') {
+            a.style.paddingLeft = '2rem';
+          } else if (heading.tagName === 'H4') {
+            a.style.paddingLeft = '3rem';
+          }
+          
+          li.appendChild(a);
+          tocContainer.appendChild(li);
+        });
+      } else if (placeholder) {
+        placeholder.textContent = 'No headings found';
+      }
+      
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    });
+
+    // Cookie banner functionality (Scottish Government style)
+    function acceptAllCookies() {
+      localStorage.setItem('cookiePreference', 'all');
+      hideCookieBanner();
+    }
+
+    function useEssentialCookies() {
+      localStorage.setItem('cookiePreference', 'essential');
+      hideCookieBanner();
+    }
+
+    function setCookiePreferences() {
+      // In a real implementation, this would open a preferences modal
+      localStorage.setItem('cookiePreference', 'essential');
+      hideCookieBanner();
+      alert('Cookie preferences saved. Only essential cookies will be used.');
+    }
+
+    function hideCookieBanner() {
+      const banner = document.getElementById('cookie-banner');
+      if (banner) {
+        banner.style.display = 'none';
+      }
+    }
+
+    // Check if user has already made a cookie preference
+    document.addEventListener('DOMContentLoaded', function() {
+      const cookiePreference = localStorage.getItem('cookiePreference');
+      if (cookiePreference) {
+        hideCookieBanner();
+      }
+    });
+
+    // Mobile navigation toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const navToggle = document.querySelector('.sg-nav__toggle');
+      const navMenu = document.querySelector('.sg-nav__list');
+      
+      if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+          const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+          navToggle.setAttribute('aria-expanded', !isExpanded);
+          navMenu.classList.toggle('sg-nav__list--open');
+        });
+      }
+    });
+  </script>
+
+  <!-- Search functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <script src="/sg-identity-techdocs/sg-identity-techdocs/js/search.js"></script>
+</body>
+</html> 
