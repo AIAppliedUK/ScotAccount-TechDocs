@@ -568,11 +568,11 @@ app.listen(3000, () => {
 ## Support and Next Steps
 
 <div class="callout callout--success">
-<strong>Implementation complete?</strong> Review the <a href="/scotaccount-token-validation-module/">Token Validation Module</a> for advanced security patterns.
+<strong>Implementation complete?</strong> Review the <a href="{{ '/scotaccount-token-validation-module/' | url }}">Token Validation Module</a> for advanced security patterns.
 </div>
 
 <div class="callout callout--info">
-<strong>Need architecture details?</strong> See the <a href="/architecture/">Architecture Overview</a> for system components and data flows.
+<strong>Need architecture details?</strong> See the <a href="{{ '/architecture/' | url }}">Architecture Overview</a> for system components and data flows.
 </div>
 
 <div class="callout callout--warning">

@@ -350,9 +350,9 @@ describe("Security Tests", () => {
 </div>
 
 <div class="callout callout--info">
-<strong>Need more help?</strong> Follow the <a href="/scotaccount-complete-guide/">Complete Implementation Guide</a> for comprehensive solutions.
+<strong>Need more help?</strong> Follow the <a href="{{ '/scotaccount-complete-guide/' | url }}">Complete Implementation Guide</a> for comprehensive solutions.
 </div>
 
 <div class="callout callout--info">
-<strong>Questions about security?</strong> Review the <a href="/scotaccount-token-validation-module/">Token Validation Module</a> for detailed security guidance.
+<strong>Questions about security?</strong> Review the <a href="{{ '/scotaccount-token-validation-module/' | url }}">Token Validation Module</a> for detailed security guidance.
 </div>

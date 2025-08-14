@@ -19,7 +19,7 @@ Before you begin, ensure you have:
 - **Access to ScotAccount** integration environment
 
 <div class="callout callout--info">
-<strong>Need help with key generation?</strong> See our <a href="/scotaccount-complete-guide/#key-generation">complete key generation guide</a> for step-by-step instructions.
+<strong>Need help with key generation?</strong> See our <a href="{{ '/scotaccount-complete-guide/#key-generation' | url }}">complete key generation guide</a> for step-by-step instructions.
 </div>
 
 ## Quick Start Checklist
@@ -206,15 +206,15 @@ if (error === "access_denied") {
 ## Next Steps
 
 <div class="callout callout--success">
-<strong>Ready for detailed implementation?</strong> Move on to the <a href="/scotaccount-complete-guide/">Complete Integration Guide</a> for comprehensive technical details.
+<strong>Ready for detailed implementation?</strong> Move on to the <a href="{{ '/scotaccount-complete-guide/' | url }}">Complete Integration Guide</a> for comprehensive technical details.
 </div>
 
 <div class="callout callout--info">
-<strong>Need verified attributes?</strong> Learn about <a href="/scotaccount-token-validation-module/">token validation</a> and attribute handling.
+<strong>Need verified attributes?</strong> Learn about <a href="{{ '/scotaccount-token-validation-module/' | url }}">token validation</a> and attribute handling.
 </div>
 
 <div class="callout callout--warning">
-<strong>Planning for production?</strong> Review the <a href="/architecture/">architecture overview</a> to understand system components and scalability considerations.
+<strong>Planning for production?</strong> Review the <a href="{{ '/architecture/' | url }}">architecture overview</a> to understand system components and scalability considerations.
 </div>
 
 ## Support and Resources

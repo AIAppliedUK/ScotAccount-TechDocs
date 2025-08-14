@@ -7,16 +7,15 @@ const markdownItTOC = require("markdown-it-table-of-contents");
 
 module.exports = function (eleventyConfig) {
   // Add plugins
-  eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
+  // eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
   eleventyConfig.addPlugin(eleventyNavigationPlugin);
   eleventyConfig.addPlugin(syntaxHighlight);
 
   // Copy static assets
-  eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy("src/js");
   eleventyConfig.addPassthroughCopy("src/images");
-  eleventyConfig.addPassthroughCopy("src/assets/scotgovlogo.svg");
+  eleventyConfig.addPassthroughCopy("src/assets");
 
   // Copy favicon files to root (Scottish Government style)
   eleventyConfig.addPassthroughCopy({

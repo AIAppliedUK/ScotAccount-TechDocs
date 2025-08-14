@@ -466,11 +466,11 @@ describe("Token Validation", () => {
 ## Next Steps
 
 <div class="callout callout--success">
-<strong>Validation implemented?</strong> Review the <a href="/architecture/">Architecture Overview</a> to understand the complete system design.
+<strong>Validation implemented?</strong> Review the <a href="{{ '/architecture/' | url }}">Architecture Overview</a> to understand the complete system design.
 </div>
 
 <div class="callout callout--info">
-<strong>Need implementation help?</strong> See the <a href="/scotaccount-complete-guide/">Complete Implementation Guide</a> for full integration patterns.
+<strong>Need implementation help?</strong> See the <a href="{{ '/scotaccount-complete-guide/' | url }}">Complete Implementation Guide</a> for full integration patterns.
 </div>
 
 <div class="callout callout--warning">

@@ -22,21 +22,21 @@ All authentication is verified to **GPG45 Medium assurance level** through compr
 
 ### For Developers
 
-- **[Quick Start Guide](/getting-started/)** - Get a working integration in 30 minutes
-- **[Complete Guide](/scotaccount-complete-guide/)** - Comprehensive implementation guide
-- **[Token Validation](/scotaccount-token-validation-module/)** - Secure token handling
+- **[Quick Start Guide]({{ '/getting-started/' | url }})** - Get a working integration in 30 minutes
+- **[Complete Guide]({{ '/scotaccount-complete-guide/' | url }})** - Comprehensive implementation guide
+- **[Token Validation]({{ '/scotaccount-token-validation-module/' | url }})** - Secure token handling
 
 ### For Project Managers
 
-- **[Architecture Overview](/architecture/)** - Understand the service structure and components
-- **[Planning Your Integration](/getting-started/)** - Requirements and preparation steps
-- **[Modular Structure](/scotaccount-modular-structure/)** - Service organisation and modules
+- **[Architecture Overview]({{ '/architecture/' | url }})** - Understand the service structure and components
+- **[Planning Your Integration]({{ '/getting-started/' | url }})** - Requirements and preparation steps
+- **[Modular Structure]({{ '/scotaccount-modular-structure/' | url }})** - Service organisation and modules
 
 ### For Technical Architects
 
-- **[Authentication Implementation](/scotaccount-complete-guide/)** - Complete technical integration guide
-- **[Token Validation Module](/scotaccount-token-validation-module/)** - Secure token verification
-- **[Missing Content Analysis](/scotaccount-missing-content-analysis/)** - Implementation gaps and solutions
+- **[Authentication Implementation]({{ '/scotaccount-complete-guide/' | url }})** - Complete technical integration guide
+- **[Token Validation Module]({{ '/scotaccount-token-validation-module/' | url }})** - Secure token verification
+- **[Missing Content Analysis]({{ '/scotaccount-missing-content-analysis/' | url }})** - Implementation gaps and solutions
 
 ## Integration Journey
 
@@ -114,13 +114,13 @@ ScotAccount uniquely handles verification processes that can take days or weeks:
 Choose your path based on your role:
 
 <div class="callout callout--info">
-<strong>New to ScotAccount?</strong> Start with our <a href="/getting-started/">Getting Started guide</a> to understand the basics and set up your first integration.
+<strong>New to ScotAccount?</strong> Start with our <a href="{{ '/getting-started/' | url }}">Getting Started guide</a> to understand the basics and set up your first integration.
 </div>
 
 <div class="callout callout--success">
-<strong>Ready to implement?</strong> Jump into the <a href="/scotaccount-complete-guide/">Complete Implementation Guide</a> for detailed technical instructions.
+<strong>Ready to implement?</strong> Jump into the <a href="{{ '/scotaccount-complete-guide/' | url }}">Complete Implementation Guide</a> for detailed technical instructions.
 </div>
 
 <div class="callout callout--warning">
-<strong>Need architecture details?</strong> Review the <a href="/architecture/">Architecture Overview</a> to understand system components and data flows.
+<strong>Need architecture details?</strong> Review the <a href="{{ '/architecture/' | url }}">Architecture Overview</a> to understand system components and data flows.
 </div>

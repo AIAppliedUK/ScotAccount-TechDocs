@@ -180,13 +180,13 @@ User → VerifyYourIdentity → External Verification → mySafe → Attributes
 ## Next Steps
 
 <div class="callout callout--info">
-<strong>Need implementation guidance?</strong> Start with the <a href="/getting-started/">Getting Started guide</a> to implement the authentication module first.
+<strong>Need implementation guidance?</strong> Start with the <a href="{{ '/getting-started/' | url }}">Getting Started guide</a> to implement the authentication module first.
 </div>
 
 <div class="callout callout--success">
-<strong>Planning your architecture?</strong> Review the <a href="/architecture/">Architecture Overview</a> to understand how modules fit together.
+<strong>Planning your architecture?</strong> Review the <a href="{{ '/architecture/' | url }}">Architecture Overview</a> to understand how modules fit together.
 </div>
 
 <div class="callout callout--warning">
-<strong>Ready for detailed implementation?</strong> See the <a href="/scotaccount-complete-guide/">Complete Implementation Guide</a> for comprehensive technical details.
+<strong>Ready for detailed implementation?</strong> See the <a href="{{ '/scotaccount-complete-guide/' | url }}">Complete Implementation Guide</a> for comprehensive technical details.
 </div>
