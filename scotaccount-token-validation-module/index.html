@@ -68,7 +68,7 @@
   <header class="sg-header" role="banner">
     <div class="sg-header__wrapper">
       <div class="sg-header__branding">
-        <a href="/" class="sg-header__logo">
+        <a href="/sg-identity-techdocs/" class="sg-header__logo">
           <img src="/sg-identity-techdocs/assets/scotgovlogo.svg" alt="Scottish Government">
         </a>
       </div>
@@ -96,19 +96,19 @@
           </li>
         
           <li class="site-nav__item">
-            <a href="getting-started/" class="site-nav__link">Getting Started</a>
+            <a href="/sg-identity-techdocs/getting-started/" class="site-nav__link">Getting Started</a>
           </li>
         
           <li class="site-nav__item">
-            <a href="architecture/" class="site-nav__link">Architecture</a>
+            <a href="/sg-identity-techdocs/architecture/" class="site-nav__link">Architecture</a>
           </li>
         
           <li class="site-nav__item">
-            <a href="scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
           </li>
         
           <li class="site-nav__item">
-            <a href="scotaccount-token-validation-module/" class="site-nav__link">Token Validation</a>
+            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link site-nav__link--active">Token Validation</a>
           </li>
         
       </ul>
@@ -219,7 +219,7 @@
 
       <!-- Page content -->
       <p>Proper token validation is critical for security. This guide shows you how to validate ID tokens and access tokens from ScotAccount to ensure they’re authentic and intended for your service.</p>
-<p><div class="table-of-contents"><ul><li><a href="#security-overview">Security Overview</a><ul><li><a href="#what-you-must-validate">What You Must Validate</a></li></ul></li><li><a href="#id-token-validation">ID Token Validation</a><ul><li><a href="#id-token-structure">ID Token Structure</a></li><li><a href="#complete-validation-implementation">Complete Validation Implementation</a><ul><li><a href="#step-1-set-up-jwks-client">Step 1: Set Up JWKS Client</a></li><li><a href="#step-2-implement-validation-function">Step 2: Implement Validation Function</a></li><li><a href="#step-3-additional-security-validations">Step 3: Additional Security Validations</a></li><li><a href="#step-4-extract-and-store-user-information">Step 4: Extract and Store User Information</a></li></ul></li></ul></li><li><a href="#verified-attributes-validation">Verified Attributes Validation</a><ul><li><a href="#email-attributes-validation">Email Attributes Validation</a></li><li><a href="#address-attributes-validation">Address Attributes Validation</a></li><li><a href="#identity-attributes-validation">Identity Attributes Validation</a></li></ul></li><li><a href="#access-token-validation">Access Token Validation</a><ul><li><a href="#introspection-endpoint">Introspection Endpoint</a></li></ul></li><li><a href="#complete-validation-example">Complete Validation Example</a></li><li><a href="#error-handling">Error Handling</a><ul><li><a href="#common-validation-errors">Common Validation Errors</a></li><li><a href="#security-best-practices">Security Best Practices</a></li></ul></li><li><a href="#testing-token-validation">Testing Token Validation</a><ul><li><a href="#unit-test-example">Unit Test Example</a></li></ul></li><li><a href="#production-considerations">Production Considerations</a><ul><li><a href="#performance-optimization">Performance Optimization</a></li><li><a href="#monitoring-and-alerts">Monitoring and Alerts</a></li></ul></li><li><a href="#next-steps">Next Steps</a></li></ul></div></p>
+<p><div class="table-of-contents"><ul><li><a href="#security-overview">Security Overview</a><ul><li><a href="#what-you-must-validate">What You Must Validate</a></li></ul></li><li><a href="#id-token-validation">ID Token Validation</a><ul><li><a href="#id-token-structure">ID Token Structure</a></li><li><a href="#complete-validation-implementation">Complete Validation Implementation</a><ul><li><a href="#step-1-set-up-jwks-client">Step 1: Set Up JWKS Client</a></li><li><a href="#step-2-implement-validation-function">Step 2: Implement Validation Function</a></li><li><a href="#step-3-additional-security-validations">Step 3: Additional Security Validations</a></li><li><a href="#step-4-extract-and-store-user-information">Step 4: Extract and Store User Information</a></li></ul></li></ul></li><li><a href="#verified-attributes-validation">Verified Attributes Validation</a><ul><li><a href="#identity-gpg45-medium-extraction-from-claimstoken">Identity (GPG45 Medium) extraction (from claimsToken)</a></li><li><a href="#address-extraction-from-claimstoken">Address extraction (from claimsToken)</a></li></ul></li><li><a href="#access-token-usage">Access Token Usage</a></li><li><a href="#complete-validation-example">Complete Validation Example</a></li><li><a href="#error-handling">Error Handling</a><ul><li><a href="#common-validation-errors">Common Validation Errors</a></li><li><a href="#security-best-practices">Security Best Practices</a></li></ul></li><li><a href="#testing-token-validation">Testing Token Validation</a><ul><li><a href="#unit-test-example">Unit Test Example</a></li></ul></li><li><a href="#production-considerations">Production Considerations</a><ul><li><a href="#performance-optimization">Performance Optimization</a></li><li><a href="#monitoring-and-alerts">Monitoring and Alerts</a></li></ul></li><li><a href="#next-steps">Next Steps</a></li></ul></div></p>
 <h2 id="security-overview" tabindex="-1"><a class="header-anchor" href="#security-overview"><span>Security Overview</span></a></h2>
 <p>ScotAccount issues JSON Web Tokens (JWTs) that must be validated before trusting their contents. This ensures tokens haven’t been tampered with and were genuinely issued by ScotAccount.</p>
 <div class="callout callout--error">
@@ -362,122 +362,40 @@
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <h2 id="verified-attributes-validation" tabindex="-1"><a class="header-anchor" href="#verified-attributes-validation"><span>Verified Attributes Validation</span></a></h2>
-<p>When using verified attributes, additional claims will be present in the ID token that require validation.</p>
-<h3 id="email-attributes-validation" tabindex="-1"><a class="header-anchor" href="#email-attributes-validation"><span>Email Attributes Validation</span></a></h3>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">validateEmailAttributes</span><span class="token punctuation">(</span><span class="token parameter">payload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> emailData <span class="token operator">=</span> payload<span class="token punctuation">[</span><span class="token string">"scotaccount.email"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>emailData<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// No email scope requested</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token comment">// Validate required fields</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>emailData<span class="token punctuation">.</span>email <span class="token operator">||</span> <span class="token keyword">typeof</span> emailData<span class="token punctuation">.</span>email <span class="token operator">!==</span> <span class="token string">"string"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Invalid email attribute format"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token comment">// Check verification status</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>emailData<span class="token punctuation">.</span>verified<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    console<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Email not verified for user:"</span><span class="token punctuation">,</span> payload<span class="token punctuation">.</span>sub<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
+<p>Verified attributes are provided by the attributes endpoint as a signed <code>claimsToken</code> JWT that includes a <code>verified_claims</code> array. Validate the JWT and extract claims for the scopes you requested.</p>
+<h3 id="identity-gpg45-medium-extraction-from-claimstoken" tabindex="-1"><a class="header-anchor" href="#identity-gpg45-medium-extraction-from-claimstoken"><span>Identity (GPG45 Medium) extraction (from claimsToken)</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">extractIdentityFromClaimsToken</span><span class="token punctuation">(</span><span class="token parameter">claimsTokenPayload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>Array<span class="token punctuation">.</span><span class="token function">isArray</span><span class="token punctuation">(</span>claimsTokenPayload<span class="token punctuation">.</span>verified_claims<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> entry <span class="token operator">=</span> claimsTokenPayload<span class="token punctuation">.</span>verified_claims<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>
+    <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=></span> e<span class="token punctuation">.</span>scope <span class="token operator">===</span> <span class="token string">"scotaccount.gpg45.medium"</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>entry <span class="token operator">||</span> <span class="token operator">!</span>entry<span class="token punctuation">.</span>claims<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> given_name<span class="token punctuation">,</span> family_name<span class="token punctuation">,</span> birth_date <span class="token punctuation">}</span> <span class="token operator">=</span> entry<span class="token punctuation">.</span>claims<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>given_name <span class="token operator">||</span> <span class="token operator">!</span>family_name <span class="token operator">||</span> <span class="token operator">!</span>birth_date<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">email</span><span class="token operator">:</span> emailData<span class="token punctuation">.</span>email<span class="token punctuation">,</span>
-    <span class="token literal-property property">verified</span><span class="token operator">:</span> emailData<span class="token punctuation">.</span>verified <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-    <span class="token literal-property property">verifiedAt</span><span class="token operator">:</span> emailData<span class="token punctuation">.</span>verified_at <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>emailData<span class="token punctuation">.</span>verified_at<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">givenName</span><span class="token operator">:</span> given_name<span class="token punctuation">,</span>
+    <span class="token literal-property property">familyName</span><span class="token operator">:</span> family_name<span class="token punctuation">,</span>
+    <span class="token literal-property property">birthDate</span><span class="token operator">:</span> birth_date<span class="token punctuation">,</span>
   <span class="token punctuation">}</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="address-attributes-validation" tabindex="-1"><a class="header-anchor" href="#address-attributes-validation"><span>Address Attributes Validation</span></a></h3>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">validateAddressAttributes</span><span class="token punctuation">(</span><span class="token parameter">payload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> addressData <span class="token operator">=</span> payload<span class="token punctuation">[</span><span class="token string">"scotaccount.address"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>addressData<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// No address scope requested</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token comment">// Validate required fields</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>addressData<span class="token punctuation">.</span>formatted <span class="token operator">||</span> <span class="token keyword">typeof</span> addressData<span class="token punctuation">.</span>formatted <span class="token operator">!==</span> <span class="token string">"string"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Invalid address attribute format"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token comment">// Check verification status</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>addressData<span class="token punctuation">.</span>verified<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    console<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Address not verified for user:"</span><span class="token punctuation">,</span> payload<span class="token punctuation">.</span>sub<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
+<h3 id="address-extraction-from-claimstoken" tabindex="-1"><a class="header-anchor" href="#address-extraction-from-claimstoken"><span>Address extraction (from claimsToken)</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">extractAddressFromClaimsToken</span><span class="token punctuation">(</span><span class="token parameter">claimsTokenPayload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>Array<span class="token punctuation">.</span><span class="token function">isArray</span><span class="token punctuation">(</span>claimsTokenPayload<span class="token punctuation">.</span>verified_claims<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> entry <span class="token operator">=</span> claimsTokenPayload<span class="token punctuation">.</span>verified_claims<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>
+    <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=></span> e<span class="token punctuation">.</span>scope <span class="token operator">===</span> <span class="token string">"scotaccount.address"</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>entry <span class="token operator">||</span> <span class="token operator">!</span>entry<span class="token punctuation">.</span>claims <span class="token operator">||</span> <span class="token operator">!</span>entry<span class="token punctuation">.</span>claims<span class="token punctuation">.</span>address<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> building_number<span class="token punctuation">,</span> street_name<span class="token punctuation">,</span> postal_code<span class="token punctuation">,</span> address_locality <span class="token punctuation">}</span> <span class="token operator">=</span>
+    entry<span class="token punctuation">.</span>claims<span class="token punctuation">.</span>address<span class="token punctuation">;</span>
   <span class="token keyword">return</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">formatted</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>formatted<span class="token punctuation">,</span>
-    <span class="token literal-property property">streetAddress</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>street_address<span class="token punctuation">,</span>
-    <span class="token literal-property property">locality</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>locality<span class="token punctuation">,</span>
-    <span class="token literal-property property">postalCode</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>postal_code<span class="token punctuation">,</span>
-    <span class="token literal-property property">country</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>country<span class="token punctuation">,</span>
-    <span class="token literal-property property">verified</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>verified <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-    <span class="token literal-property property">verifiedAt</span><span class="token operator">:</span> addressData<span class="token punctuation">.</span>verified_at
-      <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>addressData<span class="token punctuation">.</span>verified_at<span class="token punctuation">)</span>
-      <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">buildingNumber</span><span class="token operator">:</span> building_number<span class="token punctuation">,</span>
+    <span class="token literal-property property">streetName</span><span class="token operator">:</span> street_name<span class="token punctuation">,</span>
+    <span class="token literal-property property">postalCode</span><span class="token operator">:</span> postal_code<span class="token punctuation">,</span>
+    <span class="token literal-property property">locality</span><span class="token operator">:</span> address_locality<span class="token punctuation">,</span>
   <span class="token punctuation">}</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="identity-attributes-validation" tabindex="-1"><a class="header-anchor" href="#identity-attributes-validation"><span>Identity Attributes Validation</span></a></h3>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">validateIdentityAttributes</span><span class="token punctuation">(</span><span class="token parameter">payload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> identityData <span class="token operator">=</span> payload<span class="token punctuation">[</span><span class="token string">"scotaccount.identity"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>identityData<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span> <span class="token comment">// No identity scope requested</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token comment">// Validate required fields</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>identityData<span class="token punctuation">.</span>given_name <span class="token operator">||</span> <span class="token operator">!</span>identityData<span class="token punctuation">.</span>family_name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Missing required identity fields"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token comment">// Check assurance level</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>identityData<span class="token punctuation">.</span>assurance_level <span class="token operator">!==</span> <span class="token string">"GPG45_MEDIUM"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    console<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Unexpected assurance level:"</span><span class="token punctuation">,</span> identityData<span class="token punctuation">.</span>assurance_level<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token keyword">return</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">givenName</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>given_name<span class="token punctuation">,</span>
-    <span class="token literal-property property">familyName</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>family_name<span class="token punctuation">,</span>
-    <span class="token literal-property property">birthdate</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>birthdate<span class="token punctuation">,</span>
-    <span class="token literal-property property">verified</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>verified <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-    <span class="token literal-property property">verifiedAt</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>verified_at
-      <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>identityData<span class="token punctuation">.</span>verified_at<span class="token punctuation">)</span>
-      <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
-    <span class="token literal-property property">assuranceLevel</span><span class="token operator">:</span> identityData<span class="token punctuation">.</span>assurance_level<span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
-<h2 id="access-token-validation" tabindex="-1"><a class="header-anchor" href="#access-token-validation"><span>Access Token Validation</span></a></h2>
-<p>Access tokens are used for API calls and have a different validation process since they are opaque tokens.</p>
-<h3 id="introspection-endpoint" tabindex="-1"><a class="header-anchor" href="#introspection-endpoint"><span>Introspection Endpoint</span></a></h3>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">validateAccessToken</span><span class="token punctuation">(</span><span class="token parameter">accessToken<span class="token punctuation">,</span> clientAssertion</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> introspectionUrl <span class="token operator">=</span>
-    <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/introspect"</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>introspectionUrl<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">method</span><span class="token operator">:</span> <span class="token string">"POST"</span><span class="token punctuation">,</span>
-    <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token string-property property">"Content-Type"</span><span class="token operator">:</span> <span class="token string">"application/x-www-form-urlencoded"</span><span class="token punctuation">,</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token literal-property property">body</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">URLSearchParams</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-      <span class="token literal-property property">token</span><span class="token operator">:</span> accessToken<span class="token punctuation">,</span>
-      <span class="token literal-property property">client_assertion_type</span><span class="token operator">:</span>
-        <span class="token string">"urn:ietf:params:oauth:client-assertion-type:jwt-bearer"</span><span class="token punctuation">,</span>
-      <span class="token literal-property property">client_assertion</span><span class="token operator">:</span> clientAssertion<span class="token punctuation">,</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>response<span class="token punctuation">.</span>ok<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Token introspection failed: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>response<span class="token punctuation">.</span>status<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>result<span class="token punctuation">.</span>active<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">"Access token is not active"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token keyword">return</span> result<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<h2 id="access-token-usage" tabindex="-1"><a class="header-anchor" href="#access-token-usage"><span>Access Token Usage</span></a></h2>
+<p>Use the access token (15 minutes) to call <code>GET https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values</code> with a <code>DIS-Client-Assertion</code> whose audience is the attributes URL.</p>
 <h2 id="complete-validation-example" tabindex="-1"><a class="header-anchor" href="#complete-validation-example"><span>Complete Validation Example</span></a></h2>
 <p>Here’s a complete example showing validation in an Express.js application:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> express <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"express"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -507,9 +425,6 @@
     req<span class="token punctuation">.</span>user <span class="token operator">=</span> <span class="token punctuation">{</span>
       <span class="token literal-property property">id</span><span class="token operator">:</span> payload<span class="token punctuation">.</span>sub<span class="token punctuation">,</span>
       <span class="token literal-property property">sessionId</span><span class="token operator">:</span> payload<span class="token punctuation">.</span>sid<span class="token punctuation">,</span>
-      <span class="token literal-property property">email</span><span class="token operator">:</span> <span class="token function">validateEmailAttributes</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">,</span>
-      <span class="token literal-property property">address</span><span class="token operator">:</span> <span class="token function">validateAddressAttributes</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">,</span>
-      <span class="token literal-property property">identity</span><span class="token operator">:</span> <span class="token function">validateIdentityAttributes</span><span class="token punctuation">(</span>payload<span class="token punctuation">)</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">;</span>
 
     <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

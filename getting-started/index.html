@@ -68,7 +68,7 @@
   <header class="sg-header" role="banner">
     <div class="sg-header__wrapper">
       <div class="sg-header__branding">
-        <a href="/" class="sg-header__logo">
+        <a href="/sg-identity-techdocs/" class="sg-header__logo">
           <img src="/sg-identity-techdocs/assets/scotgovlogo.svg" alt="Scottish Government">
         </a>
       </div>
@@ -96,19 +96,19 @@
           </li>
         
           <li class="site-nav__item">
-            <a href="getting-started/" class="site-nav__link">Getting Started</a>
+            <a href="/sg-identity-techdocs/getting-started/" class="site-nav__link site-nav__link--active">Getting Started</a>
           </li>
         
           <li class="site-nav__item">
-            <a href="architecture/" class="site-nav__link">Architecture</a>
+            <a href="/sg-identity-techdocs/architecture/" class="site-nav__link">Architecture</a>
           </li>
         
           <li class="site-nav__item">
-            <a href="scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
           </li>
         
           <li class="site-nav__item">
-            <a href="scotaccount-token-validation-module/" class="site-nav__link">Token Validation</a>
+            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">Token Validation</a>
           </li>
         
       </ul>
@@ -351,13 +351,14 @@ code_verifier=your-code-verifier</code></pre>
   <span class="token literal-property property">uuid</span><span class="token operator">:</span> idToken<span class="token punctuation">.</span>sub<span class="token punctuation">,</span>
   <span class="token literal-property property">sessionId</span><span class="token operator">:</span> idToken<span class="token punctuation">.</span>sid<span class="token punctuation">,</span>
   <span class="token literal-property property">authenticatedAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">8</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">,</span> <span class="token comment">// 8 hours</span>
+  <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">,</span> <span class="token comment">// 1 hour</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
 <h3 id="logout-implementation" tabindex="-1"><a class="header-anchor" href="#logout-implementation"><span>Logout Implementation</span></a></h3>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Redirect to ScotAccount logout</span>
-<span class="token keyword">const</span> logoutUrl <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://authz.integration.scotaccount.service.gov.scot/logout?
+<span class="token keyword">const</span> logoutUrl <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://authz.integration.scotaccount.service.gov.scot/authorize/logout?
   id_token_hint=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>idToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&amp;
-  post_logout_redirect_uri=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>postLogoutUrl<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span></code></pre>
+  post_logout_redirect_uri=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>postLogoutUrl<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&amp;
+  state=logout-state</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span></code></pre>
 <h3 id="error-handling" tabindex="-1"><a class="header-anchor" href="#error-handling"><span>Error Handling</span></a></h3>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Handle common error scenarios</span>
 <span class="token keyword">if</span> <span class="token punctuation">(</span>error <span class="token operator">===</span> <span class="token string">"access_denied"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
