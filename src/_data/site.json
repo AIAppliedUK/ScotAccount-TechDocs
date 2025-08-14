@@ -18,22 +18,22 @@
     },
     {
       "text": "Getting Started",
-      "url": "getting-started/",
+      "url": "/getting-started/",
       "key": "getting-started"
     },
     {
       "text": "Architecture",
-      "url": "architecture/",
+      "url": "/architecture/",
       "key": "architecture"
     },
     {
       "text": "Complete Guide",
-      "url": "scotaccount-complete-guide/",
+      "url": "/scotaccount-complete-guide/",
       "key": "complete-guide"
     },
     {
       "text": "Token Validation",
-      "url": "scotaccount-token-validation-module/",
+      "url": "/scotaccount-token-validation-module/",
       "key": "token-validation"
     }
   ]

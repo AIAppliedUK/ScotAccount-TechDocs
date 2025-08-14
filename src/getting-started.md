@@ -177,7 +177,7 @@ const userSession = {
   uuid: idToken.sub,
   sessionId: idToken.sid,
   authenticatedAt: Date.now(),
-  expiresAt: Date.now() + 8 * 60 * 60 * 1000, // 8 hours
+  expiresAt: Date.now() + 60 * 60 * 1000, // 1 hour
 };
 ```
 
@@ -185,9 +185,10 @@ const userSession = {
 
 ```javascript
 // Redirect to ScotAccount logout
-const logoutUrl = `https://authz.integration.scotaccount.service.gov.scot/logout?
+const logoutUrl = `https://authz.integration.scotaccount.service.gov.scot/authorize/logout?
   id_token_hint=${idToken}&
-  post_logout_redirect_uri=${encodeURIComponent(postLogoutUrl)}`;
+  post_logout_redirect_uri=${encodeURIComponent(postLogoutUrl)}&
+  state=logout-state`;
 ```
 
 ### Error Handling

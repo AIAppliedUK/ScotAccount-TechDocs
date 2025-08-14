@@ -13,8 +13,7 @@ Understanding the ScotAccount architecture is essential for successful integrati
 
 ScotAccount is part of the Digital Identity Scotland (DIS) ecosystem, providing centralised authentication and verified attribute services for Scottish Government digital services.
 
-### High-Level Architecture 
-
+### High-Level Architecture
 
 ![ScotAccount High-Level Architecture]({{ '/assets/diagrams/architecture-context.png' | url }})
 
@@ -165,7 +164,7 @@ _Figure: High-level architecture of ScotAccount and its integration with core DI
 
 - **Signing Algorithms**: RS256, ES256
 - **Key Lengths**: RSA 3072-bit minimum, EC P-256
-- **Token Expiration**: 15 minutes for access tokens, 8 hours for sessions
+- **Token Expiration**: 15 minutes for access tokens, 1 hour for sessions
 - **Certificate Management**: Automatic rotation and validation
 
 ## Scalability and Performance

@@ -11,6 +11,32 @@ This comprehensive guide provides detailed technical implementation instructions
 
 [[toc]]
 
+## Understanding ScotAccount
+
+ScotAccount is Scotland's centralised digital identity provider that lets government services authenticate users securely and, with consent, access verified personal information. Rather than building and operating your own authentication and identity verification stack, you rely on ScotAccount to provide:
+
+- Consistent user authentication with a persistent UUID per user
+- Access to verified attributes when required, with clear user consent
+- Standards-based security built on OpenID Connect and OAuth 2.0
+
+From a service perspective, this reduces security and compliance overheads, and gives users a single, familiar journey across services.
+
+## Why OpenID Connect and OAuth 2.0
+
+OpenID Connect adds an identity layer to OAuth 2.0. Together they provide a robust, standards-based approach with built-in controls:
+
+- State for CSRF protection
+- Nonce for replay protection
+- PKCE to protect the authorisation code flow
+
+Your service redirects the user to ScotAccount for authentication and receives cryptographically signed tokens that you validate using ScotAccount's public keys.
+
+## Architecture Overview
+
+At a high level, the user is redirected from your service to ScotAccount to authenticate. Your backend exchanges the returned authorisation code for tokens, validates the ID token, and creates a session. If verified attributes are required, you initiate a new flow requesting additional scopes and call the attributes endpoint with the access token and a client assertion to receive a signed claims token.
+
+For a detailed diagram and component overview, see the Architecture page.
+
 ## Implementation Overview
 
 ScotAccount integration follows a four-phase approach:
@@ -94,10 +120,9 @@ Submit these details to the ScotAccount team:
 **Scope Reference**:
 
 - `openid` - Required for all integrations
-- `scotaccount.email` - Verified email address
+- `scotaccount.gpg45.medium` - Verified identity (GPG45 Medium)
 - `scotaccount.address` - Verified postal address
-- `scotaccount.identity` - Verified identity information
-- `scotaccount.mobile` - Verified mobile phone number
+- `scotaccount.email` - Verified email address
 
 ### Registration Response
 
@@ -116,7 +141,7 @@ Always retrieve current configuration dynamically:
 ```javascript
 async function getOidcConfiguration() {
   const response = await fetch(
-    "https://authz.scotaccount.service.gov.scot/.well-known/openid-configuration"
+    "https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration"
   );
   return await response.json();
 }
@@ -127,279 +152,70 @@ async function getOidcConfiguration() {
 - `authorization_endpoint` - Where to send authentication requests
 - `token_endpoint` - Where to exchange codes for tokens
 - `jwks_uri` - Public keys for token validation
-- `end_session_endpoint` - Logout endpoint
 
 ### PKCE Implementation
 
-Generate PKCE parameters for security:
+You must generate a code verifier and corresponding SHA256-based code challenge, and include the challenge in the initial authorisation request. When exchanging the code for tokens, provide the original verifier. This binds the returned authorisation code to your original request and prevents interception.
 
-```javascript
-function generatePKCE() {
-  // Generate random code verifier
-  const codeVerifier = base64URLEncode(crypto.randomBytes(32));
+### Authorisation Request
 
-  // Create SHA256 hash
-  const hash = crypto.createHash("sha256").update(codeVerifier).digest();
-  const codeChallenge = base64URLEncode(hash);
+Build an authorisation URL including: `client_id`, `redirect_uri`, `response_type=code`, `scope`, `state`, `nonce`, `code_challenge`, and `code_challenge_method=S256`. Store the `state`, `nonce`, and PKCE verifier securely until the callback is processed.
 
-  return {
-    codeVerifier,
-    codeChallenge,
-    codeChallengeMethod: "S256",
-  };
-}
-```
+### Callback Handling
 
-### Authorization Request
+Validate the returned `state` before doing anything else. If it does not match, reject the response. Extract the authorisation `code`, retrieve the stored `nonce` and PKCE verifier, and proceed to token exchange.
 
-Build the authentication URL:
+### Client Assertion
 
-```javascript
-function buildAuthUrl(config, pkce, clientId, redirectUri) {
-  const state = crypto.randomBytes(16).toString("hex");
-  const nonce = crypto.randomBytes(16).toString("hex");
-
-  const params = new URLSearchParams({
-    client_id: clientId,
-    redirect_uri: redirectUri,
-    response_type: "code",
-    scope: "openid",
-    state: state,
-    nonce: nonce,
-    code_challenge: pkce.codeChallenge,
-    code_challenge_method: pkce.codeChallengeMethod,
-  });
-
-  // Store state and nonce for validation
-  storeSecurely(state, { nonce, codeVerifier: pkce.codeVerifier });
-
-  return `${config.authorization_endpoint}?${params.toString()}`;
-}
-```
-
-### Callback Handler
-
-Process the authentication response:
-
-```javascript
-function handleCallback(req) {
-  const { code, state, error } = req.query;
-
-  // Handle errors first
-  if (error) {
-    throw new Error(`Authentication failed: ${error}`);
-  }
-
-  // Validate state parameter
-  const storedData = retrieveSecurely(state);
-  if (!storedData) {
-    throw new Error("Invalid state parameter");
-  }
-
-  return {
-    code,
-    state,
-    nonce: storedData.nonce,
-    codeVerifier: storedData.codeVerifier,
-  };
-}
-```
-
-### JWT Client Assertion
-
-Create signed JWT for token exchange:
-
-```javascript
-function createClientAssertion(clientId, tokenEndpoint, privateKey) {
-  const now = Math.floor(Date.now() / 1000);
-
-  const payload = {
-    iss: clientId,
-    sub: clientId,
-    aud: tokenEndpoint,
-    exp: now + 60, // 1 minute expiration
-    iat: now,
-    jti: crypto.randomUUID(),
-  };
-
-  return jwt.sign(payload, privateKey, { algorithm: "RS256" });
-}
-```
+Authenticate your client to the token and attributes endpoints using a signed JWT (private_key_jwt). The assertion includes `iss`, `sub`, `aud` (endpoint URL), `exp` (up to 6 months), `iat`, and a unique `jti`.
 
 ### Token Exchange
 
-Exchange authorization code for tokens:
-
-```javascript
-async function exchangeCodeForTokens(
-  config,
-  code,
-  redirectUri,
-  codeVerifier,
-  clientAssertion
-) {
-  const response = await fetch(config.token_endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      grant_type: "authorization_code",
-      code: code,
-      redirect_uri: redirectUri,
-      client_assertion_type:
-        "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-      client_assertion: clientAssertion,
-      code_verifier: codeVerifier,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Token exchange failed: ${response.status}`);
-  }
-
-  return await response.json();
-}
-```
+Exchange the authorisation code at the token endpoint with: `grant_type=authorization_code`, the received `code`, your `redirect_uri`, `client_assertion_type`, your `client_assertion`, and the PKCE `code_verifier`.
 
 ### ID Token Validation
 
-Validate and extract user information:
-
-```javascript
-async function validateIdToken(idToken, clientId, config, expectedNonce) {
-  // Get public keys
-  const jwks = await fetch(config.jwks_uri).then((r) => r.json());
-
-  // Verify JWT signature and claims
-  const decoded = jwt.verify(idToken, getPublicKey(jwks), {
-    algorithms: ["RS256"],
-    audience: clientId,
-    issuer: config.issuer,
-  });
-
-  // Validate nonce
-  if (decoded.nonce !== expectedNonce) {
-    throw new Error("Invalid nonce");
-  }
-
-  return {
-    userId: decoded.sub,
-    sessionId: decoded.sid,
-    authenticatedAt: decoded.auth_time,
-  };
-}
-```
+Validate the ID token signature using ScotAccount's JWKS. Check audience equals your client ID, issuer matches discovery, and the `nonce` matches the original value. Extract `sub` (persistent user UUID) and `sid` (session ID).
 
 ## Phase 3: Verified Attributes
 
-### Requesting Additional Scopes
+### Verified Attributes and Consent
 
-To access verified attributes, request additional scopes:
+Request additional scopes only when functionality requires them. Users must be present and consent to sharing each type of verified information. To access verified attributes, start a new authorisation flow with the additional scopes:
 
-```javascript
-// Example: Request email and address verification
-const scope = "openid scotaccount.email scotaccount.address";
-
-const authUrl = buildAuthUrl(config, pkce, clientId, redirectUri, scope);
+```http
+GET https://authz.integration.scotaccount.service.gov.scot/authorize?
+    client_id=your-client-id&
+    redirect_uri=https://yourservice.gov.scot/auth/callback&
+    response_type=code&
+    scope=openid%20scotaccount.email%20scotaccount.address%20scotaccount.gpg45.medium&
+    state=your-state&
+    nonce=your-nonce&
+    code_challenge=your-code-challenge&
+    code_challenge_method=S256
 ```
 
-### Attribute Data Structure
+After exchanging the code for an access token, request attributes at the attributes endpoint using the access token and a new client assertion whose audience is the attributes URL:
 
-**Email Attributes** (`scotaccount.email` scope):
-
-```json
-{
-  "scotaccount.email": {
-    "email": "user@example.com",
-    "verified": true,
-    "verified_at": "2024-01-15T10:30:00Z"
-  }
-}
+```http
+GET https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values
+Authorization: Bearer [access-token]
+DIS-Client-Assertion: [client-assertion-for-attributes-endpoint]
 ```
 
-**Address Attributes** (`scotaccount.address` scope):
-
-```json
-{
-  "scotaccount.address": {
-    "formatted": "123 Main Street\nEdinburgh EH1 1AA\nScotland",
-    "street_address": "123 Main Street",
-    "locality": "Edinburgh",
-    "postal_code": "EH1 1AA",
-    "country": "Scotland",
-    "verified": true,
-    "verified_at": "2024-01-15T09:15:00Z"
-  }
-}
-```
-
-**Identity Attributes** (`scotaccount.identity` scope):
-
-```json
-{
-  "scotaccount.identity": {
-    "given_name": "John",
-    "family_name": "Smith",
-    "birthdate": "1990-01-15",
-    "verified": true,
-    "verified_at": "2024-01-15T14:20:00Z",
-    "assurance_level": "GPG45_MEDIUM"
-  }
-}
-```
-
-### Processing Verified Attributes
-
-Extract and validate attribute data:
-
-```javascript
-function processVerifiedAttributes(idToken) {
-  const attributes = {};
-
-  // Process email verification
-  if (idToken["scotaccount.email"]) {
-    const email = idToken["scotaccount.email"];
-    if (email.verified) {
-      attributes.verifiedEmail = {
-        address: email.email,
-        verifiedAt: new Date(email.verified_at),
-      };
-    }
-  }
-
-  // Process address verification
-  if (idToken["scotaccount.address"]) {
-    const address = idToken["scotaccount.address"];
-    if (address.verified) {
-      attributes.verifiedAddress = {
-        formatted: address.formatted,
-        components: {
-          street: address.street_address,
-          city: address.locality,
-          postcode: address.postal_code,
-          country: address.country,
-        },
-        verifiedAt: new Date(address.verified_at),
-      };
-    }
-  }
-
-  return attributes;
-}
-```
+The response contains a signed `claimsToken` JWT. Validate it and read `verified_claims`. Each entry includes the scope, the verified claims (for example identity names and date of birth), and detailed verification metadata (outcome, trust framework, assurance policy, confidence level, time, and verifier).
 
 ## Phase 4: Production Deployment
 
-### Environment Configuration
+### Environments and Configuration
 
-Update endpoints for production:
+Use integration endpoints during development and testing, then switch to production endpoints when onboarding completes. Always resolve actual endpoints via discovery.
 
 ```javascript
 const config = {
   integration: {
     discoveryUrl:
-      "https://authz.scotaccount.service.gov.scot/.well-known/openid-configuration",
+      "https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration",
   },
   production: {
     discoveryUrl:
@@ -410,7 +226,7 @@ const config = {
 
 ### Monitoring and Logging
 
-Implement comprehensive monitoring:
+Implement comprehensive monitoring for authentication success/failure rates, discovery and JWKS availability, and unusual error patterns. Log events with sufficient detail for troubleshooting whilst protecting sensitive data:
 
 ```javascript
 // Log authentication events
@@ -474,9 +290,14 @@ Before going live, verify:
 - [ ] **Rate limiting** on authentication endpoints
 - [ ] **Monitoring** and alerting configured
 
-## Complete Example Implementation
+## Implementation References
 
-Here's a complete Node.js/Express example:
+For end-to-end implementation examples and code, see the following developer-focused pages:
+
+- Integration Examples and Best Practices
+- Token Validation Module
+
+Below is a minimal Node.js/Express example to illustrate request sequencing. For production-ready code, refer to the pages above.
 
 ```javascript
 const express = require("express");

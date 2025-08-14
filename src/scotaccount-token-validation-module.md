@@ -181,140 +181,50 @@ async function handleTokenValidation(idToken, expectedNonce, clientId) {
 
 ## Verified Attributes Validation
 
-When using verified attributes, additional claims will be present in the ID token that require validation.
+Verified attributes are provided by the attributes endpoint as a signed `claimsToken` JWT that includes a `verified_claims` array. Validate the JWT and extract claims for the scopes you requested.
 
-### Email Attributes Validation
+### Identity (GPG45 Medium) extraction (from claimsToken)
 
 ```javascript
-function validateEmailAttributes(payload) {
-  const emailData = payload["scotaccount.email"];
-
-  if (!emailData) {
-    return null; // No email scope requested
-  }
-
-  // Validate required fields
-  if (!emailData.email || typeof emailData.email !== "string") {
-    throw new Error("Invalid email attribute format");
-  }
-
-  // Check verification status
-  if (!emailData.verified) {
-    console.warn("Email not verified for user:", payload.sub);
-  }
-
+function extractIdentityFromClaimsToken(claimsTokenPayload) {
+  if (!Array.isArray(claimsTokenPayload.verified_claims)) return null;
+  const entry = claimsTokenPayload.verified_claims.find(
+    (e) => e.scope === "scotaccount.gpg45.medium"
+  );
+  if (!entry || !entry.claims) return null;
+  const { given_name, family_name, birth_date } = entry.claims;
+  if (!given_name || !family_name || !birth_date) return null;
   return {
-    email: emailData.email,
-    verified: emailData.verified === true,
-    verifiedAt: emailData.verified_at ? new Date(emailData.verified_at) : null,
+    givenName: given_name,
+    familyName: family_name,
+    birthDate: birth_date,
   };
 }
 ```
 
-### Address Attributes Validation
+### Address extraction (from claimsToken)
 
 ```javascript
-function validateAddressAttributes(payload) {
-  const addressData = payload["scotaccount.address"];
-
-  if (!addressData) {
-    return null; // No address scope requested
-  }
-
-  // Validate required fields
-  if (!addressData.formatted || typeof addressData.formatted !== "string") {
-    throw new Error("Invalid address attribute format");
-  }
-
-  // Check verification status
-  if (!addressData.verified) {
-    console.warn("Address not verified for user:", payload.sub);
-  }
-
+function extractAddressFromClaimsToken(claimsTokenPayload) {
+  if (!Array.isArray(claimsTokenPayload.verified_claims)) return null;
+  const entry = claimsTokenPayload.verified_claims.find(
+    (e) => e.scope === "scotaccount.address"
+  );
+  if (!entry || !entry.claims || !entry.claims.address) return null;
+  const { building_number, street_name, postal_code, address_locality } =
+    entry.claims.address;
   return {
-    formatted: addressData.formatted,
-    streetAddress: addressData.street_address,
-    locality: addressData.locality,
-    postalCode: addressData.postal_code,
-    country: addressData.country,
-    verified: addressData.verified === true,
-    verifiedAt: addressData.verified_at
-      ? new Date(addressData.verified_at)
-      : null,
+    buildingNumber: building_number,
+    streetName: street_name,
+    postalCode: postal_code,
+    locality: address_locality,
   };
 }
 ```
 
-### Identity Attributes Validation
+## Access Token Usage
 
-```javascript
-function validateIdentityAttributes(payload) {
-  const identityData = payload["scotaccount.identity"];
-
-  if (!identityData) {
-    return null; // No identity scope requested
-  }
-
-  // Validate required fields
-  if (!identityData.given_name || !identityData.family_name) {
-    throw new Error("Missing required identity fields");
-  }
-
-  // Check assurance level
-  if (identityData.assurance_level !== "GPG45_MEDIUM") {
-    console.warn("Unexpected assurance level:", identityData.assurance_level);
-  }
-
-  return {
-    givenName: identityData.given_name,
-    familyName: identityData.family_name,
-    birthdate: identityData.birthdate,
-    verified: identityData.verified === true,
-    verifiedAt: identityData.verified_at
-      ? new Date(identityData.verified_at)
-      : null,
-    assuranceLevel: identityData.assurance_level,
-  };
-}
-```
-
-## Access Token Validation
-
-Access tokens are used for API calls and have a different validation process since they are opaque tokens.
-
-### Introspection Endpoint
-
-```javascript
-async function validateAccessToken(accessToken, clientAssertion) {
-  const introspectionUrl =
-    "https://authz.integration.scotaccount.service.gov.scot/introspect";
-
-  const response = await fetch(introspectionUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      token: accessToken,
-      client_assertion_type:
-        "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-      client_assertion: clientAssertion,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Token introspection failed: ${response.status}`);
-  }
-
-  const result = await response.json();
-
-  if (!result.active) {
-    throw new Error("Access token is not active");
-  }
-
-  return result;
-}
-```
+Use the access token (15 minutes) to call `GET https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values` with a `DIS-Client-Assertion` whose audience is the attributes URL.
 
 ## Complete Validation Example
 
@@ -348,9 +258,6 @@ async function validateScotAccountToken(req, res, next) {
     req.user = {
       id: payload.sub,
       sessionId: payload.sid,
-      email: validateEmailAttributes(payload),
-      address: validateAddressAttributes(payload),
-      identity: validateIdentityAttributes(payload),
     };
 
     next();

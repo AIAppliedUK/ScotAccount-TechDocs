@@ -95,7 +95,7 @@ class SecureSession {
     this.sessionId = sessionData.sessionId;
     this.createdAt = Date.now();
     this.lastActivity = Date.now();
-    this.expiresAt = Date.now() + 8 * 60 * 60 * 1000; // 8 hours
+    this.expiresAt = Date.now() + 60 * 60 * 1000; // 1 hour
   }
 
   isValid() {
@@ -143,21 +143,22 @@ class SecureSession {
 // Environment-specific configuration example
 const config = {
   development: {
-    scotAccountBaseUrl:
-      "https://authz.integration.scotaccount.service.gov.scot",
+    discoveryUrl:
+      "https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration",
     clientId: process.env.DEV_CLIENT_ID,
     redirectUri: "http://localhost:3000/auth/callback",
   },
 
   integration: {
-    scotAccountBaseUrl:
-      "https://authz.integration.scotaccount.service.gov.scot",
+    discoveryUrl:
+      "https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration",
     clientId: process.env.INT_CLIENT_ID,
     redirectUri: "https://your-service-int.gov.scot/auth/callback",
   },
 
   production: {
-    scotAccountBaseUrl: "https://authz.scotaccount.service.gov.scot",
+    discoveryUrl:
+      "https://authz.scotaccount.service.gov.scot/.well-known/openid-configuration",
     clientId: process.env.PROD_CLIENT_ID,
     redirectUri: "https://your-service.gov.scot/auth/callback",
   },
