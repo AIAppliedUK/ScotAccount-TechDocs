@@ -7,7 +7,378 @@ eleventyNavigation:
   order: 7
 ---
 
-This page provides practical integration examples and best practices for ScotAccount, helping you implement secure, robust, and production-ready solutions.
+This page provides practical integration examples and best practices for ScotAccount, helping you implement secure, robust code that you can tailor for your needs. These code elements are for example purposes only
+
+## Phase 1: Setup & Registration Examples
+
+### Discovery Endpoint Integration
+
+Always retrieve current configuration dynamically:
+
+```javascript
+async function getOidcConfiguration() {
+  const response = await fetch(
+    "https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration"
+  );
+  return await response.json();
+}
+```
+
+**Key configuration values**:
+
+- `authorization_endpoint` - Where to send authentication requests
+- `token_endpoint` - Where to exchange codes for tokens
+- `jwks_uri` - Public keys for token validation
+
+### PKCE Implementation
+
+Generate PKCE parameters for security:
+
+```javascript
+function generatePKCE() {
+  // Generate random code verifier
+  const codeVerifier = base64URLEncode(crypto.randomBytes(32));
+
+  // Create SHA256 hash
+  const hash = crypto.createHash("sha256").update(codeVerifier).digest();
+  const codeChallenge = base64URLEncode(hash);
+
+  return {
+    codeVerifier,
+    codeChallenge,
+    codeChallengeMethod: "S256",
+  };
+}
+```
+
+## Phase 2: Basic Authentication Examples
+
+### Authorization Request Builder
+
+Build the authentication URL:
+
+```javascript
+function buildAuthUrl(config, pkce, clientId, redirectUri) {
+  const state = crypto.randomBytes(16).toString("hex");
+  const nonce = crypto.randomBytes(16).toString("hex");
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    response_type: "code",
+    scope: "openid",
+    state: state,
+    nonce: nonce,
+    code_challenge: pkce.codeChallenge,
+    code_challenge_method: pkce.codeChallengeMethod,
+  });
+
+  // Store state and nonce for validation
+  storeSecurely(state, { nonce, codeVerifier: pkce.codeVerifier });
+
+  return `${config.authorization_endpoint}?${params.toString()}`;
+}
+```
+
+### Callback Handler
+
+Process the authentication response:
+
+```javascript
+function handleCallback(req) {
+  const { code, state, error } = req.query;
+
+  // Handle errors first
+  if (error) {
+    throw new Error(`Authentication failed: ${error}`);
+  }
+
+  // Validate state parameter
+  const storedData = retrieveSecurely(state);
+  if (!storedData) {
+    throw new Error("Invalid state parameter");
+  }
+
+  return {
+    code,
+    state,
+    nonce: storedData.nonce,
+    codeVerifier: storedData.codeVerifier,
+  };
+}
+```
+
+### JWT Client Assertion
+
+Create signed JWT for token exchange:
+
+```javascript
+function createClientAssertion(clientId, tokenEndpoint, privateKey) {
+  const now = Math.floor(Date.now() / 1000);
+
+  const payload = {
+    iss: clientId,
+    sub: clientId,
+    aud: tokenEndpoint,
+    exp: now + 60 * 60 * 24 * 30 * 6, // 6 months expiration
+    iat: now,
+    jti: crypto.randomUUID(),
+  };
+
+  return jwt.sign(payload, privateKey, { algorithm: "RS256" });
+}
+```
+
+### Token Exchange
+
+Exchange authorization code for tokens:
+
+```javascript
+async function exchangeCodeForTokens(
+  config,
+  code,
+  redirectUri,
+  codeVerifier,
+  clientAssertion
+) {
+  const response = await fetch(config.token_endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      grant_type: "authorization_code",
+      code: code,
+      redirect_uri: redirectUri,
+      client_assertion_type:
+        "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+      client_assertion: clientAssertion,
+      code_verifier: codeVerifier,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Token exchange failed: ${response.status}`);
+  }
+
+  return await response.json();
+}
+```
+
+### ID Token Validation
+
+Validate and extract user information:
+
+```javascript
+async function validateIdToken(idToken, clientId, config, expectedNonce) {
+  // Get public keys
+  const jwks = await fetch(config.jwks_uri).then((r) => r.json());
+
+  // Verify JWT signature and claims
+  const decoded = jwt.verify(idToken, getPublicKey(jwks), {
+    algorithms: ["RS256"],
+    audience: clientId,
+    issuer: config.issuer,
+  });
+
+  // Validate nonce
+  if (decoded.nonce !== expectedNonce) {
+    throw new Error("Invalid nonce");
+  }
+
+  return {
+    userId: decoded.sub,
+    sessionId: decoded.sid,
+    authenticatedAt: decoded.iat,
+  };
+}
+```
+
+## Phase 3: Verified Attributes Examples
+
+### Attribute Request Implementation
+
+Request verified attributes using access token:
+
+```javascript
+async function requestVerifiedAttributes(accessToken, clientAssertion) {
+  const response = await fetch(
+    "https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values",
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "DIS-Client-Assertion": clientAssertion,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Attribute request failed: ${response.status}`);
+  }
+
+  return await response.json();
+}
+```
+
+### Attribute Token Validation
+
+Validate and extract verified claims:
+
+```javascript
+async function validateAttributeToken(claimsToken, config) {
+  // Get public keys for attribute service
+  const jwks = await fetch(config.attribute_jwks_uri).then((r) => r.json());
+
+  // Verify JWT signature and claims
+  const decoded = jwt.verify(claimsToken, getPublicKey(jwks), {
+    algorithms: ["RS256"],
+    issuer: config.attribute_issuer,
+  });
+
+  return decoded.verified_claims;
+}
+```
+
+## Phase 4: Production Deployment Examples
+
+### Environment Configuration
+
+Update endpoints for production:
+
+```javascript
+const config = {
+  integration: {
+    discoveryUrl:
+      "https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration",
+  },
+  production: {
+    discoveryUrl:
+      "https://authz.scotaccount.service.gov.scot/.well-known/openid-configuration",
+  },
+};
+```
+
+### Monitoring and Logging
+
+Implement comprehensive monitoring:
+
+```javascript
+// Log authentication events
+function logAuthEvent(event, userId, details) {
+  console.log(
+    JSON.stringify({
+      timestamp: new Date().toISOString(),
+      event: event,
+      userId: userId,
+      sessionId: details.sessionId,
+      userAgent: details.userAgent,
+      ipAddress: details.ipAddress,
+    })
+  );
+}
+
+// Track authentication metrics
+function trackMetrics(event, duration) {
+  // Send to your monitoring system
+  metrics.increment(`scotaccount.${event}`);
+  metrics.timing(`scotaccount.${event}.duration`, duration);
+}
+```
+
+### Error Handling
+
+Implement user-friendly error handling:
+
+```javascript
+function handleAuthError(error, res) {
+  console.error("Authentication error:", error);
+
+  switch (error.message) {
+    case "access_denied":
+      res.redirect("/auth/cancelled");
+      break;
+    case "invalid_request":
+      res.status(400).render("error", {
+        message: "Invalid authentication request",
+      });
+      break;
+    default:
+      res.status(500).render("error", {
+        message: "Authentication service temporarily unavailable",
+      });
+  }
+}
+```
+
+## Complete Example Implementation
+
+Here's a complete Node.js/Express example:
+
+```javascript
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+
+const app = express();
+
+// Configuration
+const CLIENT_ID = process.env.SCOTACCOUNT_CLIENT_ID;
+const PRIVATE_KEY = process.env.SCOTACCOUNT_PRIVATE_KEY;
+const REDIRECT_URI = process.env.SCOTACCOUNT_REDIRECT_URI;
+
+// Routes
+app.get("/auth/login", async (req, res) => {
+  try {
+    const config = await getOidcConfiguration();
+    const pkce = generatePKCE();
+    const authUrl = buildAuthUrl(config, pkce, CLIENT_ID, REDIRECT_URI);
+
+    res.redirect(authUrl);
+  } catch (error) {
+    handleAuthError(error, res);
+  }
+});
+
+app.get("/auth/callback", async (req, res) => {
+  try {
+    const callbackData = handleCallback(req);
+    const config = await getOidcConfiguration();
+
+    const clientAssertion = createClientAssertion(
+      CLIENT_ID,
+      config.token_endpoint,
+      PRIVATE_KEY
+    );
+
+    const tokens = await exchangeCodeForTokens(
+      config,
+      callbackData.code,
+      REDIRECT_URI,
+      callbackData.codeVerifier,
+      clientAssertion
+    );
+
+    const userInfo = await validateIdToken(
+      tokens.id_token,
+      CLIENT_ID,
+      config,
+      callbackData.nonce
+    );
+
+    // Store user session
+    req.session.user = userInfo;
+
+    res.redirect("/dashboard");
+  } catch (error) {
+    handleAuthError(error, res);
+  }
+});
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
+```
 
 ## Example: Complete Authentication Flow
 

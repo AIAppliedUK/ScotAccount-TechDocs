@@ -7,8 +7,6 @@ eleventyNavigation:
   order: 1
 ---
 
-ScotAccount is Scotland's centralised digital identity service that provides government services with secure user authentication and access to verified personal information.
-
 ## What ScotAccount Provides
 
 ScotAccount offers two core capabilities for government services:
@@ -16,31 +14,17 @@ ScotAccount offers two core capabilities for government services:
 - **User Authentication** - Verify users have a ScotAccount and receive a persistent user identifier (UUID)
 - **Verified Attributes** - Access independently verified identity, address, and email data
 
-All authentication is verified to **GPG45 Medium assurance level** through comprehensive identity verification processes.
+When a use completes the verification process their identity verified to **GPG45 Medium assurance level** through comprehensive identity verification processes.
 
 ## Get Started Quickly
 
-### For Developers
-
-- **[Quick Start Guide]({{ '/getting-started/' | url }})** - Get a working integration in 30 minutes
-- **[Complete Guide]({{ '/scotaccount-complete-guide/' | url }})** - Comprehensive implementation guide
+- **[Quick Start Guide]({{ '/getting-started/' | url }})** - Get a working integration quickly
+- **[Implementation Guide]({{ '/scotaccount-guide/' | url }})** - High level implementation guide
+- **[Comprehensive Guide]({{ '/scotaccount-complete-guide/' | url }})** - Comprehensive implementation guide detailing the implementation
 - **[Token Validation]({{ '/scotaccount-token-validation-module/' | url }})** - Secure token handling
-
-### For Project Managers
-
-- **[Architecture Overview]({{ '/architecture/' | url }})** - Understand the service structure and components
-- **[Planning Your Integration]({{ '/getting-started/' | url }})** - Requirements and preparation steps
-- **[Modular Structure]({{ '/scotaccount-modular-structure/' | url }})** - Service organisation and modules
-
-### For Technical Architects
-
-- **[Authentication Implementation]({{ '/scotaccount-complete-guide/' | url }})** - Complete technical integration guide
 - **[Token Validation Module]({{ '/scotaccount-token-validation-module/' | url }})** - Secure token verification
-- **[Missing Content Analysis]({{ '/scotaccount-missing-content-analysis/' | url }})** - Implementation gaps and solutions
 
 ## Integration Journey
-
-**Typical Timeline**: 2-4 weeks from planning to production deployment
 
 ### Phase 1: Planning and Setup
 
@@ -56,16 +40,16 @@ All authentication is verified to **GPG45 Medium assurance level** through compr
 
 ### Phase 3: Testing and Deployment
 
-1. Test with development environment
-2. Security and penetration testing
+1. Test with mock or integration environment
+2. Verify all of your journeys and scenario permutations.
 3. Production deployment and monitoring
 
 ## Core Features
 
 ### Authentication
 
-- **Persistent User Identity**: Each user receives a UUID that never changes
-- **GPG45 Medium Assurance**: High confidence in user identity
+- **Persistent User Identity**: Each user receives a unique UUID that never changes
+- **GPG45 Medium Assurance**: High confidence in user verified identity
 - **Single Sign-On**: Users authenticate once across multiple government services
 - **Secure by Design**: Built on OpenID Connect with PKCE, state management, and JWT validation
 
@@ -76,14 +60,14 @@ All authentication is verified to **GPG45 Medium assurance level** through compr
 | **Identity** | GPG45 Medium identity verification | Legal identity confirmation, age verification |
 | **Address**  | Credit reference agency checks     | Service delivery, eligibility verification    |
 | **Email**    | Email confirmation loop            | Service communications, account recovery      |
+| **Mobile**   | Text Message confirmation loop     | Service communications, account recovery      |
 
 ### Extended Verification Support
 
-ScotAccount uniquely handles verification processes that can take days or weeks:
+ScotAccount uniquely handles verification processes that can minutes or days:
 
-- Users can start verification on one device and complete on another
+- Users can start verification on one device and verify information on their mobile.
 - Progress is automatically saved and resumed
-- Cross-device completion is fully supported
 - Your service receives results when verification completes
 
 ## Why Choose ScotAccount?
@@ -104,7 +88,7 @@ ScotAccount uniquely handles verification processes that can take days or weeks:
 
 ### For Technical Teams
 
-- **Standards-Based**: Built on OpenID Connect and OAuth 2.0
+- **Standards-Based**: Built on OpenID Connect
 - **Comprehensive Documentation**: Complete guides and working examples
 - **Testing Tools**: Mock service for rapid development and testing
 - **Production Support**: Dedicated support for live service operation

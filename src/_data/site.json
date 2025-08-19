@@ -27,7 +27,12 @@
       "key": "architecture"
     },
     {
-      "text": "Complete Guide",
+      "text": "Implementation Guide",
+      "url": "/scotaccount-guide/",
+      "key": "implementation-guide"
+    },
+    {
+      "text": "Comprehensive Guide",
       "url": "/scotaccount-complete-guide/",
       "key": "complete-guide"
     },

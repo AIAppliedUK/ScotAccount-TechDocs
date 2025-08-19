@@ -1,22 +1,22 @@
 ---
 layout: base.njk
 title: "Getting Started with ScotAccount"
-description: "Quick start guide for developers integrating with ScotAccount - Scotland's digital identity service"
+description: "Quick start guide for developers integrating with ScotAccount"
 eleventyNavigation:
   key: getting-started
   order: 2
 ---
 
-Get up and running with ScotAccount in 30 minutes. This guide covers the essential steps to integrate Scotland's digital identity service into your application.
+Get up and running with ScotAccount in quickly. This guide covers the essential steps to integrate ScotAccount into your application.
 
 ## Prerequisites
 
 Before you begin, ensure you have:
 
 - **Development environment** set up with HTTPS capability
-- **RSA 3072-bit or EC P-256 key pair** generated using OpenSSL
-- **Basic understanding** of OpenID Connect and OAuth 2.0
-- **Access to ScotAccount** integration environment
+- **EC P-256 key pair** Eliptic Curve keys generated using OpenSSL
+- **Basic understanding** of OpenID Connect
+- **Access to ScotAccount** Mock and Integration environment
 
 <div class="callout callout--info">
 <strong>Need help with key generation?</strong> See our <a href="{{ '/scotaccount-complete-guide/#key-generation' | url }}">complete key generation guide</a> for step-by-step instructions.
@@ -26,36 +26,42 @@ Before you begin, ensure you have:
 
 ### Phase 1: Setup & Registration
 
-- [ ] **Generate key pair** - Create RSA 3072-bit or EC P-256 keys
-- [ ] **Store private key securely** - Use a secrets manager (AWS Secrets Manager, Azure Key Vault)
-- [ ] **Determine required scopes** - Basic authentication or verified attributes
-- [ ] **Define redirect URIs** - Set up callback URLs for your service
-- [ ] **Submit registration** - Provide details to ScotAccount team
-- [ ] **Receive client_id** - Get your unique client identifier
+Before you begin, ensure you have completed the following configuration and preparation steps.
+
+1. **Generate key pair** - Create EC P-256 keys
+2. **Stored private key securely** - Use a secrets manager (AWS Secrets Manager, Azure Key Vault) or suitable alternative
+3. **Determine required scopes** - Basic authentication or verified attributes
+4. **Define redirect URIs** - Set up callback URLs for your service
+5. **Submit registration** - Provide details and public key the to ScotAccount team
+6. **Receive client_id** - Get your unique client identifier
 
 ### Phase 2: Basic Authentication
 
-- [ ] **Implement discovery endpoint** - Retrieve current configuration automatically
-- [ ] **Build PKCE parameters** - Generate code verifier and challenge
-- [ ] **Create authorization request** - Build secure authentication URL
-- [ ] **Implement callback handler** - Process authentication response
-- [ ] **Build JWT client assertion** - Use your private key for token requests
-- [ ] **Complete token exchange** - Get access and ID tokens
-- [ ] **Validate ID tokens** - Extract and verify user identity
+The first step in your implementation is get the authentication flow working. This will prove connectivity and
+your applications ability to send requests to the ScotAccount serveice and handle the redirects to enable the
+user to complete the login steps necessary to complete authentication.
+
+1. **Implement discovery endpoint** - Retrieve current configuration automatically
+2. **Build PKCE parameters** - Generate code verifier and challenge
+3. **Create authorization request** - Build secure authentication URL
+4. **Implement callback handler** - Process authentication response
+5. **Build JWT client assertion** - Use your private key for token requests
+6. **Complete token exchange** - Get access and ID tokens
+7. **Validate ID tokens** - Extract and verify user identity
 
 ### Phase 3: Verified Attributes (Optional)
 
-- [ ] **Choose additional scopes** - Select identity, address, or email verification
-- [ ] **Handle attribute requests** - Manage user consent flow
-- [ ] **Process attribute responses** - Parse verified claims data
-- [ ] **Validate and store data** - Implement secure data handling
+1. **Choose additional scopes** - Select identity, address, or email verification
+2. **Handle attribute requests** - Manage user consent flow
+3. **Process attribute responses** - Parse verified claims data
+4. **Validate and store data** - Implement secure data handling
 
 ### Phase 4: Production Deployment
 
-- [ ] **Update to production endpoints** - Switch from integration to live URLs
-- [ ] **Implement monitoring** - Add logging and error tracking
-- [ ] **Add error handling** - Create user-friendly error messages
-- [ ] **Complete security review** - Run penetration testing
+1. **Update to production endpoints** - Switch from integration to live URLs
+2. **Implement monitoring** - Add logging and error tracking
+3. **Add error handling** - Create user-friendly error messages
+4. **Complete security review** - Recommended: Run penetration testing
 
 ## Core Authentication Flow
 
@@ -69,9 +75,11 @@ First, retrieve the current configuration:
 GET https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration
 ```
 
-This provides all endpoint URLs and supported features.
+This provides all endpoint URLs and supported features. Ensure your application leverages
 
 ### 2. Generate Security Parameters
+
+During the first call to scotaccount, your application is responsible for implementing the PKCE client data and security required to succesfully implement an OIDC client.
 
 Your application must generate:
 
@@ -181,6 +189,10 @@ const userSession = {
 };
 ```
 
+![ScotAccount High-Level Architecture]({{ '/assets/diagrams/auth-flow.png' | url }})
+
+_Figure: Illustration of authentication flow._
+
 ### Logout Implementation
 
 ```javascript
@@ -191,23 +203,10 @@ const logoutUrl = `https://authz.integration.scotaccount.service.gov.scot/author
   state=logout-state`;
 ```
 
-### Error Handling
-
-```javascript
-// Handle common error scenarios
-if (error === "access_denied") {
-  // User cancelled authentication
-  showMessage("Authentication cancelled");
-} else if (error === "invalid_request") {
-  // Check your parameters
-  logError("Invalid request parameters", errorDescription);
-}
-```
-
 ## Next Steps
 
 <div class="callout callout--success">
-<strong>Ready for detailed implementation?</strong> Move on to the <a href="{{ '/scotaccount-complete-guide/' | url }}">Complete Integration Guide</a> for comprehensive technical details.
+<strong>Ready for detailed implementation?</strong> Move on to the <a href="{{ '/scotaccount-guide/' | url }}">Implementation Guide</a> for technical details.
 </div>
 
 <div class="callout callout--info">
@@ -218,9 +217,13 @@ if (error === "access_denied") {
 <strong>Planning for production?</strong> Review the <a href="{{ '/architecture/' | url }}">architecture overview</a> to understand system components and scalability considerations.
 </div>
 
+<div class="callout callout--info">
+<strong>Need a deeper dive on how ScotAcocunt works?</strong> Learn about <a href="{{ '/scotaccount-complete-guide/' | url }}">Comprehensive Implementation Guide</a> to understand the details regarding the implementation.
+</div>
+
 ## Support and Resources
 
 - **Integration support**: Contact the ScotAccount team for technical assistance
 - **Testing environment**: Use integration endpoints for development and testing
-- **Documentation**: Refer to the complete guide for detailed implementation patterns
+- **Documentation**: Refer to the comprehensive implementation guide for detailed implementation information
 - **Security**: Follow all security requirements for production deployment

@@ -1,13 +1,13 @@
 ---
 layout: base.njk
 title: "ScotAccount Architecture Overview"
-description: "Technical architecture and system components of ScotAccount - Scotland's digital identity service"
+description: "Technical architecture and system components of ScotAccount"
 eleventyNavigation:
   key: architecture
   order: 3
 ---
 
-Understanding the ScotAccount architecture is essential for successful integration. This page provides an overview of system components, data flows, and integration points.
+Understanding the ScotAccount architecture works is helpful for a successful integration. This page provides an overview of system components, data flows, and integration points.
 
 ## System Overview
 
@@ -38,6 +38,7 @@ _Figure: High-level architecture of ScotAccount and its integration with core DI
 - **Relying Parties**: Government services requiring authentication
 - **Citizens**: User registration and authentication interface
 - **mySafe**: Integration for verified attribute retrieval
+- **VerifyYourIdentity**: Delegation for the user verification journey
 
 ### VerifyYourIdentity (ID&V Services)
 
@@ -56,6 +57,8 @@ _Figure: High-level architecture of ScotAccount and its integration with core DI
 - **Experian ID&V**: Primary identity verification service
 - **Experian Mitek**: Biometric verification and document scanning
 - **Experian PEPS**: PEP and sanctions screening
+- **ViaEuropa**: Address lookup and verification
+- **Gov.UK Notify**: SMS and email delivery services
 
 ### mySafe (Locker Services)
 
@@ -68,12 +71,6 @@ _Figure: High-level architecture of ScotAccount and its integration with core DI
 - Email verification and management
 - Consent tracking for data sharing
 - Audit logging for compliance
-
-**External Dependencies**:
-
-- **ViaEuropa**: Address lookup and verification
-- **Gov.UK Notify**: SMS and email delivery services
-- **SG SOC**: Security monitoring and audit logging
 
 ## Data Flow Patterns
 
