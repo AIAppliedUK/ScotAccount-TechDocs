@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Complete Implementation Guide | ScotAccount Technical Documentation</title>
+  <title>Comprehensive Guide | ScotAccount Technical Documentation</title>
   <meta name="description" content="Comprehensive technical guide for implementing ScotAccount authentication and verified attributes">
   <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-complete-guide/">
   
@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="/sg-identity-techdocs/css/main.css">
   
   <!-- Open Graph -->
-  <meta property="og:title" content="Complete Implementation Guide">
+  <meta property="og:title" content="Comprehensive Guide">
   <meta property="og:description" content="Comprehensive technical guide for implementing ScotAccount authentication and verified attributes">
   <meta property="og:type" content="website">
   <meta property="og:url" content="/scotaccount-complete-guide/">
@@ -29,7 +29,7 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Complete Implementation Guide",
+    "headline": "Comprehensive Guide",
     "description": "Comprehensive technical guide for implementing ScotAccount authentication and verified attributes",
     "author": {
       "@type": "Organization",
@@ -104,7 +104,11 @@
           </li>
         
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link site-nav__link--active">Complete Guide</a>
+            <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">Implementation Guide</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link site-nav__link--active">Comprehensive Guide</a>
           </li>
         
           <li class="site-nav__item">
@@ -170,7 +174,16 @@
           <li class="sidebar__nav-item">
             <a href="/sg-identity-techdocs/scotaccount-complete-guide/" 
               class="sidebar__nav-link">
-              Complete Implementation Guide
+              Comprehensive Guide
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/scotaccount-guide/" 
+              class="sidebar__nav-link">
+              Implementation Guide
             </a>
           </li>
           
@@ -210,7 +223,7 @@
     <!-- Main content -->
     <main class="main" id="main-content" role="main" tabindex="-1">
       
-        <h1>Complete Implementation Guide</h1>
+        <h1>Comprehensive Guide</h1>
       
       
       
@@ -218,307 +231,964 @@
       
 
       <!-- Page content -->
-      <p>This comprehensive guide provides detailed technical implementation instructions for integrating with ScotAccount. Follow these steps to build secure authentication with optional verified attributes.</p>
-<p><div class="table-of-contents"><ul><li><a href="#understanding-scotaccount">Understanding ScotAccount</a></li><li><a href="#why-openid-connect-and-oauth-2-0">Why OpenID Connect and OAuth 2.0</a></li><li><a href="#architecture-overview">Architecture Overview</a></li><li><a href="#implementation-overview">Implementation Overview</a><ul><li><a href="#expected-timeline">Expected Timeline</a></li></ul></li><li><a href="#phase-1-setup-and-registration">Phase 1: Setup &amp; Registration</a><ul><li><a href="#generate-cryptographic-keys">Generate Cryptographic Keys</a></li><li><a href="#secure-key-storage">Secure Key Storage</a></li><li><a href="#service-registration">Service Registration</a></li><li><a href="#registration-response">Registration Response</a></li></ul></li><li><a href="#phase-2-basic-authentication">Phase 2: Basic Authentication</a><ul><li><a href="#discovery-endpoint-integration">Discovery Endpoint Integration</a></li><li><a href="#pkce-implementation">PKCE Implementation</a></li><li><a href="#authorisation-request">Authorisation Request</a></li><li><a href="#callback-handling">Callback Handling</a></li><li><a href="#client-assertion">Client Assertion</a></li><li><a href="#token-exchange">Token Exchange</a></li><li><a href="#id-token-validation">ID Token Validation</a></li></ul></li><li><a href="#phase-3-verified-attributes">Phase 3: Verified Attributes</a><ul><li><a href="#verified-attributes-and-consent">Verified Attributes and Consent</a></li></ul></li><li><a href="#phase-4-production-deployment">Phase 4: Production Deployment</a><ul><li><a href="#environments-and-configuration">Environments and Configuration</a></li><li><a href="#monitoring-and-logging">Monitoring and Logging</a></li><li><a href="#error-handling">Error Handling</a></li><li><a href="#security-checklist">Security Checklist</a></li></ul></li><li><a href="#implementation-references">Implementation References</a></li><li><a href="#troubleshooting-common-issues">Troubleshooting Common Issues</a><ul><li><a href="#invalid-client-assertion">Invalid Client Assertion</a></li><li><a href="#state-parameter-mismatch">State Parameter Mismatch</a></li><li><a href="#token-validation-failures">Token Validation Failures</a></li><li><a href="#pkce-errors">PKCE Errors</a></li></ul></li><li><a href="#support-and-next-steps">Support and Next Steps</a></li></ul></div></p>
-<h2 id="understanding-scotaccount" tabindex="-1"><a class="header-anchor" href="#understanding-scotaccount"><span>Understanding ScotAccount</span></a></h2>
-<p>ScotAccount is Scotland’s centralised digital identity provider that lets government services authenticate users securely and, with consent, access verified personal information. Rather than building and operating your own authentication and identity verification stack, you rely on ScotAccount to provide:</p>
+      <h2 id="quick-start-checklist" tabindex="-1"><a class="header-anchor" href="#quick-start-checklist"><span>Quick Start Checklist</span></a></h2>
+<h3 id="phase-1-setup-and-registration" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-and-registration"><span>Phase 1: Setup &amp; Registration</span></a></h3>
 <ul>
-<li>Consistent user authentication with a persistent UUID per user</li>
-<li>Access to verified attributes when required, with clear user consent</li>
-<li>Standards-based security built on OpenID Connect and OAuth 2.0</li>
+<li>[ ] Generate RSA 3072-bit or EC P-256 key pair using OpenSSL</li>
+<li>[ ] Securely store private key in secrets manager (AWS Secrets Manager, Azure Key Vault, etc.)</li>
+<li>[ ] Determine required scopes based on your service needs</li>
+<li>[ ] Identify production IP addresses for allowlisting (if applicable)</li>
+<li>[ ] Define redirect and logout URIs for your service</li>
+<li>[ ] Submit complete registration information to ScotAccount team</li>
+<li>[ ] Receive client_id confirmation and test connectivity</li>
 </ul>
-<p>From a service perspective, this reduces security and compliance overheads, and gives users a single, familiar journey across services.</p>
-<h2 id="why-openid-connect-and-oauth-2-0" tabindex="-1"><a class="header-anchor" href="#why-openid-connect-and-oauth-2-0"><span>Why OpenID Connect and OAuth 2.0</span></a></h2>
-<p>OpenID Connect adds an identity layer to OAuth 2.0. Together they provide a robust, standards-based approach with built-in controls:</p>
+<h3 id="phase-2-basic-authentication" tabindex="-1"><a class="header-anchor" href="#phase-2-basic-authentication"><span>Phase 2: Basic Authentication</span></a></h3>
 <ul>
-<li>State for CSRF protection</li>
-<li>Nonce for replay protection</li>
-<li>PKCE to protect the authorisation code flow</li>
+<li>[ ] Implement discovery endpoint integration to retrieve current configuration</li>
+<li>[ ] Build PKCE parameter generation for security</li>
+<li>[ ] Create authorization request builder with proper state management</li>
+<li>[ ] Implement callback handler with comprehensive state validation</li>
+<li>[ ] Build JWT client assertion creator using your private key</li>
+<li>[ ] Complete token exchange implementation with error handling</li>
+<li>[ ] Add robust ID token validation and user identity extraction</li>
 </ul>
-<p>Your service redirects the user to ScotAccount for authentication and receives cryptographically signed tokens that you validate using ScotAccount’s public keys.</p>
-<h2 id="architecture-overview" tabindex="-1"><a class="header-anchor" href="#architecture-overview"><span>Architecture Overview</span></a></h2>
-<p>At a high level, the user is redirected from your service to ScotAccount to authenticate. Your backend exchanges the returned authorisation code for tokens, validates the ID token, and creates a session. If verified attributes are required, you initiate a new flow requesting additional scopes and call the attributes endpoint with the access token and a client assertion to receive a signed claims token.</p>
-<p>For a detailed diagram and component overview, see the Architecture page.</p>
-<h2 id="implementation-overview" tabindex="-1"><a class="header-anchor" href="#implementation-overview"><span>Implementation Overview</span></a></h2>
-<p>ScotAccount integration follows a four-phase approach:</p>
-<ol>
-<li><strong>Setup &amp; Registration</strong> - Generate keys and register your service</li>
-<li><strong>Basic Authentication</strong> - Implement OpenID Connect authentication flow</li>
-<li><strong>Verified Attributes</strong> - Add identity, address, and email verification</li>
-<li><strong>Production Deployment</strong> - Go live with monitoring and security measures</li>
-</ol>
-<h3 id="expected-timeline" tabindex="-1"><a class="header-anchor" href="#expected-timeline"><span>Expected Timeline</span></a></h3>
+<h3 id="phase-3-verified-attributes" tabindex="-1"><a class="header-anchor" href="#phase-3-verified-attributes"><span>Phase 3: Verified Attributes</span></a></h3>
 <ul>
-<li><strong>Phase 1</strong>: 1-2 days (setup and registration)</li>
-<li><strong>Phase 2</strong>: 3-5 days (basic authentication implementation)</li>
-<li><strong>Phase 3</strong>: 2-3 days (verified attributes, if required)</li>
-<li><strong>Phase 4</strong>: 2-3 days (production deployment and testing)</li>
+<li>[ ] Determine which additional scopes your service requires</li>
+<li>[ ] Implement attribute request flow with user consent handling</li>
+<li>[ ] Build attribute response processor to parse verified claims</li>
+<li>[ ] Add comprehensive attribute data validation and storage</li>
 </ul>
-<p><strong>Total</strong>: 2-4 weeks from start to production</p>
-<h2 id="phase-1-setup-and-registration" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-and-registration"><span>Phase 1: Setup &amp; Registration</span></a></h2>
-<h3 id="generate-cryptographic-keys" tabindex="-1"><a class="header-anchor" href="#generate-cryptographic-keys"><span>Generate Cryptographic Keys</span></a></h3>
-<p><strong>RSA Key Pair (Recommended)</strong>:</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment"># Generate private key</span>
-openssl genpkey <span class="token parameter variable">-algorithm</span> RSA <span class="token parameter variable">-out</span> private_key.pem <span class="token parameter variable">-keylen</span> <span class="token number">3072</span>
-
-<span class="token comment"># Extract public key</span>
-openssl rsa <span class="token parameter variable">-in</span> private_key.pem <span class="token parameter variable">-pubout</span> <span class="token parameter variable">-out</span> public_key.pem
-
-<span class="token comment"># Verify key length</span>
-openssl rsa <span class="token parameter variable">-in</span> private_key.pem <span class="token parameter variable">-text</span> <span class="token parameter variable">-noout</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token string">"Private-Key"</span></code></pre>
-<p><strong>EC Key Pair (Alternative)</strong>:</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment"># Generate EC private key</span>
-openssl ecparam <span class="token parameter variable">-genkey</span> <span class="token parameter variable">-name</span> prime256v1 <span class="token parameter variable">-out</span> ec_private_key.pem
-
-<span class="token comment"># Extract public key</span>
-openssl ec <span class="token parameter variable">-in</span> ec_private_key.pem <span class="token parameter variable">-pubout</span> <span class="token parameter variable">-out</span> ec_public_key.pem</code></pre>
-<h3 id="secure-key-storage" tabindex="-1"><a class="header-anchor" href="#secure-key-storage"><span>Secure Key Storage</span></a></h3>
-<p>Store private keys securely using a secrets manager:</p>
-<p><strong>AWS Secrets Manager</strong>:</p>
-<pre class="language-bash"><code class="language-bash">aws secretsmanager create-secret <span class="token punctuation">\</span>
-  <span class="token parameter variable">--name</span> <span class="token string">"scotaccount/private-key"</span> <span class="token punctuation">\</span>
-  --secret-string file://private_key.pem</code></pre>
-<p><strong>Azure Key Vault</strong>:</p>
-<pre class="language-bash"><code class="language-bash">az keyvault secret <span class="token builtin class-name">set</span> <span class="token punctuation">\</span>
-  --vault-name <span class="token string">"your-keyvault"</span> <span class="token punctuation">\</span>
-  <span class="token parameter variable">--name</span> <span class="token string">"scotaccount-private-key"</span> <span class="token punctuation">\</span>
-  <span class="token parameter variable">--file</span> private_key.pem</code></pre>
-<h3 id="service-registration" tabindex="-1"><a class="header-anchor" href="#service-registration"><span>Service Registration</span></a></h3>
-<p>Submit these details to the ScotAccount team:</p>
-<p><strong>Required Information</strong>:</p>
+<h3 id="phase-4-production-deployment" tabindex="-1"><a class="header-anchor" href="#phase-4-production-deployment"><span>Phase 4: Production Deployment</span></a></h3>
 <ul>
-<li><strong>Service name</strong> and description</li>
-<li><strong>Public key</strong> (from generated key pair)</li>
-<li><strong>Redirect URIs</strong> (where users return after authentication)</li>
-<li><strong>Post-logout redirect URIs</strong> (where users go after logout)</li>
-<li><strong>Required scopes</strong> (see scope reference below)</li>
-<li><strong>Production IP addresses</strong> (if IP allowlisting required)</li>
-<li><strong>Technical contact</strong> details</li>
+<li>[ ] Update configuration to use production endpoints</li>
+<li>[ ] Implement comprehensive monitoring and logging</li>
+<li>[ ] Add user-friendly error handling and messaging</li>
+<li>[ ] Complete security review and penetration testing</li>
 </ul>
-<p><strong>Scope Reference</strong>:</p>
+<hr>
+<h2 id="complete-authentication-flow-summary" tabindex="-1"><a class="header-anchor" href="#complete-authentication-flow-summary"><span>Complete Authentication Flow Summary</span></a></h2>
+<p>This section provides a step-by-step walkthrough of the entire authentication process with actual URLs and data exchanges.</p>
+<h3 id="step-1-discovery-configuration" tabindex="-1"><a class="header-anchor" href="#step-1-discovery-configuration"><span>Step 1: Discovery Configuration</span></a></h3>
+<pre class="language-http"><code class="language-http">GET https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration</code></pre>
+<p>Response provides all endpoint URLs and supported features.</p>
+<h3 id="step-2-start-authentication" tabindex="-1"><a class="header-anchor" href="#step-2-start-authentication"><span>Step 2: Start Authentication</span></a></h3>
+<p>Your application generates:</p>
 <ul>
-<li><code>openid</code> - Required for all integrations</li>
-<li><code>scotaccount.gpg45.medium</code> - Verified identity (GPG45 Medium)</li>
-<li><code>scotaccount.address</code> - Verified postal address</li>
-<li><code>scotaccount.email</code> - Verified email address</li>
+<li>Code verifier: <code>dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></li>
+<li>Code challenge: <code>E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM</code></li>
+<li>State: <code>af0ifjsldkj</code></li>
+<li>Nonce: <code>n-0S6_WzA2Mj</code></li>
 </ul>
-<h3 id="registration-response" tabindex="-1"><a class="header-anchor" href="#registration-response"><span>Registration Response</span></a></h3>
-<p>You’ll receive:</p>
-<ul>
-<li><strong>Client ID</strong> - Your unique service identifier</li>
-<li><strong>Configuration URLs</strong> - Integration and production endpoints</li>
-<li><strong>Testing credentials</strong> - For development environment access</li>
-</ul>
-<h2 id="phase-2-basic-authentication" tabindex="-1"><a class="header-anchor" href="#phase-2-basic-authentication"><span>Phase 2: Basic Authentication</span></a></h2>
-<h3 id="discovery-endpoint-integration" tabindex="-1"><a class="header-anchor" href="#discovery-endpoint-integration"><span>Discovery Endpoint Integration</span></a></h3>
-<p>Always retrieve current configuration dynamically:</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getOidcConfiguration</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>
-    <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration"</span>
-  <span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">return</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
-<p><strong>Key configuration values</strong>:</p>
-<ul>
-<li><code>authorization_endpoint</code> - Where to send authentication requests</li>
-<li><code>token_endpoint</code> - Where to exchange codes for tokens</li>
-<li><code>jwks_uri</code> - Public keys for token validation</li>
-</ul>
-<h3 id="pkce-implementation" tabindex="-1"><a class="header-anchor" href="#pkce-implementation"><span>PKCE Implementation</span></a></h3>
-<p>You must generate a code verifier and corresponding SHA256-based code challenge, and include the challenge in the initial authorisation request. When exchanging the code for tokens, provide the original verifier. This binds the returned authorisation code to your original request and prevents interception.</p>
-<h3 id="authorisation-request" tabindex="-1"><a class="header-anchor" href="#authorisation-request"><span>Authorisation Request</span></a></h3>
-<p>Build an authorisation URL including: <code>client_id</code>, <code>redirect_uri</code>, <code>response_type=code</code>, <code>scope</code>, <code>state</code>, <code>nonce</code>, <code>code_challenge</code>, and <code>code_challenge_method=S256</code>. Store the <code>state</code>, <code>nonce</code>, and PKCE verifier securely until the callback is processed.</p>
-<h3 id="callback-handling" tabindex="-1"><a class="header-anchor" href="#callback-handling"><span>Callback Handling</span></a></h3>
-<p>Validate the returned <code>state</code> before doing anything else. If it does not match, reject the response. Extract the authorisation <code>code</code>, retrieve the stored <code>nonce</code> and PKCE verifier, and proceed to token exchange.</p>
-<h3 id="client-assertion" tabindex="-1"><a class="header-anchor" href="#client-assertion"><span>Client Assertion</span></a></h3>
-<p>Authenticate your client to the token and attributes endpoints using a signed JWT (private_key_jwt). The assertion includes <code>iss</code>, <code>sub</code>, <code>aud</code> (endpoint URL), <code>exp</code> (up to 6 months), <code>iat</code>, and a unique <code>jti</code>.</p>
-<h3 id="token-exchange" tabindex="-1"><a class="header-anchor" href="#token-exchange"><span>Token Exchange</span></a></h3>
-<p>Exchange the authorisation code at the token endpoint with: <code>grant_type=authorization_code</code>, the received <code>code</code>, your <code>redirect_uri</code>, <code>client_assertion_type</code>, your <code>client_assertion</code>, and the PKCE <code>code_verifier</code>.</p>
-<h3 id="id-token-validation" tabindex="-1"><a class="header-anchor" href="#id-token-validation"><span>ID Token Validation</span></a></h3>
-<p>Validate the ID token signature using ScotAccount’s JWKS. Check audience equals your client ID, issuer matches discovery, and the <code>nonce</code> matches the original value. Extract <code>sub</code> (persistent user UUID) and <code>sid</code> (session ID).</p>
-<h2 id="phase-3-verified-attributes" tabindex="-1"><a class="header-anchor" href="#phase-3-verified-attributes"><span>Phase 3: Verified Attributes</span></a></h2>
-<h3 id="verified-attributes-and-consent" tabindex="-1"><a class="header-anchor" href="#verified-attributes-and-consent"><span>Verified Attributes and Consent</span></a></h3>
-<p>Request additional scopes only when functionality requires them. Users must be present and consent to sharing each type of verified information. To access verified attributes, start a new authorisation flow with the additional scopes:</p>
-<pre class="language-http"><code class="language-http">GET https://authz.integration.scotaccount.service.gov.scot/authorize?
+<p>Redirect user to:</p>
+<pre><code>https://authz.integration.scotaccount.service.gov.scot/authorize?
     client_id=your-client-id&amp;
     redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
     response_type=code&amp;
-    scope=openid%20scotaccount.email%20scotaccount.address%20scotaccount.gpg45.medium&amp;
-    state=your-state&amp;
-    nonce=your-nonce&amp;
-    code_challenge=your-code-challenge&amp;
-    code_challenge_method=S256</code></pre>
-<p>After exchanging the code for an access token, request attributes at the attributes endpoint using the access token and a new client assertion whose audience is the attributes URL:</p>
+    scope=openid&amp;
+    state=af0ifjsldkj&amp;
+    nonce=n-0S6_WzA2Mj&amp;
+    code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&amp;
+    code_challenge_method=S256
+</code></pre>
+<h3 id="step-3-user-authenticates" tabindex="-1"><a class="header-anchor" href="#step-3-user-authenticates"><span>Step 3: User Authenticates</span></a></h3>
+<p>User logs in at ScotAccount and is redirected back:</p>
+<pre><code>https://yourservice.gov.scot/auth/callback?
+    code=SplxlOBeZQQYbYS6WxSbIA&amp;
+    state=af0ifjsldkj
+</code></pre>
+<h3 id="step-4-exchange-code-for-tokens" tabindex="-1"><a class="header-anchor" href="#step-4-exchange-code-for-tokens"><span>Step 4: Exchange Code for Tokens</span></a></h3>
+<p>Create client assertion JWT:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"iss"</span><span class="token operator">:</span> <span class="token string">"your-client-id"</span><span class="token punctuation">,</span>
+  <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"your-client-id"</span><span class="token punctuation">,</span>
+  <span class="token property">"aud"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/token"</span><span class="token punctuation">,</span>
+  <span class="token property">"exp"</span><span class="token operator">:</span> <span class="token number">1757847083</span><span class="token punctuation">,</span>
+  <span class="token property">"iat"</span><span class="token operator">:</span> <span class="token number">1741953083</span><span class="token punctuation">,</span>
+  <span class="token property">"jti"</span><span class="token operator">:</span> <span class="token string">"unique-id-here"</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Make token request:</p>
+<pre class="language-http"><code class="language-http">POST https://authz.integration.scotaccount.service.gov.scot/token
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/x-www-form-urlencoded</span></span>
+
+grant_type=authorization_code&amp;
+code=SplxlOBeZQQYbYS6WxSbIA&amp;
+redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
+client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&amp;
+client_assertion=eyJhbGciOiJSUzI1NiJ9...&amp;
+code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
+<p>Receive tokens:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"access_token"</span><span class="token operator">:</span> <span class="token string">"eyJraWQiOiJXZ2lHIiw..."</span><span class="token punctuation">,</span>
+  <span class="token property">"id_token"</span><span class="token operator">:</span> <span class="token string">"eyJraWQiOiJXZ2lHIiw..."</span><span class="token punctuation">,</span>
+  <span class="token property">"refresh_token"</span><span class="token operator">:</span> <span class="token string">"eyJlbmMiOiJBMTI4Q0..."</span><span class="token punctuation">,</span>
+  <span class="token property">"token_type"</span><span class="token operator">:</span> <span class="token string">"Bearer"</span><span class="token punctuation">,</span>
+  <span class="token property">"expires_in"</span><span class="token operator">:</span> <span class="token number">900</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="step-5-validate-id-token" tabindex="-1"><a class="header-anchor" href="#step-5-validate-id-token"><span>Step 5: Validate ID Token</span></a></h3>
+<p>Extract and validate claims from ID token:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"4f6893f4-6fbe-423e-a5cc-d3c93e5a7c41"</span><span class="token punctuation">,</span> <span class="token comment">// User's UUID</span>
+  <span class="token property">"aud"</span><span class="token operator">:</span> <span class="token string">"your-client-id"</span><span class="token punctuation">,</span>
+  <span class="token property">"iss"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot"</span><span class="token punctuation">,</span>
+  <span class="token property">"nonce"</span><span class="token operator">:</span> <span class="token string">"n-0S6_WzA2Mj"</span><span class="token punctuation">,</span>
+  <span class="token property">"sid"</span><span class="token operator">:</span> <span class="token string">"session-id-for-logout"</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="step-6-request-verified-attributes-optional" tabindex="-1"><a class="header-anchor" href="#step-6-request-verified-attributes-optional"><span>Step 6: Request Verified Attributes (Optional)</span></a></h3>
+<p>If you need verified data, start new flow with additional scopes:</p>
+<pre><code>https://authz.integration.scotaccount.service.gov.scot/authorize?
+    client_id=your-client-id&amp;
+    redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
+    response_type=code&amp;
+    scope=openid%20scotaccount.email%20scotaccount.address&amp;
+    // ... other parameters
+</code></pre>
+<p>After getting new access token, request attributes:</p>
 <pre class="language-http"><code class="language-http">GET https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values
 <span class="token header"><span class="token header-name keyword">Authorization</span><span class="token punctuation">:</span> <span class="token header-value">Bearer [access-token]</span></span>
-<span class="token header"><span class="token header-name keyword">DIS-Client-Assertion</span><span class="token punctuation">:</span> <span class="token header-value">[client-assertion-for-attributes-endpoint]</span></span></code></pre>
-<p>The response contains a signed <code>claimsToken</code> JWT. Validate it and read <code>verified_claims</code>. Each entry includes the scope, the verified claims (for example identity names and date of birth), and detailed verification metadata (outcome, trust framework, assurance policy, confidence level, time, and verifier).</p>
-<h2 id="phase-4-production-deployment" tabindex="-1"><a class="header-anchor" href="#phase-4-production-deployment"><span>Phase 4: Production Deployment</span></a></h2>
-<h3 id="environments-and-configuration" tabindex="-1"><a class="header-anchor" href="#environments-and-configuration"><span>Environments and Configuration</span></a></h3>
-<p>Use integration endpoints during development and testing, then switch to production endpoints when onboarding completes. Always resolve actual endpoints via discovery.</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> config <span class="token operator">=</span> <span class="token punctuation">{</span>
-  <span class="token literal-property property">integration</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">discoveryUrl</span><span class="token operator">:</span>
-      <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration"</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">production</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">discoveryUrl</span><span class="token operator">:</span>
-      <span class="token string">"https://authz.scotaccount.service.gov.scot/.well-known/openid-configuration"</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
-<h3 id="monitoring-and-logging" tabindex="-1"><a class="header-anchor" href="#monitoring-and-logging"><span>Monitoring and Logging</span></a></h3>
-<p>Implement comprehensive monitoring for authentication success/failure rates, discovery and JWKS availability, and unusual error patterns. Log events with sufficient detail for troubleshooting whilst protecting sensitive data:</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Log authentication events</span>
-<span class="token keyword">function</span> <span class="token function">logAuthEvent</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> userId<span class="token punctuation">,</span> details</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>
-    <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-      <span class="token literal-property property">timestamp</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-      <span class="token literal-property property">event</span><span class="token operator">:</span> event<span class="token punctuation">,</span>
-      <span class="token literal-property property">userId</span><span class="token operator">:</span> userId<span class="token punctuation">,</span>
-      <span class="token literal-property property">sessionId</span><span class="token operator">:</span> details<span class="token punctuation">.</span>sessionId<span class="token punctuation">,</span>
-      <span class="token literal-property property">userAgent</span><span class="token operator">:</span> details<span class="token punctuation">.</span>userAgent<span class="token punctuation">,</span>
-      <span class="token literal-property property">ipAddress</span><span class="token operator">:</span> details<span class="token punctuation">.</span>ipAddress<span class="token punctuation">,</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span>
-  <span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
+<span class="token header"><span class="token header-name keyword">DIS-Client-Assertion</span><span class="token punctuation">:</span> <span class="token header-value">[new-client-assertion-for-attributes-endpoint]</span></span></code></pre>
+<h3 id="step-7-logout" tabindex="-1"><a class="header-anchor" href="#step-7-logout"><span>Step 7: Logout</span></a></h3>
+<p>When user logs out:</p>
+<pre class="language-http"><code class="language-http">GET https://authz.integration.scotaccount.service.gov.scot/authorize/logout?
+    id_token_hint=[id-token]&amp;
+    post_logout_redirect_uri=https://yourservice.gov.scot/logout&amp;
+    state=logout-state</code></pre>
+<hr>
+<h2 id="understanding-scotaccount-a-developer-s-perspective" tabindex="-1"><a class="header-anchor" href="#understanding-scotaccount-a-developer-s-perspective"><span>Understanding ScotAccount: A Developer’s Perspective</span></a></h2>
+<p>ScotAccount serves as Scotland’s centralised digital identity provider, offering government services a secure way to authenticate citizens and access verified personal information. Think of it as a trusted intermediary that handles the complex work of identity verification so your service doesn’t have to build these capabilities from scratch.</p>
+<h3 id="the-value-proposition-for-developers" tabindex="-1"><a class="header-anchor" href="#the-value-proposition-for-developers"><span>The Value Proposition for Developers</span></a></h3>
+<p>Rather than building your own authentication system with all the associated complexity of password management, identity verification, and security compliance, ScotAccount provides several key benefits. Users authenticate once with ScotAccount and can then access multiple government services seamlessly. Your service gains access to verified identity data that has been independently validated through rigorous processes. The system provides security by design through OpenID Connect standards, protecting against common web vulnerabilities. Additionally, you benefit from built-in compliance support with data protection and audit capabilities already implemented.</p>
+<h3 id="core-concepts-you-need-to-understand" tabindex="-1"><a class="header-anchor" href="#core-concepts-you-need-to-understand"><span>Core Concepts You Need to Understand</span></a></h3>
+<p>The distinction between authentication and verified attributes is fundamental to understanding how ScotAccount works. Authentication proves that someone is a returning user by providing you with a persistent UUID that uniquely identifies them across all interactions. Verified attributes go further, providing specific information about that person that has been independently verified through various means such as credit reference checks, document verification, or email confirmation processes.</p>
+<p>ScotAccount uses token-based security rather than traditional password handling. Instead of your service managing user credentials, ScotAccount provides cryptographically signed tokens that prove user identity and permissions. This delegation model means your service redirects users to ScotAccount for authentication, then receives cryptographic proof of successful authentication without ever handling user credentials directly.</p>
+<h3 id="why-openid-connect-and-oauth-2-0-matter" tabindex="-1"><a class="header-anchor" href="#why-openid-connect-and-oauth-2-0-matter"><span>Why OpenID Connect and OAuth 2.0 Matter</span></a></h3>
+<p>OpenID Connect builds upon OAuth 2.0 to provide a standardised approach to identity and authorisation. OAuth 2.0 handles the authorisation aspect, determining what a user is allowed to access, whilst OpenID Connect adds the identity layer, proving who the user actually is. This separation of concerns allows for more flexible and secure implementations.</p>
+<p>The protocols include sophisticated protection mechanisms against common attack vectors. Cross-Site Request Forgery protection through state parameters, authorization code interception protection through PKCE, and replay attack protection through nonce values all work together to create a robust security framework.</p>
+<hr>
+<h2 id="architecture-overview" tabindex="-1"><a class="header-anchor" href="#architecture-overview"><span>Architecture Overview</span></a></h2>
+<p><img src="/sg-identity-techdocs/assets/diagrams/architecture-context.png" alt="ScotAccount High-Level Architecture"></p>
+<p><em>Figure: High-level architecture of ScotAccount and its integration with core DIS components.</em></p>
+<p>This architecture diagram illustrates the complete integration pattern between your government service and ScotAccount. The flow begins when a user visits your service and needs to authenticate. Your web application redirects them to ScotAccount’s authentication service, which handles the actual credential verification process.</p>
+<p>Once authentication is complete, ScotAccount redirects the user back to your service with an authorization code. Your backend processes this code by exchanging it for tokens through ScotAccount’s token service. If your service needs verified attributes about the user, you can make additional requests to the attribute service using the access token you received.</p>
+<p>The final steps involve storing or updating user information in your database, creating an appropriate session, and granting access to your service. Throughout this process, tokens are cryptographically signed JWTs that you validate using ScotAccount’s public keys, ensuring authenticity and integrity.</p>
+<hr>
+<h2 id="phase-1-setup-and-registration-1" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-and-registration-1"><span>Phase 1: Setup &amp; Registration</span></a></h2>
+<h3 id="understanding-what-you-need-to-prepare" tabindex="-1"><a class="header-anchor" href="#understanding-what-you-need-to-prepare"><span>Understanding What You Need to Prepare</span></a></h3>
+<p>Before you can integrate with ScotAccount, you need to establish a secure, trusted relationship between your service and ScotAccount’s infrastructure. This involves several critical components that work together to ensure secure communication and proper authorization.</p>
+<p>The foundation of this relationship is cryptographic key management. You’ll generate a public-private key pair where you keep the private key absolutely secure within your systems and provide the public key to ScotAccount during registration. ScotAccount uses your public key to verify that API requests are genuinely coming from your service.</p>
+<p>Network configuration is equally important, particularly for production deployments. ScotAccount implements IP allowlisting as a security measure, meaning only requests from pre-registered IP addresses will be accepted. You’ll need to identify all the IP addresses that your service will use to communicate with ScotAccount.</p>
+<p>Service endpoint configuration defines how ScotAccount will interact with your service during authentication flows. The redirect URI is where ScotAccount will send users after they complete authentication, whilst the logout URI defines where users go after terminating their session.</p>
+<h3 id="cryptographic-key-generation-strategy" tabindex="-1"><a class="header-anchor" href="#cryptographic-key-generation-strategy"><span>Cryptographic Key Generation Strategy</span></a></h3>
+<p>The security of your entire ScotAccount integration depends on proper cryptographic key management. should use Elliptic Curve keys</p>
+<p>Elliptic Curve keys have smaller key sizes and good performance characteristics. The P-256 curve provides security roughly equivalent to a 3072-bit RSA keys whilst requiring significantly less computational resources. This can be particularly beneficial for high-volume services or resource-constrained environments.</p>
+<p>Regardless of which key type you choose, the critical security requirement is proper private key storage. Your private key must never exist in plain text outside of your application’s runtime memory. Use dedicated secret management systems like AWS Secrets Manager, Azure Key Vault, or HashiCorp Vault. The key should be loaded into your application at runtime and never written to configuration files, environment variables, or any persistent storage.</p>
+<h3 id="scope-planning-and-data-requirements-analysis" tabindex="-1"><a class="header-anchor" href="#scope-planning-and-data-requirements-analysis"><span>Scope Planning and Data Requirements Analysis</span></a></h3>
+<p>Understanding which scopes your service requires is fundamental to a successful integration. Each scope represents a specific type of information or capability that ScotAccount can provide, and requesting the right combination of scopes ensures your service gets the data it needs whilst maintaining user trust through appropriate consent requests.</p>
+<p>The openid scope is mandatory for all integrations as it provides the basic authentication functionality and the persistent user identifier that allows you to recognise returning users. This UUID is immutable and provides a reliable way to link user sessions and data across multiple interactions.</p>
+<p>The scotaccount.gpg45.medium scope provides verified identity information including the user’s given name, family name, and date of birth. This information has been verified to GPG45 medium assurance level through a comprehensive process that includes checking identity documents and performing various verification checks. This scope is essential for services that need to verify users’ legal identities.</p>
+<p>The scotaccount.address scope provides a verified postal address that has been checked against credit reference records. This verification process confirms that the user has a genuine connection to the provided address through financial or residency records. This scope is particularly useful for services that need to verify where users live for eligibility or delivery purposes.</p>
+<p>The scotaccount.email scope provides an email address that has been verified through an email confirmation loop during the user’s ScotAccount registration process. This ensures that the user actually controls the provided email address and can receive communications sent to it.</p>
+<p>The scotaccount.mobile scope provides a mobile number that has been verified through an SMS confirmation loop during the user’s ScotAccount registration process. This ensures that the user actually controls the provided mobile number and can receive communications sent to it.</p>
+<p>When planning your scope requirements, consider implementing progressive consent where you request additional scopes only when they become necessary for specific functionality rather than requesting everything upfront. This approach can improve user experience and conversion rates.</p>
+<h3 id="registration-information-preparation" tabindex="-1"><a class="header-anchor" href="#registration-information-preparation"><span>Registration Information Preparation</span></a></h3>
+<p>The registration process requires comprehensive information about your service configuration. This information is used to configure ScotAccount’s systems to work with your specific deployment architecture and security requirements.</p>
+<p>Your service information should include a clear service name and description that will be shown to users during authentication and consent flows. Users need to understand what service they’re granting access to, so this information should be clear and recognisable.</p>
+<p>Network configuration for production deployments must include all IP addresses that will make requests to ScotAccount’s APIs. This typically includes your web servers, application servers, and any background services that might need to validate tokens or refresh authentication state. If your infrastructure uses load balancers, proxy servers, or content delivery networks, you need to understand how these affect the source IP addresses that ScotAccount will see.</p>
+<p>Service endpoint configuration requires careful planning of your redirect and logout URIs. These URLs must be accessible to users’ browsers and must exactly match what you register with ScotAccount. Even small differences in URL structure, query parameters, or trailing slashes will cause authentication failures.</p>
+<p>Your cryptographic configuration section should specify whether you’re using RSA or Elliptic Curve keys, the key length, and provide the complete public key content including all formatting and line breaks.</p>
+<p>Scope requirements should list all the scopes your service needs along with a clear justification for why each scope is necessary. This helps ScotAccount understand your use case and ensures that you’re requesting appropriate permissions for your service’s functionality.</p>
+<hr>
+<h2 id="phase-2-basic-authentication-implementation" tabindex="-1"><a class="header-anchor" href="#phase-2-basic-authentication-implementation"><span>Phase 2: Basic Authentication Implementation</span></a></h2>
+<h3 id="understanding-the-openid-connect-flow" tabindex="-1"><a class="header-anchor" href="#understanding-the-openid-connect-flow"><span>Understanding the OpenID Connect Flow</span></a></h3>
+<p>OpenID Connect authentication represents a sophisticated approach to solving the fundamental challenge of proving user identity in web applications. The protocol addresses many security and usability problems inherent in traditional username-and-password authentication through its delegation model.</p>
+<p>When a user attempts to authenticate with your service via ScotAccount, they’re not providing their credentials directly to your application. Instead, your application redirects them to ScotAccount, where they authenticate using whatever methods ScotAccount supports. Once authentication is complete, ScotAccount provides your application with cryptographic proof that the user has been authenticated, along with a persistent identifier that allows you to recognise that user in future interactions.</p>
+<p>This delegation model provides several crucial benefits that make it superior to traditional authentication approaches. Your application never handles user passwords or other sensitive authentication credentials, reducing your security liability and simplifying compliance requirements. Users benefit from a consistent authentication experience across all government services that use ScotAccount, and they only need to maintain one set of authentication credentials for accessing multiple services.</p>
+<p>The authentication flow incorporates several sophisticated protection mechanisms against common web application attacks. Understanding these mechanisms helps you appreciate why certain steps in the process are mandatory and why attempting to simplify or skip steps can introduce serious security vulnerabilities.</p>
+<p><img src="/sg-identity-techdocs/assets/diagrams/auth-flow.png" alt="ScotAccount High-Level Architecture"></p>
+<p><em>Figure: Illustration of authentication flow.</em></p>
+<pre class="language-plantuml"><code class="language-plantuml"><span class="token delimiter punctuation">@startuml</span> OpenID Connect Authentication Flow
+<span class="token preprocessor property">!theme cerulean-outline</span>
 
-<span class="token comment">// Track authentication metrics</span>
-<span class="token keyword">function</span> <span class="token function">trackMetrics</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> duration</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">// Send to your monitoring system</span>
-  metrics<span class="token punctuation">.</span><span class="token function">increment</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">scotaccount.</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>event<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  metrics<span class="token punctuation">.</span><span class="token function">timing</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">scotaccount.</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>event<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.duration</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> duration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">participant</span> <span class="token string">"User"</span> <span class="token keyword">as</span> User
+<span class="token keyword">participant</span> <span class="token string">"Your Service"</span> <span class="token keyword">as</span> Service
+<span class="token keyword">participant</span> <span class="token string">"ScotAccount"</span> <span class="token keyword">as</span> SA
+<span class="token keyword">participant</span> <span class="token string">"Token Endpoint"</span> <span class="token keyword">as</span> Token
+
+User <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 1. Access protected resource
+Service <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 2. Generate PKCE parameters\n<span class="token punctuation">(</span>code_verifier<span class="token punctuation">,</span> code_challenge<span class="token punctuation">)</span>
+Service <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 3. Generate state &amp; nonce\n<span class="token punctuation">(</span>CSRF &amp; replay protection<span class="token punctuation">)</span>
+Service <span class="token arrow operator">-></span> User<span class="token punctuation">:</span> 4. Redirect to ScotAccount\nwith auth request
+User <span class="token arrow operator">-></span> SA<span class="token punctuation">:</span> 5. Authentication &amp; consent
+SA <span class="token arrow operator">-></span> User<span class="token punctuation">:</span> 6. Redirect back with\nauthorization code
+User <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 7. Callback with code &amp; state
+Service <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 8. Validate state parameter\n<span class="token punctuation">(</span>CSRF protection<span class="token punctuation">)</span>
+Service <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 9. Create client assertion JWT\n<span class="token punctuation">(</span>signed with private key<span class="token punctuation">)</span>
+Service <span class="token arrow operator">-></span> Token<span class="token punctuation">:</span> 10. Exchange code for tokens\n+ client assertion + code_verifier
+Token <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 11. Return access_token<span class="token punctuation">,</span>\nid_token<span class="token punctuation">,</span> refresh_token
+Service <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 12. Validate ID token signature\nand claims
+Service <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 13. Extract user UUID <span class="token punctuation">(</span>sub<span class="token punctuation">)</span>\nand create session
+Service <span class="token arrow operator">-></span> User<span class="token punctuation">:</span> 14. Grant access to\nprotected resource
+
+<span class="token keyword">note</span> over Service<span class="token punctuation">,</span> Token
+The client assertion proves your
+service's identity using your private key.
+The code_verifier proves you initiated
+the original auth request <span class="token punctuation">(</span>PKCE protection<span class="token punctuation">)</span>.
+<span class="token keyword">end note</span>
+
+<span class="token delimiter punctuation">@enduml</span></code></pre>
+<p>This comprehensive flow diagram illustrates every critical step in the OpenID Connect authentication process as implemented by ScotAccount. Each step serves specific security purposes and contributes to the overall integrity of the authentication system.</p>
+<p>The process begins when a user attempts to access a protected resource in your service. Your service recognises that authentication is required and initiates the OpenID Connect flow by generating the necessary security parameters. The PKCE parameters protect against authorization code interception attacks, whilst the state and nonce parameters provide protection against CSRF and replay attacks respectively.</p>
+<p>Your service then redirects the user to ScotAccount with a carefully constructed authorization request that includes all necessary parameters. ScotAccount handles the actual authentication process, which may involve multiple steps depending on the user’s account status and the security requirements.</p>
+<p>Once authentication is complete, ScotAccount redirects the user back to your service with an authorization code. Your service validates the state parameter to ensure the response corresponds to a request it actually made, then creates a client assertion JWT to prove its identity to ScotAccount.</p>
+<p>The token exchange step involves your service sending the authorization code, client assertion, and PKCE code verifier to ScotAccount’s token endpoint. ScotAccount validates all these components before issuing tokens that your service can use.</p>
+<p>Finally, your service validates the received tokens, extracts the user’s identifier, and creates an appropriate session to grant access to the protected resource.</p>
+<h3 id="discovery-and-configuration-management" tabindex="-1"><a class="header-anchor" href="#discovery-and-configuration-management"><span>Discovery and Configuration Management</span></a></h3>
+<p>Before your application can authenticate users, it needs to understand ScotAccount’s current configuration and capabilities. This information is provided through the OpenID Connect discovery mechanism, which returns a JSON document containing endpoint URLs, supported authentication methods, and other configuration details.</p>
+<p><strong>Discovery Endpoint URL:</strong></p>
+<pre><code>https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration
+</code></pre>
+<p><strong>Example Discovery Request:</strong></p>
+<pre class="language-http"><code class="language-http"><span class="token request-line"><span class="token method property">GET</span> <span class="token request-target url">/.well-known/openid-configuration</span> <span class="token http-version property">HTTP/1.1</span></span>
+<span class="token header"><span class="token header-name keyword">Host</span><span class="token punctuation">:</span> <span class="token header-value">authz.integration.scotaccount.service.gov.scot</span></span></code></pre>
+<p><strong>Example Discovery Response:</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"issuer"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot"</span><span class="token punctuation">,</span>
+  <span class="token property">"authorization_endpoint"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/authorize"</span><span class="token punctuation">,</span>
+  <span class="token property">"token_endpoint"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/token"</span><span class="token punctuation">,</span>
+  <span class="token property">"jwks_uri"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/jwks.json"</span><span class="token punctuation">,</span>
+  <span class="token property">"registration_endpoint"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/register"</span><span class="token punctuation">,</span>
+  <span class="token property">"scopes_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">"openid"</span><span class="token punctuation">,</span>
+    <span class="token string">"scotaccount.email"</span><span class="token punctuation">,</span>
+    <span class="token string">"scotaccount.gpg45.medium"</span><span class="token punctuation">,</span>
+    <span class="token string">"scotaccount.address"</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"response_types_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"code"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"response_modes_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"query"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"grant_types_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authorization_code"</span><span class="token punctuation">,</span> <span class="token string">"refresh_token"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"subject_types_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"pairwise"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"id_token_signing_alg_values_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"RS256"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"token_endpoint_auth_methods_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"private_key_jwt"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"token_endpoint_auth_signing_alg_values_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"RS256"</span><span class="token punctuation">,</span> <span class="token string">"ES256"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"claims_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"sub"</span><span class="token punctuation">,</span> <span class="token string">"iss"</span><span class="token punctuation">,</span> <span class="token string">"aud"</span><span class="token punctuation">,</span> <span class="token string">"exp"</span><span class="token punctuation">,</span> <span class="token string">"iat"</span><span class="token punctuation">,</span> <span class="token string">"nonce"</span><span class="token punctuation">,</span> <span class="token string">"sid"</span><span class="token punctuation">]</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="error-handling" tabindex="-1"><a class="header-anchor" href="#error-handling"><span>Error Handling</span></a></h3>
-<p>Implement user-friendly error handling:</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">handleAuthError</span><span class="token punctuation">(</span><span class="token parameter">error<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"Authentication error:"</span><span class="token punctuation">,</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">switch</span> <span class="token punctuation">(</span>error<span class="token punctuation">.</span>message<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">case</span> <span class="token string">"access_denied"</span><span class="token operator">:</span>
-      res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span><span class="token string">"/auth/cancelled"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">break</span><span class="token punctuation">;</span>
-    <span class="token keyword">case</span> <span class="token string">"invalid_request"</span><span class="token operator">:</span>
-      res<span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token number">400</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token string">"error"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
-        <span class="token literal-property property">message</span><span class="token operator">:</span> <span class="token string">"Invalid authentication request"</span><span class="token punctuation">,</span>
-      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">break</span><span class="token punctuation">;</span>
-    <span class="token keyword">default</span><span class="token operator">:</span>
-      res<span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token string">"error"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
-        <span class="token literal-property property">message</span><span class="token operator">:</span> <span class="token string">"Authentication service temporarily unavailable"</span><span class="token punctuation">,</span>
-      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
+<p><strong>JWKS Endpoint for Public Keys:</strong></p>
+<pre><code>https://authz.integration.scotaccount.service.gov.scot/jwks.json
+</code></pre>
+<p><strong>Example JWKS Response:</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"keys"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"RSA"</span><span class="token punctuation">,</span>
+      <span class="token property">"e"</span><span class="token operator">:</span> <span class="token string">"AQAB"</span><span class="token punctuation">,</span>
+      <span class="token property">"use"</span><span class="token operator">:</span> <span class="token string">"sig"</span><span class="token punctuation">,</span>
+      <span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"WgiG"</span><span class="token punctuation">,</span>
+      <span class="token property">"n"</span><span class="token operator">:</span> <span class="token string">"j37Y-Fmx2Pr9xCHXhBWvDRaXobvpikF2Nd2J_FoK8U5SlMeb..."</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="security-checklist" tabindex="-1"><a class="header-anchor" href="#security-checklist"><span>Security Checklist</span></a></h3>
-<p>Before going live, verify:</p>
+<p>Dynamic configuration retrieval is essential because it allows your service to adapt to changes in ScotAccount’s infrastructure without requiring code updates. ScotAccount may periodically update endpoint URLs, rotate cryptographic keys, or modify supported authentication methods. By retrieving configuration dynamically, your service can handle these changes automatically.</p>
+<p>The discovery endpoint provides several critical pieces of information that your application will use throughout the authentication process. The issuer field identifies ScotAccount as the identity provider and must match the issuer claims in tokens that ScotAccount issues. The authorization_endpoint is where you’ll send users to begin the authentication process, whilst the token_endpoint is where your application will exchange authorization codes for tokens.</p>
+<p>The jwks_uri provides access to the cryptographic keys that ScotAccount uses to sign tokens. Your application will use these keys to validate the authenticity and integrity of tokens it receives. The various supported fields indicate which authentication methods, token types, and cryptographic algorithms ScotAccount supports, helping ensure compatibility between your implementation and ScotAccount’s capabilities.</p>
+<p>Implementing robust configuration management involves caching the discovery response to improve performance whilst ensuring that your application picks up configuration changes within a reasonable timeframe. Error handling should include fallback to cached configuration if the discovery endpoint is temporarily unavailable, helping maintain service availability during network issues or ScotAccount maintenance periods.</p>
+<h3 id="pkce-implementation-strategy" tabindex="-1"><a class="header-anchor" href="#pkce-implementation-strategy"><span>PKCE Implementation Strategy</span></a></h3>
+<p>PKCE (Proof Key for Code Exchange) is a critical security enhancement that protects the authorization code flow against interception attacks. Understanding how PKCE works and implementing it correctly is essential for maintaining the security of your ScotAccount integration.</p>
+<p>PKCE addresses a specific vulnerability in the OAuth 2.0 authorization code flow where an attacker might intercept the authorization code during the redirect back to your application. In traditional OAuth 2.0, this authorization code could then be exchanged for tokens by anyone who possesses it.</p>
+<p>PKCE solves this problem by introducing a cryptographic challenge-response mechanism. Your application generates a random code verifier, calculates a corresponding code challenge using SHA256 hashing, and includes the code challenge in the initial authorization request. The authorization code that ScotAccount returns is cryptographically bound to this code challenge.</p>
+<p>When your application exchanges the authorization code for tokens, it must provide the original code verifier. ScotAccount can then verify that the code verifier matches the code challenge from the original request, proving that the token exchange request is coming from the same application that initiated the authorization flow.</p>
+<p>The security of PKCE depends entirely on the unpredictability of the code verifier. The code verifier must be generated using a cryptographically secure random number generator and must have sufficient entropy to resist brute-force attacks. The code verifier should be between 43 and 128 characters long and use the base64url character set.</p>
+<p>The code challenge is calculated by taking the SHA256 hash of the code verifier and encoding it using base64url encoding. This one-way transformation ensures that even if an attacker intercepts the code challenge, they cannot derive the original code verifier.</p>
+<h3 id="state-management-for-csrf-protection" tabindex="-1"><a class="header-anchor" href="#state-management-for-csrf-protection"><span>State Management for CSRF Protection</span></a></h3>
+<p>The state parameter provides protection against Cross-Site Request Forgery attacks by ensuring that authorization responses correspond to requests that your application actually initiated. Implementing state management correctly is crucial for maintaining the security of the authentication flow.</p>
+<p>CSRF attacks occur when an attacker tricks a user into performing actions they didn’t intend by exploiting their existing authenticated sessions. In the context of OpenID Connect, this could involve an attacker initiating an authentication flow and then tricking a victim into completing it, potentially allowing the attacker to gain access to the victim’s account.</p>
+<p>The state parameter prevents this attack by creating a unique, unpredictable value for each authentication request. Your application generates this value and includes it in the authorization request. ScotAccount returns the same state value in the authorization response, allowing your application to verify that the response corresponds to a request it actually made.</p>
+<p>Proper state management involves generating cryptographically secure random state values that cannot be predicted by attackers. Each state value should be single-use and have a limited lifetime to prevent replay attacks. Your application should store the state value securely during the authentication flow and validate it when processing the authorization response.</p>
+<p>The state validation step must occur before any other processing of the authorization response. If the state value doesn’t match what your application originally generated, the entire response should be rejected as potentially malicious.</p>
+<h3 id="authorization-request-construction" tabindex="-1"><a class="header-anchor" href="#authorization-request-construction"><span>Authorization Request Construction</span></a></h3>
+<p>The authorization request is the first step in the authentication flow where your application redirects the user to ScotAccount for authentication. Constructing this request correctly is crucial for both security and functionality.</p>
+<p><strong>Authorization Endpoint URL:</strong></p>
+<pre><code>https://authz.integration.scotaccount.service.gov.scot/authorize
+</code></pre>
+<p><strong>Complete Authorization Request Example:</strong></p>
+<pre><code>GET https://authz.integration.scotaccount.service.gov.scot/authorize?
+    client_id=your-client-id&amp;
+    redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
+    response_type=code&amp;
+    scope=openid&amp;
+    state=af0ifjsldkj-unique-state-value&amp;
+    nonce=n-0S6_WzA2Mj-unique-nonce-value&amp;
+    code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&amp;
+    code_challenge_method=S256
+</code></pre>
+<p>Each parameter in the authorization request serves a specific purpose:</p>
 <ul>
-<li>[ ] <strong>Private keys</strong> stored securely in secrets manager</li>
-<li>[ ] <strong>HTTPS only</strong> - no HTTP endpoints in production</li>
-<li>[ ] <strong>State validation</strong> implemented for CSRF protection</li>
-<li>[ ] <strong>Nonce validation</strong> prevents replay attacks</li>
-<li>[ ] <strong>Token expiration</strong> handled correctly</li>
-<li>[ ] <strong>Session management</strong> implemented securely</li>
-<li>[ ] <strong>Error logging</strong> without exposing sensitive data</li>
-<li>[ ] <strong>Rate limiting</strong> on authentication endpoints</li>
-<li>[ ] <strong>Monitoring</strong> and alerting configured</li>
+<li><strong>client_id</strong>: Your unique identifier assigned during registration (e.g., <code>6ovfxtjaivlpy</code>)</li>
+<li><strong>redirect_uri</strong>: Where ScotAccount sends users after authentication. Must exactly match your registered URI</li>
+<li><strong>response_type</strong>: Always <code>code</code> for the authorization code flow</li>
+<li><strong>scope</strong>: Space-separated list of requested permissions. <code>openid</code> is mandatory</li>
+<li><strong>state</strong>: Random value for CSRF protection (you generate this)</li>
+<li><strong>nonce</strong>: Random value for replay protection (you generate this)</li>
+<li><strong>code_challenge</strong>: SHA256 hash of your code verifier, base64url encoded</li>
+<li><strong>code_challenge_method</strong>: Always <code>S256</code> for SHA256</li>
 </ul>
-<h2 id="implementation-references" tabindex="-1"><a class="header-anchor" href="#implementation-references"><span>Implementation References</span></a></h2>
-<p>For end-to-end implementation examples and code, see the following developer-focused pages:</p>
+<p><strong>Example with Additional Scopes:</strong></p>
+<pre><code>GET https://authz.integration.scotaccount.service.gov.scot/authorize?
+    client_id=your-client-id&amp;
+    redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
+    response_type=code&amp;
+    scope=openid%20scotaccount.email%20scotaccount.gpg45.medium&amp;
+    state=af0ifjsldkj&amp;
+    nonce=n-0S6_WzA2Mj&amp;
+    code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&amp;
+    code_challenge_method=S256
+</code></pre>
+<p><strong>What Happens Next:</strong></p>
+<ol>
+<li>User is redirected to ScotAccount’s login page</li>
+<li>User authenticates and grants consent</li>
+<li>ScotAccount redirects back to your redirect_uri with:<pre><code>https://yourservice.gov.scot/auth/callback?
+    code=SplxlOBeZQQYbYS6WxSbIA&amp;
+    state=af0ifjsldkj
+</code></pre>
+</li>
+</ol>
+<h3 id="token-exchange-and-client-authentication" tabindex="-1"><a class="header-anchor" href="#token-exchange-and-client-authentication"><span>Token Exchange and Client Authentication</span></a></h3>
+<p>The token exchange step is where your application proves its identity to ScotAccount and exchanges the authorization code for usable tokens. This critical step requires your service to create a special JWT called a “client assertion” that acts like a digital signature, proving you are who you claim to be.</p>
+<p><strong>Token Endpoint URL:</strong></p>
+<pre><code>https://authz.integration.scotaccount.service.gov.scot/token
+</code></pre>
+<p><strong>Step 1: Create Your Client Assertion JWT</strong></p>
+<p>Your service creates a JWT with these claims:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"iss"</span><span class="token operator">:</span> <span class="token string">"your-client-id"</span><span class="token punctuation">,</span>
+  <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"your-client-id"</span><span class="token punctuation">,</span>
+  <span class="token property">"aud"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/token"</span><span class="token punctuation">,</span>
+  <span class="token property">"exp"</span><span class="token operator">:</span> <span class="token number">1757847083</span><span class="token punctuation">,</span> <span class="token comment">// 6 months from now</span>
+  <span class="token property">"iat"</span><span class="token operator">:</span> <span class="token number">1741953083</span><span class="token punctuation">,</span> <span class="token comment">// Current time</span>
+  <span class="token property">"jti"</span><span class="token operator">:</span> <span class="token string">"239a5659-0533-4faa-ba97-8f6ee057843f"</span> <span class="token comment">// Unique ID</span>
+<span class="token punctuation">}</span></code></pre>
+<p>This JWT is signed with your private key, resulting in something like:</p>
+<pre><code>eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI2b3ZmeHRqYWl2bHB5Iiw...
+</code></pre>
+<p><strong>Step 2: Make the Token Exchange Request</strong></p>
+<pre class="language-http"><code class="language-http"><span class="token request-line"><span class="token method property">POST</span> <span class="token request-target url">/token</span> <span class="token http-version property">HTTP/1.1</span></span>
+<span class="token header"><span class="token header-name keyword">Host</span><span class="token punctuation">:</span> <span class="token header-value">authz.integration.scotaccount.service.gov.scot</span></span>
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/x-www-form-urlencoded</span></span>
+
+grant_type=authorization_code&amp;
+code=SplxlOBeZQQYbYS6WxSbIA&amp;
+redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
+client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&amp;
+client_assertion=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI2b3ZmeHRqYWl2bHB5Iiw...&amp;
+code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
+<p><strong>Request Parameters Explained:</strong></p>
 <ul>
-<li>Integration Examples and Best Practices</li>
-<li>Token Validation Module</li>
+<li><strong>grant_type</strong>: Always <code>authorization_code</code></li>
+<li><strong>code</strong>: The authorization code from the callback</li>
+<li><strong>redirect_uri</strong>: Must match exactly what you used in the authorization request</li>
+<li><strong>client_assertion_type</strong>: Always this exact URN value</li>
+<li><strong>client_assertion</strong>: Your signed JWT proving your identity</li>
+<li><strong>code_verifier</strong>: The original PKCE verifier you generated</li>
 </ul>
-<p>Below is a minimal Node.js/Express example to illustrate request sequencing. For production-ready code, refer to the pages above.</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> express <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"express"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> jwt <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jsonwebtoken"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> crypto <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"crypto"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<p><strong>Step 3: Receive Tokens</strong></p>
+<p>Success response:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"access_token"</span><span class="token operator">:</span> <span class="token string">"eyJraWQiOiJXZ2lHIiwidHlwIjoiYXQrand0IiwiYWxnIjoiUlMyNTYifQ..."</span><span class="token punctuation">,</span>
+  <span class="token property">"refresh_token"</span><span class="token operator">:</span> <span class="token string">"eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..."</span><span class="token punctuation">,</span>
+  <span class="token property">"id_token"</span><span class="token operator">:</span> <span class="token string">"eyJraWQiOiJXZ2lHIiwiYWxnIjoiUlMyNTYifQ..."</span><span class="token punctuation">,</span>
+  <span class="token property">"token_type"</span><span class="token operator">:</span> <span class="token string">"Bearer"</span><span class="token punctuation">,</span>
+  <span class="token property">"expires_in"</span><span class="token operator">:</span> <span class="token number">900</span><span class="token punctuation">,</span>
+  <span class="token property">"scope"</span><span class="token operator">:</span> <span class="token string">"openid"</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Error response example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"error"</span><span class="token operator">:</span> <span class="token string">"invalid_grant"</span><span class="token punctuation">,</span>
+  <span class="token property">"error_description"</span><span class="token operator">:</span> <span class="token string">"Authorization code is invalid or expired"</span>
+<span class="token punctuation">}</span></code></pre>
+<p>The key security aspects of this exchange:</p>
+<ul>
+<li>Your private key never leaves your system</li>
+<li>The client assertion proves only you could have made this request</li>
+<li>The code verifier proves you initiated the original flow</li>
+<li>All parameters are validated together for maximum security</li>
+</ul>
+<h3 id="token-validation-and-user-identity-extraction" tabindex="-1"><a class="header-anchor" href="#token-validation-and-user-identity-extraction"><span>Token Validation and User Identity Extraction</span></a></h3>
+<p>Once your application receives tokens from ScotAccount, it must validate them thoroughly before trusting their contents. Token validation is a critical security step that ensures the tokens are authentic, haven’t been tampered with, and are intended for your application.</p>
+<p>JSON Web Tokens used by ScotAccount consist of three parts separated by dots: the header, payload, and signature. Understanding this structure through a concrete example helps clarify what you’re validating and why each step matters.</p>
+<p><strong>Example ID Token (Encoded):</strong></p>
+<pre><code>eyJraWQiOiJXZ2lHIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI0ZjY4OTNmNC02ZmJlLTQyM2UtYTVjYy1kM2M5M2U1YTdjNDEiLCJhdWQiOiI1eWh5Z2tzY3R3cHFnIiwiaXNzIjoiaHR0cHM6Ly9hdXRoei5pbnRlZ3JhdGlvbi5zY290YWNjb3VudC5zZXJ2aWNlLmdvdi5zY290IiwiZXhwIjoxNjc4OTMyNjYyLCJpYXQiOjE2Nzg5MzE3NjIsIm5vbmNlIjoiQmRITERXUFJtWThXQllONkJFdEZmSTJSVm9KbXlDUnBwR0ZJdDJoR3k3QSIsImp0aSI6ImZQX1hfMnc2NWlVIiwic2lkIjoieXhaMlZwT255ZFYwQ1Q4ajFTYmxmenRSWURya3EtU0ozT0g3ZWpGN0dRZyJ9.db79iKccqKkXF4MF2IThOV05AZHrlvmNZWAW5ojUzyQoKzHSlPtCEeC3sqwsah84gHMqU0A9ACWPbE8SECdpzOvL6QVCfoWjwuiMEzMsOZvCHccMEpeNX8rbB7_L5Mo5lLOpVl80jIezKNQJ8NMQoOgMGaBm5qkgLTVFuYqVnvpzAEb44xDeSYe7__jaXOUBiGIWMqopeqJRmR1cy5yJ9ShqDa_xoBVmAxXXXv0ZOanE7E7-LCBApdvFNRA-JUUrjMIYUNn8cSkupye6bjLElLT_qPKJc6N0mSOhH43oU5GB-heMhNX18p-07J5pFFAHotcP6VsA2mE7y96gLQ1XrA
+</code></pre>
+<p>This encoded token contains three Base64URL-encoded sections separated by dots. Let’s examine what’s inside by decoding each section:</p>
+<p><strong>Header (Decoded):</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"WgiG"</span><span class="token punctuation">,</span>
+  <span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"RS256"</span>
+<span class="token punctuation">}</span></code></pre>
+<p>The header tells us that this token is signed using RS256 (RSA with SHA-256) and identifies which key was used to sign it through the kid (key ID) field. Your application will use this kid to look up the correct public key from ScotAccount’s JWKS endpoint.</p>
+<p><strong>Payload (Decoded):</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"4f6893f4-6fbe-423e-a5cc-d3c93e5a7c41"</span><span class="token punctuation">,</span>
+  <span class="token property">"aud"</span><span class="token operator">:</span> <span class="token string">"5yhygksctwpqg"</span><span class="token punctuation">,</span>
+  <span class="token property">"iss"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot"</span><span class="token punctuation">,</span>
+  <span class="token property">"exp"</span><span class="token operator">:</span> <span class="token number">1678932662</span><span class="token punctuation">,</span>
+  <span class="token property">"iat"</span><span class="token operator">:</span> <span class="token number">1678931762</span><span class="token punctuation">,</span>
+  <span class="token property">"nonce"</span><span class="token operator">:</span> <span class="token string">"BdHLDWPRmY8WBYN6BEtFfI2RVoJmyCRppGFIt2hGy7A"</span><span class="token punctuation">,</span>
+  <span class="token property">"jti"</span><span class="token operator">:</span> <span class="token string">"fP_X_2w65iU"</span><span class="token punctuation">,</span>
+  <span class="token property">"sid"</span><span class="token operator">:</span> <span class="token string">"yxZ2VpOnydV0CT8j1SblfztRYDrkq-SJ3OH7ejF7GQg"</span>
+<span class="token punctuation">}</span></code></pre>
+<p>The payload contains the actual claims about the authentication event. Each field serves a specific purpose in the validation process:</p>
+<ul>
+<li><strong>sub (Subject)</strong>: This is the persistent user identifier (UUID) that uniquely identifies the user across all ScotAccount services. This is the primary piece of information you’ll extract and store.</li>
+<li><strong>aud (Audience)</strong>: Your client ID, confirming this token was issued specifically for your application.</li>
+<li><strong>iss (Issuer)</strong>: ScotAccount’s identifier, which must match the issuer from the discovery document.</li>
+<li><strong>exp (Expiration)</strong>: Unix timestamp indicating when this token expires (15 minutes after issuance).</li>
+<li><strong>iat (Issued At)</strong>: Unix timestamp of when the token was created.</li>
+<li><strong>nonce</strong>: The random value you provided in the authorization request, used to prevent replay attacks.</li>
+<li><strong>jti (JWT ID)</strong>: A unique identifier for this specific token.</li>
+<li><strong>sid (Session ID)</strong>: ScotAccount’s session identifier, used for session management and logout.</li>
+</ul>
+<p><strong>Signature:</strong><br>
+The third part is the cryptographic signature that proves the token hasn’t been tampered with and was genuinely issued by ScotAccount. This signature is created using ScotAccount’s private key and can be verified using their public key.</p>
+<p>Proper JWT validation involves several distinct steps, each of which protects against different types of attacks. Signature verification ensures the token hasn’t been tampered with and was indeed issued by ScotAccount. This involves retrieving ScotAccount’s current public keys from the JWKS endpoint and using them to verify the token’s cryptographic signature.</p>
+<p>The validation process involves several critical steps that must be performed in the correct order to ensure security. First, your service parses the JWT to extract the header and payload sections. Using the key identifier from the header, you retrieve the appropriate public key from ScotAccount’s JWKS endpoint. This key is then used to verify the cryptographic signature, ensuring the token hasn’t been tampered with and was genuinely issued by ScotAccount.</p>
+<p>After signature verification, you must validate each claim in the token. The expiration time must be checked to ensure the token is still valid. The issuer must match ScotAccount’s identifier exactly as provided in the discovery document. The audience must be your client ID, confirming this token was issued specifically for your service. The nonce must match the value your service provided in the original authorization request, preventing replay attacks.</p>
+<p>Successful validation confirms that the token is authentic, current, and intended for your service. The subject claim then provides the persistent user identifier that your service uses to recognise this user in all future interactions. This UUID remains constant for each user across all their sessions and interactions with your service.</p>
+<p>OpenID Connect specific validation includes verifying the nonce claim to prevent replay attacks. The nonce value in the token must match the nonce value your application included in the original authorization request. Additionally, the subject claim provides the persistent user identifier that your application will use to recognise the user in future interactions.</p>
+<p>Once validation is complete, you can extract the user’s persistent identifier from the sub claim and use it to establish or update the user’s session within your application. This UUID uniquely and persistently identifies the user across all interactions with ScotAccount-integrated services and serves as the foundation for user identity management in your service.</p>
+<hr>
+<h2 id="phase-3-verified-attributes-integration" tabindex="-1"><a class="header-anchor" href="#phase-3-verified-attributes-integration"><span>Phase 3: Verified Attributes Integration</span></a></h2>
+<h3 id="understanding-attribute-requests" tabindex="-1"><a class="header-anchor" href="#understanding-attribute-requests"><span>Understanding Attribute Requests</span></a></h3>
+<p>When your service needs verified information about users beyond their basic identity, you request additional scopes in the authentication flow. ScotAccount will then guide users through appropriate consent screens and return verified data that has been independently validated through various verification processes.</p>
+<p>The key principle behind verified attributes is user consent and data minimisation. Users must be present and actively consent to sharing each type of verified information. ScotAccount cannot provide verified attributes through background API calls or long-lived tokens - the user must be actively involved in the process each time new attributes are requested.</p>
+<p>This consent-based approach serves both privacy and security purposes. Users maintain control over what information they share with each service, and services are encouraged to request only the data they actually need. The verification processes that ScotAccount uses to validate attributes are rigorous and involve multiple independent checks to ensure accuracy.</p>
+<pre class="language-plantuml"><code class="language-plantuml"><span class="token delimiter punctuation">@startuml</span> Verified Attributes Flow
+<span class="token preprocessor property">!theme cerulean-outline</span>
 
-<span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token function">express</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">participant</span> <span class="token string">"User"</span> <span class="token keyword">as</span> User
+<span class="token keyword">participant</span> <span class="token string">"Your Service"</span> <span class="token keyword">as</span> Service
+<span class="token keyword">participant</span> <span class="token string">"ScotAccount Auth"</span> <span class="token keyword">as</span> Auth
+<span class="token keyword">participant</span> <span class="token string">"Attribute Service"</span> <span class="token keyword">as</span> Attrs
 
-<span class="token comment">// Configuration</span>
-<span class="token keyword">const</span> <span class="token constant">CLIENT_ID</span> <span class="token operator">=</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">SCOTACCOUNT_CLIENT_ID</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> <span class="token constant">PRIVATE_KEY</span> <span class="token operator">=</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">SCOTACCOUNT_PRIVATE_KEY</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> <span class="token constant">REDIRECT_URI</span> <span class="token operator">=</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">SCOTACCOUNT_REDIRECT_URI</span><span class="token punctuation">;</span>
+User <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 1. Access feature requiring\nverified information
+Service <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 2. Check if user has\nrequired attributes locally
+<span class="token keyword">alt</span> User needs additional attributes
+    Service <span class="token arrow operator">-></span> Auth<span class="token punctuation">:</span> 3. Auth request with\nadditional scopes
+    Auth <span class="token arrow operator">-></span> User<span class="token punctuation">:</span> 4. Show consent screen\nfor data sharing
+    User <span class="token arrow operator">-></span> Auth<span class="token punctuation">:</span> 5. Grant consent
+    Auth <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 6. Return auth code
+    Service <span class="token arrow operator">-></span> Auth<span class="token punctuation">:</span> 7. Exchange for tokens\n<span class="token punctuation">(</span>including access_token<span class="token punctuation">)</span>
+    Service <span class="token arrow operator">-></span> Attrs<span class="token punctuation">:</span> 8. Request attributes\nusing access_token + client_assertion
+    Attrs <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 9. Return verified\nattribute data <span class="token punctuation">(</span>JWT<span class="token punctuation">)</span>
+    Service <span class="token arrow operator">-></span> Service<span class="token punctuation">:</span> 10. Validate attribute JWT\nand extract claims
+    Service <span class="token arrow operator">-></span> User<span class="token punctuation">:</span> 11. Provide service using\nverified information
+<span class="token keyword">else</span> User already has required attributes
+    Service <span class="token arrow operator">-></span> User<span class="token punctuation">:</span> 12. Provide service immediately\nusing stored attributes
+<span class="token keyword">end
 
-<span class="token comment">// Routes</span>
-app<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"/auth/login"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> config <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">getOidcConfiguration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> pkce <span class="token operator">=</span> <span class="token function">generatePKCE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> authUrl <span class="token operator">=</span> <span class="token function">buildAuthUrl</span><span class="token punctuation">(</span>config<span class="token punctuation">,</span> pkce<span class="token punctuation">,</span> <span class="token constant">CLIENT_ID</span><span class="token punctuation">,</span> <span class="token constant">REDIRECT_URI</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+note</span> over Service<span class="token punctuation">,</span> Attrs
+Attribute requests require user
+presence and consent. Access tokens
+are short-lived and single-use.
+Each attribute has verification metadata.
+<span class="token keyword">end note</span>
 
-    res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span>authUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token function">handleAuthError</span><span class="token punctuation">(</span>error<span class="token punctuation">,</span> res<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter punctuation">@enduml</span></code></pre>
+<p>This flow diagram illustrates the complete process for requesting and receiving verified attributes from ScotAccount. The process begins when a user attempts to access functionality that requires verified information beyond basic authentication.</p>
+<p>Your service first checks whether the user already has the required attributes stored locally. If the necessary verified information is already available, your service can proceed immediately without requiring additional authentication or consent steps.</p>
+<p>If additional attributes are needed, your service initiates a new authentication flow that includes the additional scopes for the required attributes. This triggers ScotAccount’s consent process, where users are clearly informed about what information is being requested and why.</p>
+<p>Upon user consent, ScotAccount provides an authorization code that your service exchanges for tokens, including an access token specifically scoped for the requested attributes. This access token is then used to make a request to ScotAccount’s attribute service, which returns the verified information in the form of a signed JWT.</p>
+<p>The attribute JWT contains not only the verified claims but also detailed verification metadata that describes how each piece of information was verified and what level of assurance it carries. Your service validates this JWT using the same cryptographic verification process used for ID tokens.</p>
+<h3 id="attribute-verification-levels-and-trust" tabindex="-1"><a class="header-anchor" href="#attribute-verification-levels-and-trust"><span>Attribute Verification Levels and Trust</span></a></h3>
+<p>Understanding the different verification methods and assurance levels for each type of attribute helps you make informed decisions about which attributes to request and how to use the returned information appropriately.</p>
+<p>GPG45 Medium identity verification represents a substantial level of assurance about a user’s legal identity. This process involves checking official identity documents, performing various database checks, and applying sophisticated fraud detection techniques. When you receive identity information with GPG45 Medium verification, you can have high confidence that it represents the user’s actual legal identity as it appears on official documentation.</p>
+<p>Address verification through credit reference agencies provides strong assurance that the user has a genuine connection to the provided address. This verification process checks the address against multiple credit reference databases to confirm that the user has had a financial or legal connection to that address. While this doesn’t necessarily mean they currently live there, it does provide significant assurance about the legitimacy of the address information.</p>
+<p>Email verification through confirmation loops provides assurance that the user controls the provided email address at the time of verification. This process involves sending a confirmation email with a unique link or code that the user must access to complete the verification. While simpler than other verification methods, this still provides valuable assurance for services that need to communicate with users via email.</p>
+<p>Each verified attribute includes metadata that describes the verification process used, the confidence level achieved, and the timestamp of when the verification was performed. This metadata allows your service to make informed decisions about how to use the verified information and what level of trust to place in it.</p>
+<h3 id="progressive-consent-and-user-experience" tabindex="-1"><a class="header-anchor" href="#progressive-consent-and-user-experience"><span>Progressive Consent and User Experience</span></a></h3>
+<p>Implementing verified attributes effectively requires careful consideration of the user experience and the timing of attribute requests. Progressive consent, where you request additional attributes only when they become necessary for specific functionality, generally provides a better user experience than requesting all possible attributes upfront.</p>
+<p><strong>Critical Design Consideration: Extended GPG45 Verification Processes</strong></p>
+<p>The GPG45 medium identity verification process duration is entirely guided by the user’s ability to complete the required steps. Users may take days, weeks, or even longer to provide necessary documents and complete verification steps. This creates specific challenges that services must design for:</p>
+<p><strong>How ScotAccount Handles Extended Verification:</strong></p>
+<ol>
+<li><strong>User initiates verification</strong>: User begins GPG45 medium verification through your service’s request</li>
+<li><strong>ScotAccount saves progress</strong>: ScotAccount maintains the user’s progress through verification steps</li>
+<li><strong>Time passes</strong>: The user may take any amount of time to complete verification steps</li>
+<li><strong>Sessions expire</strong>: Your service session, ScotAccount session, and all tokens will have expired</li>
+<li><strong>User returns and logs in</strong>: When the user authenticates with ScotAccount again, ScotAccount automatically returns them to their saved point in the verification journey</li>
+<li><strong>Service perspective</strong>: Your service initiated an authentication flow but never received a callback</li>
+</ol>
+<p>From your service’s perspective, this appears as an abandoned authentication flow. However, ScotAccount is maintaining the user’s verification progress and will continue the process when they return.</p>
+<p><strong>Cross-Browser and Cross-Device Challenges:</strong></p>
+<p>Users may start verification on one device/browser and complete it on another. This creates additional complexity:</p>
+<ul>
+<li><strong>State parameters won’t match</strong>: The state parameter your service generated on the original browser won’t exist in the new browser session</li>
+<li><strong>Local session data is lost</strong>: Any data stored in the original browser session isn’t accessible</li>
+<li><strong>PKCE parameters are missing</strong>: The code verifier stored in the original session is not available</li>
+</ul>
+<p><strong>Recommended Patterns for Handling Extended Verification:</strong></p>
+<p><strong>1. Track Verification Initiation</strong><br>
+Record when users start verification processes so you can provide appropriate messaging when they return:</p>
+<ul>
+<li>Store the user ID and timestamp when verification is initiated</li>
+<li>Track which scopes were requested</li>
+<li>Save any context about what the user was trying to accomplish</li>
+</ul>
+<p><strong>2. Design for Stateless Returns</strong><br>
+Since users may return on different devices, avoid relying on session state:</p>
+<ul>
+<li>Don’t depend on the original state parameter being available</li>
+<li>Store important context server-side linked to the user ID</li>
+<li>Be prepared to handle authentication callbacks without matching state parameters</li>
+</ul>
+<p><strong>3. Implement Intelligent Return Handling</strong><br>
+When users authenticate without completing a previous flow:</p>
+<ul>
+<li>Check if they have previously initiated verification</li>
+<li>Provide clear messaging about continuing their verification</li>
+<li>Offer options to check status or proceed with limited functionality</li>
+</ul>
+<p><strong>4. Clear Communication Patterns</strong></p>
+<ul>
+<li><strong>Before starting</strong>: “Identity verification can take as long as you need. You can return anytime to continue where you left off.”</li>
+<li><strong>When returning</strong>: “Welcome back! Your identity verification is in progress. Would you like to continue verifying your identity or proceed with limited access?”</li>
+<li><strong>Status checking</strong>: “You started identity verification on [date]. Continue verification to unlock full access.”</li>
+</ul>
+<p><strong>5. Handle Missing State Gracefully</strong><br>
+When receiving callbacks without matching state:</p>
+<ul>
+<li>Log the event for security monitoring</li>
+<li>Check if the user has pending verification requests</li>
+<li>Provide appropriate options rather than showing errors</li>
+</ul>
+<p><strong>Example User Journeys:</strong></p>
+<p><strong>Scenario 1: Same Device Return</strong></p>
+<ul>
+<li>Day 1: User starts application on laptop → Begins verification</li>
+<li>Day 3: User returns on same laptop → ScotAccount continues verification</li>
+<li>Day 4: User completes verification → Your service receives verified attributes</li>
+</ul>
+<p><strong>Scenario 2: Cross-Device Journey</strong></p>
+<ul>
+<li>Day 1: User starts on mobile phone → Begins verification</li>
+<li>Day 2: User continues on desktop computer → ScotAccount recognises them and continues</li>
+<li>Day 5: User completes on tablet → Your service receives callback on different device</li>
+</ul>
+<p><strong>Important Considerations:</strong></p>
+<ul>
+<li>The verification duration is entirely user-controlled</li>
+<li>ScotAccount handles all progress saving and continuation</li>
+<li>Your service must handle callbacks that arrive days/weeks after initiation</li>
+<li>Cross-device flows mean you cannot rely on session state</li>
+<li>Design your user experience to accommodate these realities</li>
+</ul>
+<p>Consider a typical government service scenario where users might initially need only basic authentication to access general information, but later require identity verification to submit applications or access personalised services. By implementing progressive consent, you can allow users to access the general functionality immediately whilst requesting additional verified attributes only when they’re actually needed.</p>
+<p>This approach has several benefits for both user experience and conversion rates. Users are more likely to grant consent for data sharing when they understand the specific purpose for which the information will be used. Requesting attributes in context, when their necessity is clear, builds trust and reduces the likelihood of users abandoning the authentication process.</p>
+<p>However, progressive consent also requires careful implementation to avoid creating frustrating user experiences. Your service should clearly communicate when additional verification will be required and provide smooth transitions between different levels of access.</p>
+<h3 id="attribute-data-structure-and-validation" tabindex="-1"><a class="header-anchor" href="#attribute-data-structure-and-validation"><span>Attribute Data Structure and Validation</span></a></h3>
+<p>Verified attributes are returned in a structured JSON format within a signed JWT that includes both the actual attribute data and comprehensive verification metadata. Understanding this structure is essential for properly extracting and validating the information your service receives.</p>
+<p><strong>Attributes Endpoint URL:</strong></p>
+<pre><code>https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values
+</code></pre>
+<p><strong>Attribute Request Example:</strong></p>
+<pre class="language-http"><code class="language-http"><span class="token request-line"><span class="token method property">GET</span> <span class="token request-target url">/attributes/values</span> <span class="token http-version property">HTTP/1.1</span></span>
+<span class="token header"><span class="token header-name keyword">Host</span><span class="token punctuation">:</span> <span class="token header-value">issuer.main.integration.scotaccount.service.gov.scot</span></span>
+<span class="token header"><span class="token header-name keyword">Authorization</span><span class="token punctuation">:</span> <span class="token header-value">Bearer eyJraWQiOiJXZ2lHIiwidHlwIjoiYXQrand0Iiw...</span></span>
+<span class="token header"><span class="token header-name keyword">DIS-Client-Assertion</span><span class="token punctuation">:</span> <span class="token header-value">eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI2b3ZmeHRq...</span></span></code></pre>
+<p><strong>Important</strong>: The DIS-Client-Assertion header contains a new client assertion JWT with the audience set to the attributes endpoint URL.</p>
+<p><strong>Attribute Response Example:</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"claimsToken"</span><span class="token operator">:</span> <span class="token string">"eyJraWQiOiJkTVZEIiwiYWxnIjoiUlMyNTYifQ..."</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Decoded Claims Token Structure:</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"iss"</span><span class="token operator">:</span> <span class="token string">"https://issuer.main.integration.scotaccount.service.gov.scot"</span><span class="token punctuation">,</span>
+  <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"4f6893f4-6fbe-423e-a5cc-d3c93e5a7c41"</span><span class="token punctuation">,</span>
+  <span class="token property">"iat"</span><span class="token operator">:</span> <span class="token number">1678931762</span><span class="token punctuation">,</span>
+  <span class="token property">"verified_claims"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"scope"</span><span class="token operator">:</span> <span class="token string">"scotaccount.gpg45.medium"</span><span class="token punctuation">,</span>
+      <span class="token property">"verification"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"outcome"</span><span class="token operator">:</span> <span class="token string">"VERIFIED_SUCCESSFULLY"</span><span class="token punctuation">,</span>
+        <span class="token property">"trust_framework"</span><span class="token operator">:</span> <span class="token string">"uk_tfida"</span><span class="token punctuation">,</span>
+        <span class="token property">"assurance_policy"</span><span class="token operator">:</span> <span class="token string">"GPG_45"</span><span class="token punctuation">,</span>
+        <span class="token property">"confidence_level"</span><span class="token operator">:</span> <span class="token string">"medium"</span><span class="token punctuation">,</span>
+        <span class="token property">"time"</span><span class="token operator">:</span> <span class="token string">"2024-03-15T14:30:00Z"</span><span class="token punctuation">,</span>
+        <span class="token property">"verifier"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"organization"</span><span class="token operator">:</span> <span class="token string">"ScotAccount"</span><span class="token punctuation">,</span>
+          <span class="token property">"txn"</span><span class="token operator">:</span> <span class="token string">"a4dbe877-df63-4608-95b0-3a7fe3a4d751"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"claims"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"given_name"</span><span class="token operator">:</span> <span class="token string">"John"</span><span class="token punctuation">,</span>
+        <span class="token property">"family_name"</span><span class="token operator">:</span> <span class="token string">"Smith"</span><span class="token punctuation">,</span>
+        <span class="token property">"birth_date"</span><span class="token operator">:</span> <span class="token string">"1990-05-15"</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"scope"</span><span class="token operator">:</span> <span class="token string">"scotaccount.address"</span><span class="token punctuation">,</span>
+      <span class="token property">"verification"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"outcome"</span><span class="token operator">:</span> <span class="token string">"VERIFIED_SUCCESSFULLY"</span><span class="token punctuation">,</span>
+        <span class="token property">"trust_framework"</span><span class="token operator">:</span> <span class="token string">"uk_tfida"</span><span class="token punctuation">,</span>
+        <span class="token property">"validation_method"</span><span class="token operator">:</span> <span class="token string">"credit_reference_agency"</span><span class="token punctuation">,</span>
+        <span class="token property">"time"</span><span class="token operator">:</span> <span class="token string">"2024-03-15T14:30:00Z"</span><span class="token punctuation">,</span>
+        <span class="token property">"verifier"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"organization"</span><span class="token operator">:</span> <span class="token string">"ScotAccount"</span><span class="token punctuation">,</span>
+          <span class="token property">"txn"</span><span class="token operator">:</span> <span class="token string">"b5ece988-eg74-5719-a6c1-4b8gf4b5e862"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"claims"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"address"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"building_number"</span><span class="token operator">:</span> <span class="token string">"123"</span><span class="token punctuation">,</span>
+          <span class="token property">"street_name"</span><span class="token operator">:</span> <span class="token string">"High Street"</span><span class="token punctuation">,</span>
+          <span class="token property">"postal_code"</span><span class="token operator">:</span> <span class="token string">"EH1 1AA"</span><span class="token punctuation">,</span>
+          <span class="token property">"address_locality"</span><span class="token operator">:</span> <span class="token string">"Edinburgh"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Key Points About Attribute Responses:</strong></p>
+<ol>
+<li>
+<p><strong>Partial Success is Possible</strong>: If you request multiple scopes, ScotAccount returns as many as it can verify. You might receive 0 to N attributes back.</p>
+</li>
+<li>
+<p><strong>Verification Metadata</strong>: Each attribute includes detailed verification information:</p>
+<ul>
+<li><code>outcome</code>: Whether verification succeeded, had warnings, or failed</li>
+<li><code>trust_framework</code>: The standards framework used (typically “uk_tfida”)</li>
+<li><code>confidence_level</code>: The assurance level achieved</li>
+<li><code>validation_method</code>: How the data was verified</li>
+<li><code>time</code>: When verification occurred</li>
+<li><code>verifier</code>: Who performed the verification</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Responses</strong>:</p>
+<ul>
+<li><code>404 Not Found</code>: User has no verified attributes</li>
+<li><code>401 Unauthorized</code>: Invalid access token or client assertion</li>
+<li><code>403 Forbidden</code>: Token doesn’t have required scopes</li>
+</ul>
+</li>
+</ol>
+<p>The verified claims array contains one or more attribute objects, each corresponding to a scope that was requested and successfully provided. Each attribute object includes the scope identifier, the actual claims data, and detailed verification information.</p>
+<p>When processing attribute data, your service should validate not only the cryptographic signature of the JWT but also examine the verification metadata to ensure that the attributes meet your specific requirements for assurance level and recency. Different use cases may require different levels of verification, and the metadata provides the information needed to make these determinations.</p>
+<h3 id="attribute-storage-and-lifecycle-management" tabindex="-1"><a class="header-anchor" href="#attribute-storage-and-lifecycle-management"><span>Attribute Storage and Lifecycle Management</span></a></h3>
+<p>Once your service receives verified attributes, you need to consider how to store and manage this information throughout its lifecycle. Verified attributes represent sensitive personal information that requires appropriate protection and management practices.</p>
+<p>Consider implementing appropriate data retention policies based on your service’s specific requirements and legal obligations. Some verified attributes may remain valid for extended periods, whilst others may require periodic re-verification. The verification metadata can help inform these decisions by providing information about when attributes were last verified.</p>
+<p>Implement secure storage practices that protect verified attributes both at rest and in transit. This includes using appropriate encryption, access controls, and audit logging to ensure that verified information is only accessed by authorized personnel for legitimate purposes.</p>
+<p>Consider the relationship between ScotAccount’s verification and your service’s ongoing data management needs. While ScotAccount provides initial verification of attributes, your service may need to implement additional validation or updating processes based on its specific requirements and use patterns.</p>
+<p>Plan for scenarios where users may need to update their verified information or where verification status may change over time. Your service should be able to handle requests for re-verification and should provide clear guidance to users about how to update their information when necessary.</p>
+<hr>
+<h2 id="testing-strategy-and-mock-service-usage" tabindex="-1"><a class="header-anchor" href="#testing-strategy-and-mock-service-usage"><span>Testing Strategy &amp; Mock Service Usage</span></a></h2>
+<h3 id="understanding-testing-environments" tabindex="-1"><a class="header-anchor" href="#understanding-testing-environments"><span>Understanding Testing Environments</span></a></h3>
+<p>ScotAccount provides a comprehensive Integration/Sandpit environment that contains two distinct deployments to support different phases of your integration testing. Understanding the purpose and capabilities of each deployment helps you plan an effective testing strategy that builds confidence in your integration before production deployment.</p>
+<p><strong>Mock Service Deployment</strong></p>
+<p>The mock service is a completely isolated test application designed to allow you to test the functionality and interactions of the ScotAccount service without the complexity of full data verification or live data management. This service enables rapid development and testing cycles by providing predictable responses for all the standard OIDC flows.</p>
+<p><strong>Mock Service URL:</strong></p>
+<pre><code>https://mock-dis.main.integration.scotaccount.service.gov.scot/v2/
+</code></pre>
+<p>The mock service’s key benefits include:</p>
+<ul>
+<li>No need to create or manage test user accounts</li>
+<li>Predictable responses for testing different code paths</li>
+<li>Ability to exercise all authentication and attribute flows</li>
+<li>Fast response times for automated testing</li>
+<li>Detailed documentation of limitations and behaviour at the service URL</li>
+</ul>
+<p>The mock service is ideal for:</p>
+<ul>
+<li>Initial development of your integration</li>
+<li>Automated testing in CI/CD pipelines</li>
+<li>Testing error handling and edge cases</li>
+<li>Demonstrating journey completeness</li>
+<li>Rapid iteration during development</li>
+</ul>
+<p><strong>Production-Like Environment</strong></p>
+<p>The second deployment is a fully functional, production-like environment that provides a representative experience of the live ScotAccount service. This environment uses the same infrastructure, protocols, and security measures as production, giving you high confidence that integrations tested here will work correctly when you go live.</p>
+<p>The production-like environment provides:</p>
+<ul>
+<li>Full OIDC protocol implementation</li>
+<li>Real authentication flows with test accounts</li>
+<li>Complete security measures including IP allowlisting</li>
+<li>Actual consent and verification user interfaces</li>
+<li>The same data structures and response formats as production</li>
+</ul>
+<p>Key limitation to note:</p>
+<ul>
+<li>Identity verification always returns successful/verified status</li>
+<li>This makes it difficult to test failed verification scenarios</li>
+<li>Plan your testing accordingly to work around this limitation</li>
+</ul>
+<h3 id="testing-strategy-progression" tabindex="-1"><a class="header-anchor" href="#testing-strategy-progression"><span>Testing Strategy Progression</span></a></h3>
+<p>An effective testing strategy progresses through both deployments in a structured manner, building confidence at each stage before moving to the next. Think of this as climbing a ladder where each rung provides the foundation for safely reaching the next level.</p>
+<pre class="language-mermaid"><code class="language-mermaid"><span class="token keyword">flowchart</span> TD
+    <span class="token comment">%% Phase 1: Development</span>
+    <span class="token keyword">subgraph</span> Development<span class="token text string">["Phase 1: Development Environment"]</span>
+        UT<span class="token text string">[Unit Tests]</span>
+        IT<span class="token text string">[Integration Tests]</span>
+        Mock<span class="token text string">[Mock Service&lt;br/>Isolated Test Environment]</span>
 
-app<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"/auth/callback"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> callbackData <span class="token operator">=</span> <span class="token function">handleCallback</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> config <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">getOidcConfiguration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        UT <span class="token arrow operator">--></span> Mock
+        IT <span class="token arrow operator">--></span> Mock
+    <span class="token keyword">end</span>
 
-    <span class="token keyword">const</span> clientAssertion <span class="token operator">=</span> <span class="token function">createClientAssertion</span><span class="token punctuation">(</span>
-      <span class="token constant">CLIENT_ID</span><span class="token punctuation">,</span>
-      config<span class="token punctuation">.</span>token_endpoint<span class="token punctuation">,</span>
-      <span class="token constant">PRIVATE_KEY</span>
-    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">%% Phase 2: Integration Validation</span>
+    <span class="token keyword">subgraph</span> Validation<span class="token text string">["Phase 2: Integration Validation"]</span>
+        E2E<span class="token text string">[End-to-End Tests]</span>
+        UJT<span class="token text string">[User Journey Tests]</span>
+        ST<span class="token text string">[Security Tests]</span>
+        PLE<span class="token text string">[Production-Like Environment&lt;br/>Full ScotAccount Features]</span>
 
-    <span class="token keyword">const</span> tokens <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">exchangeCodeForTokens</span><span class="token punctuation">(</span>
-      config<span class="token punctuation">,</span>
-      callbackData<span class="token punctuation">.</span>code<span class="token punctuation">,</span>
-      <span class="token constant">REDIRECT_URI</span><span class="token punctuation">,</span>
-      callbackData<span class="token punctuation">.</span>codeVerifier<span class="token punctuation">,</span>
-      clientAssertion
-    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        E2E <span class="token arrow operator">--></span> PLE
+        UJT <span class="token arrow operator">--></span> PLE
+        ST <span class="token arrow operator">--></span> PLE
+    <span class="token keyword">end</span>
 
-    <span class="token keyword">const</span> userInfo <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">validateIdToken</span><span class="token punctuation">(</span>
-      tokens<span class="token punctuation">.</span>id_token<span class="token punctuation">,</span>
-      <span class="token constant">CLIENT_ID</span><span class="token punctuation">,</span>
-      config<span class="token punctuation">,</span>
-      callbackData<span class="token punctuation">.</span>nonce
-    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">%% Phase 3: Production</span>
+    <span class="token keyword">subgraph</span> Production<span class="token text string">["Phase 3: Production Deployment"]</span>
+        Smoke<span class="token text string">[Smoke Tests]</span>
+        Monitor<span class="token text string">[Continuous Monitoring]</span>
+        Prod<span class="token text string">[Production Environment&lt;br/>Live Service]</span>
 
-    <span class="token comment">// Store user session</span>
-    req<span class="token punctuation">.</span>session<span class="token punctuation">.</span>user <span class="token operator">=</span> userInfo<span class="token punctuation">;</span>
+        Smoke <span class="token arrow operator">--></span> Prod
+        Monitor <span class="token arrow operator">--></span> Prod
+    <span class="token keyword">end</span>
 
-    res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span><span class="token string">"/dashboard"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token function">handleAuthError</span><span class="token punctuation">(</span>error<span class="token punctuation">,</span> res<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">%% Flow between phases</span>
+    Development <span class="token arrow operator">--></span> Validation
+    Validation <span class="token arrow operator">--></span> Production
 
-app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Server running on port 3000"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<h2 id="troubleshooting-common-issues" tabindex="-1"><a class="header-anchor" href="#troubleshooting-common-issues"><span>Troubleshooting Common Issues</span></a></h2>
-<h3 id="invalid-client-assertion" tabindex="-1"><a class="header-anchor" href="#invalid-client-assertion"><span>Invalid Client Assertion</span></a></h3>
-<p><strong>Symptom</strong>: <code>invalid_client</code> error during token exchange<br>
-<strong>Solution</strong>: Check JWT claims, expiration time, and private key format</p>
-<h3 id="state-parameter-mismatch" tabindex="-1"><a class="header-anchor" href="#state-parameter-mismatch"><span>State Parameter Mismatch</span></a></h3>
-<p><strong>Symptom</strong>: CSRF protection errors<br>
-<strong>Solution</strong>: Ensure state is generated, stored, and validated correctly</p>
-<h3 id="token-validation-failures" tabindex="-1"><a class="header-anchor" href="#token-validation-failures"><span>Token Validation Failures</span></a></h3>
-<p><strong>Symptom</strong>: JWT verification errors<br>
-<strong>Solution</strong>: Verify audience, issuer, and nonce claims match expected values</p>
-<h3 id="pkce-errors" tabindex="-1"><a class="header-anchor" href="#pkce-errors"><span>PKCE Errors</span></a></h3>
-<p><strong>Symptom</strong>: <code>invalid_grant</code> errors<br>
-<strong>Solution</strong>: Ensure code verifier and challenge are generated and used correctly</p>
-<h2 id="support-and-next-steps" tabindex="-1"><a class="header-anchor" href="#support-and-next-steps"><span>Support and Next Steps</span></a></h2>
-<div class="callout callout--success">
-<strong>Implementation complete?</strong> Review the <a href="/sg-identity-techdocs/scotaccount-token-validation-module/">Token Validation Module</a> for advanced security patterns.
-</div>
-<div class="callout callout--info">
-<strong>Need architecture details?</strong> See the <a href="/sg-identity-techdocs/architecture/">Architecture Overview</a> for system components and data flows.
-</div>
-<div class="callout callout--warning">
-<strong>Ready for production?</strong> Contact the ScotAccount team for production onboarding and security review.
-</div>
+    <span class="token comment">%% Styling</span>
+    <span class="token keyword">classDef</span> devClass <span class="token style"><span class="token property">fill</span><span class="token operator">:</span>#e1f5fe<span class="token punctuation">,</span><span class="token property">stroke</span><span class="token operator">:</span>#01579b<span class="token punctuation">,</span><span class="token property">stroke-width</span><span class="token operator">:</span>2px</span>
+    <span class="token keyword">classDef</span> valClass <span class="token style"><span class="token property">fill</span><span class="token operator">:</span>#e8f5e9<span class="token punctuation">,</span><span class="token property">stroke</span><span class="token operator">:</span>#1b5e20<span class="token punctuation">,</span><span class="token property">stroke-width</span><span class="token operator">:</span>2px</span>
+    <span class="token keyword">classDef</span> prodClass <span class="token style"><span class="token property">fill</span><span class="token operator">:</span>#fff3e0<span class="token punctuation">,</span><span class="token property">stroke</span><span class="token operator">:</span>#e65100<span class="token punctuation">,</span><span class="token property">stroke-width</span><span class="token operator">:</span>2px</span>
+
+    <span class="token keyword">class</span> UT,IT,Mock devClass
+    <span class="token keyword">class</span> E2E,UJT,ST,PLE valClass
+    <span class="token keyword">class</span> Smoke,Monitor,Prod prodClass</code></pre>
+<p><strong>Understanding Each Testing Phase:</strong></p>
+<p><strong>Phase 1: Development Environment</strong> - This is where you build your foundation. The mock service acts as your safe practice space where you can make mistakes without consequences. Your unit tests verify individual components work correctly, while integration tests ensure these components play nicely together. The mock service responds instantly and predictably, allowing you to iterate quickly and build comprehensive test coverage.</p>
+<p><strong>Phase 2: Integration Validation</strong> - Here you prove your integration works with the real ScotAccount protocols. The production-like environment provides authentic OIDC flows, actual user interfaces, and full security measures. You’ll run end-to-end tests that mirror real user journeys, specific user journey tests for different scenarios, and security tests to validate your implementation. Remember that identity verification always succeeds here, so plan your error handling based on specifications rather than test results.</p>
+<p><strong>Phase 3: Production Deployment</strong> - This is where your integration meets real users. Smoke tests verify basic functionality immediately after deployment, while continuous monitoring watches for issues that only appear under real-world conditions. Here you’ll encounter actual verification outcomes, complete security controls, and the full complexity of production traffic.</p>
+<p>The downward flow between phases represents increasing realism and decreasing flexibility. You cannot skip phases because each one validates different aspects of your integration. Starting in production would be like learning to swim by jumping into the ocean - theoretically possible but unnecessarily risky.</p>
+<h3 id="mock-service-implementation-guide" tabindex="-1"><a class="header-anchor" href="#mock-service-implementation-guide"><span>Mock Service Implementation Guide</span></a></h3>
+<p>The mock service simulates all ScotAccount endpoints and responses, allowing you to develop and test your integration without managing test data. Think of it as a practice environment where you can make mistakes safely and learn how the service behaves. Visit the mock service URL for comprehensive documentation about its capabilities and limitations.</p>
+<p><strong>Using the Mock Service Effectively:</strong></p>
+<p>The beauty of the mock service lies in its simplicity. You don’t need to register your client or provide IP addresses, which means you can start testing immediately. This rapid feedback loop is invaluable during initial development when you’re still figuring out how all the pieces fit together.</p>
+<p>The mock service provides predictable responses, which might seem artificial but serves an important purpose. When you’re building your integration, you need to know that a specific request will always produce a specific response. This predictability allows you to build robust automated tests that won’t fail due to external factors like network issues or data changes.</p>
+<p><strong>Understanding Mock Service Boundaries:</strong></p>
+<p>While the mock service is excellent for functional testing, it deliberately relaxes some security validations. For instance, it may not fully validate client assertion signatures or enforce strict parameter checking. This isn’t a limitation but rather a feature that allows you to focus on getting the integration flow correct before worrying about every security detail.</p>
+<p>Example mock service endpoints follow the same pattern as production:</p>
+<ul>
+<li>Discovery: <code>https://mock-dis.main.integration.scotaccount.service.gov.scot/v2/.well-known/openid-configuration</code></li>
+<li>Authorization, Token, and other endpoints: Check the discovery response for exact URLs</li>
+</ul>
+<p>The mock service documentation (available at the service URL) provides detailed information about which validations are relaxed and how responses differ from production behaviour. This transparency helps you understand exactly what you’re testing and what you’ll need to validate later in the production-like environment.</p>
+<h3 id="production-like-environment-testing" tabindex="-1"><a class="header-anchor" href="#production-like-environment-testing"><span>Production-Like Environment Testing</span></a></h3>
+<p>Once your integration works correctly with the mock service, you’re ready for the production-like environment. This transition is like moving from a flight simulator to an actual aircraft with an instructor - everything is real except for certain safety constraints.</p>
+<p><strong>Key Testing Areas and What Makes Them Important:</strong></p>
+<p>The production-like environment forces you to handle real-world complexity. Your client assertions must be properly signed, your PKCE parameters must be correctly generated, and your state management must be bulletproof. This is where you discover if your error handling can cope with actual ScotAccount responses rather than simulated ones.</p>
+<p>Testing the consent flows with real UI is particularly valuable because it reveals user experience issues that the mock service cannot simulate. You’ll see exactly how long each step takes, where users might get confused, and how your application needs to handle users who take unexpected paths through the authentication process.</p>
+<p><strong>Working Around the Verification Limitation:</strong></p>
+<p>The fact that GPG45 verification always succeeds in this environment is a significant limitation, but there are strategies to work around it. Design your error handling based on the technical specification rather than what you can test. Use defensive programming principles - assume that verification can fail and build your system to handle that gracefully, even if you can’t test it directly.</p>
+<p>Consider creating a “verification failed” simulation in your own code during testing. You can temporarily modify your attribute parsing logic to treat successful verifications as failures, allowing you to test your error handling paths. Just remember to remove this simulation before moving to production.</p>
+<h3 id="recommended-testing-approach" tabindex="-1"><a class="header-anchor" href="#recommended-testing-approach"><span>Recommended Testing Approach</span></a></h3>
+<p>Starting with the mock service allows you to build momentum quickly. You can create a comprehensive test suite that exercises every path through your integration, giving you a safety net for future changes. Focus on getting the happy paths working first, then systematically add error handling for each type of failure the specification describes.</p>
+<p>When you move to the production-like environment, approach it with fresh eyes. Run through your test scenarios manually first to get a feel for the real system. Pay attention to timing - how long do redirects take? How quickly do tokens expire? These real-world characteristics will inform how you design your user experience.</p>
+<p>Document any scenarios you cannot test fully, particularly around verification failures. Create a plan for monitoring these scenarios in production so you can respond quickly if issues arise. Remember that the first time some error conditions occur will be in production, so comprehensive logging and alerting become your safety net.</p>
+<p>This methodical progression from mock to production-like to production ensures that when you go live, you’ve tested everything that can be tested and have plans in place for everything that cannot.</p>
+<hr>
+<hr>
+<h2 id="quick-reference" tabindex="-1"><a class="header-anchor" href="#quick-reference"><span>Quick Reference</span></a></h2>
+<h3 id="essential-endpoints" tabindex="-1"><a class="header-anchor" href="#essential-endpoints"><span>Essential Endpoints</span></a></h3>
+<p>The ScotAccount service provides different endpoints for different environments, each serving specific purposes in your integration journey. Understanding which endpoints to use in which circumstances is crucial for successful integration.</p>
+<p><strong>Integration Environment</strong>: The integration environment uses endpoints under the authz.integration.scotaccount.service.gov.scot domain and provides a complete ScotAccount implementation with test data. This environment is perfect for development, testing, and final validation before production deployment. The discovery endpoint provides current configuration information including all other endpoint URLs.</p>
+<p><strong>Production Environment</strong>: The production environment uses endpoints under the authz.scotaccount.service.gov.scot domain and provides the live ScotAccount service with real user data and full security controls. This environment requires IP allowlisting and uses production-grade security measures.</p>
+<p><strong>Mock Environment</strong>: The mock environment uses endpoints under the mock-dis.main.integration.scotaccount.service.gov.scot domain and provides simulated responses for development and automated testing. This environment doesn’t require real authentication and can simulate various success and failure scenarios.</p>
+<h3 id="scope-reference-and-data-mapping" tabindex="-1"><a class="header-anchor" href="#scope-reference-and-data-mapping"><span>Scope Reference and Data Mapping</span></a></h3>
+<p>Understanding exactly what data each scope provides helps you request appropriate permissions and handle the returned information correctly in your service.</p>
+<p><strong>openid scope</strong>: This mandatory scope provides basic authentication functionality and returns a persistent user identifier in the sub claim of the ID token. This UUID uniquely identifies the user across all ScotAccount-integrated services and never changes for a given user. The authentication process verifies the user’s identity to GPG45 Medium assurance level.</p>
+<p><strong>scotaccount.gpg45.medium scope</strong>: This scope provides verified identity information including the user’s given name, family name, and date of birth as they appear on official identity documents. The verification process involves checking identity documents and performing various database checks to achieve GPG45 Medium assurance level.</p>
+<p><strong>scotaccount.address scope</strong>: This scope provides a verified postal address that has been checked against credit reference records. The returned address includes detailed components such as building numbers, street names, locality information, and postal codes, along with verification metadata describing the validation process.</p>
+<p><strong>scotaccount.email scope</strong>: This scope provides an email address that has been verified through an email confirmation loop during the user’s ScotAccount registration. The verification process confirms that the user controls the provided email address and can receive messages sent to it.</p>
+<h3 id="token-lifetimes-and-usage-patterns" tabindex="-1"><a class="header-anchor" href="#token-lifetimes-and-usage-patterns"><span>Token Lifetimes and Usage Patterns</span></a></h3>
+<p>Understanding token lifetimes helps you implement appropriate caching, refresh, and error handling strategies in your integration.</p>
+<p><strong>Authorization Code</strong>: Authorization codes are single-use tokens with a 10-minute lifetime that must be exchanged for usable tokens immediately after being received. These codes cannot be stored or reused and should be processed as soon as they’re received from the authorization callback.</p>
+<p><strong>Access Token</strong>: Access tokens have a 15-minute lifetime and are used for making API requests to ScotAccount’s attribute service. These tokens are scoped to specific attributes and cannot be used beyond their intended scope or lifetime.</p>
+<p><strong>ID Token</strong>: ID tokens have a 15-minute lifetime and contain user identity claims that have been cryptographically signed by ScotAccount. These tokens should be validated immediately upon receipt and the claims extracted for use in your application.</p>
+<p><strong>Refresh Token</strong>: Refresh tokens have a 15-minute lifetime and provide limited token refresh capabilities. The refresh token mechanism in ScotAccount is primarily designed for extending access to attribute APIs rather than long-term session management.</p>
+<p><strong>Session</strong>: Service session duration is 1 hour.</p>
+<h3 id="common-error-codes-and-resolution" tabindex="-1"><a class="header-anchor" href="#common-error-codes-and-resolution"><span>Common Error Codes and Resolution</span></a></h3>
+<p>Understanding common error scenarios and their resolutions helps you implement effective error handling and provide appropriate user guidance.</p>
+<p><strong>Authorization Endpoint Errors (302 Redirect):</strong></p>
+<pre><code>https://yourservice.gov.scot/auth/callback?
+    error=access_denied&amp;
+    error_description=User%20denied%20consent&amp;
+    state=your-state
+</code></pre>
+<p>Common authorization errors:</p>
+<ul>
+<li><code>invalid_request</code>: Missing or invalid parameters (check scopes, redirect_uri)</li>
+<li><code>access_denied</code>: User cancelled or denied consent</li>
+<li><code>invalid_scope</code>: Requested scope not supported or not granted to your client</li>
+<li><code>server_error</code>: ScotAccount internal error</li>
+</ul>
+<p><strong>Token Endpoint Errors (400/401 JSON Response):</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"error"</span><span class="token operator">:</span> <span class="token string">"invalid_grant"</span><span class="token punctuation">,</span>
+  <span class="token property">"error_description"</span><span class="token operator">:</span> <span class="token string">"Authorization code is invalid or expired"</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Common token errors:</p>
+<ul>
+<li><code>invalid_client</code>: Your client_id is not recognized or client assertion validation failed</li>
+<li><code>invalid_grant</code>: Authorization code expired, already used, or doesn’t match your client</li>
+<li><code>invalid_request</code>: Missing required parameters or malformed request</li>
+<li><code>unauthorized_client</code>: Your client isn’t authorized for the requested grant type</li>
+</ul>
+<p><strong>Attribute Endpoint Errors:</strong></p>
+<ul>
+<li><code>401 Unauthorized</code>: Access token expired or client assertion invalid</li>
+<li><code>403 Forbidden</code>: Token lacks required scopes for requested attributes</li>
+<li><code>404 Not Found</code>: No verified attributes available for the user</li>
+<li><code>500 Internal Server Error</code>: ScotAccount service issue</li>
+</ul>
+<p><strong>Resolution Guide:</strong></p>
+<p><strong>invalid_client errors</strong> typically indicate that your client_id is not recognized by ScotAccount or that your client authentication is failing. Verify that:</p>
+<ul>
+<li>Your client_id matches exactly what was registered</li>
+<li>Your client assertion JWT is properly signed with your registered private key</li>
+<li>The audience claim in your client assertion matches the endpoint URL exactly</li>
+<li>Your client assertion hasn’t expired (check the 6-month expiry)</li>
+</ul>
+<p><strong>invalid_request errors</strong> indicate that required parameters are missing or malformed in your requests. Check that:</p>
+<ul>
+<li>All mandatory parameters are present and properly formatted</li>
+<li>Redirect URI matches exactly (including trailing slashes)</li>
+<li>Scopes are space-separated and URL-encoded</li>
+<li>PKCE parameters are properly generated and matched</li>
+</ul>
+<p><strong>access_denied errors</strong> occur when users deny consent for authentication or data sharing. Handle these gracefully by:</p>
+<ul>
+<li>Providing clear explanation of why permissions are needed</li>
+<li>Offering alternative ways to use your service without full permissions</li>
+<li>Not repeatedly requesting the same permissions in a loop</li>
+</ul>
+<p><strong>invalid_grant errors</strong> typically indicate authorization code issues. Ensure that:</p>
+<ul>
+<li>Codes are exchanged immediately (within 10 minutes)</li>
+<li>Each code is only used once</li>
+<li>The redirect_uri in token exchange matches the authorization request</li>
+<li>The PKCE verifier matches the original challenge</li>
+</ul>
+<hr>
+<h2 id="phase-4-production-deployment-1" tabindex="-1"><a class="header-anchor" href="#phase-4-production-deployment-1"><span>Phase 4: Production Deployment</span></a></h2>
+<h3 id="understanding-production-environment-differences" tabindex="-1"><a class="header-anchor" href="#understanding-production-environment-differences"><span>Understanding Production Environment Differences</span></a></h3>
+<p>Moving from development and testing to production involves several important changes that affect both security and operational considerations. The production environment implements stricter security controls and requires additional configuration that isn’t necessary during development.</p>
+<p>The most significant difference is the IP allowlisting requirement for production deployments. Unlike the integration environment where any IP address can connect for testing purposes, production requires that you register all IP addresses that will communicate with ScotAccount’s APIs. This security measure helps protect against unauthorized access and provides an additional audit trail for all API communications.</p>
+<p>Production endpoints use different URLs from the integration environment, and you’ll need to update your configuration accordingly. Your redirect URIs must use HTTPS in production (localhost HTTP URIs are not permitted), and your logout URIs must also be publicly accessible HTTPS endpoints.</p>
+<h3 id="production-configuration-checklist" tabindex="-1"><a class="header-anchor" href="#production-configuration-checklist"><span>Production Configuration Checklist</span></a></h3>
+<p><strong>Environment Configuration Updates:</strong></p>
+<ul>
+<li>[ ] Update discovery endpoint to production URL</li>
+<li>[ ] Update all redirect URIs to use HTTPS production URLs</li>
+<li>[ ] Update logout URI to production HTTPS endpoint</li>
+<li>[ ] Generate new cryptographic keys for production (never reuse development keys)</li>
+<li>[ ] Register production public key with ScotAccount</li>
+<li>[ ] Provide complete list of production IP addresses for allowlisting</li>
+</ul>
+<p><strong>Security Implementation Requirements:</strong></p>
+<ul>
+<li>[ ] Store private keys in dedicated secret management systems</li>
+<li>[ ] Implement comprehensive logging for all authentication events</li>
+<li>[ ] Add monitoring for authentication success/failure rates</li>
+<li>[ ] Configure alerting for unusual authentication patterns</li>
+<li>[ ] Implement session timeout handling appropriate for your service</li>
+<li>[ ] Add comprehensive error handling with user-friendly messages</li>
+</ul>
+<p><strong>Operational Readiness:</strong></p>
+<ul>
+<li>[ ] Test complete authentication flows in production environment</li>
+<li>[ ] Verify all error scenarios handle gracefully</li>
+<li>[ ] Confirm monitoring and alerting systems are working</li>
+<li>[ ] Document support procedures for common user issues</li>
+<li>[ ] Establish communication channels with ScotAccount support team</li>
+<li>[ ] Plan for handling service outages or maintenance windows</li>
+</ul>
+<h3 id="production-endpoints" tabindex="-1"><a class="header-anchor" href="#production-endpoints"><span>Production Endpoints</span></a></h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Production Endpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discovery</td>
+<td><code>https://authz.scotaccount.service.gov.scot/.well-known/openid-configuration</code></td>
+</tr>
+<tr>
+<td>Authorization</td>
+<td>Retrieved from discovery (typically <code>/authorize</code>)</td>
+</tr>
+<tr>
+<td>Token</td>
+<td>Retrieved from discovery (typically <code>/token</code>)</td>
+</tr>
+<tr>
+<td>JWKS</td>
+<td>Retrieved from discovery (typically <code>/jwks.json</code>)</td>
+</tr>
+<tr>
+<td>Attributes</td>
+<td>Retrieved from discovery (typically <code>/attributes/values</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="monitoring-and-operational-considerations" tabindex="-1"><a class="header-anchor" href="#monitoring-and-operational-considerations"><span>Monitoring and Operational Considerations</span></a></h3>
+<p>Implementing comprehensive monitoring helps ensure reliable operation and quick identification of issues that might affect user experience. Authentication services require specific monitoring approaches that track both technical metrics and user experience indicators.</p>
+<p><strong>Critical Metrics to Monitor:</strong></p>
+<ul>
+<li>Authentication success and failure rates over time</li>
+<li>Token validation errors and their frequency</li>
+<li>Discovery endpoint availability and response times</li>
+<li>JWKS endpoint accessibility and key rotation events</li>
+<li>User session duration and timeout patterns</li>
+<li>Error rates by error type to identify common issues</li>
+</ul>
+<p><strong>Alerting Strategy:</strong><br>
+Configure alerts for metrics that indicate immediate problems requiring attention. Authentication failure rates above normal baselines might indicate service issues or potential security concerns. Discovery endpoint failures prevent new authentication flows from starting. JWKS endpoint issues prevent token validation and can cause widespread authentication failures.</p>
+<p><strong>User Experience Monitoring:</strong><br>
+Track user journey completion rates through authentication flows to identify points where users commonly abandon the process. Monitor the time users spend on ScotAccount authentication pages, as unusually long times might indicate usability issues or service performance problems.</p>
+<p><strong>Security Event Logging:</strong><br>
+Maintain comprehensive logs of all authentication events for both operational and security purposes. Log successful authentications with user identifiers and timestamps, failed authentication attempts with error details, and any unusual patterns that might indicate security issues. Ensure logs include sufficient detail for troubleshooting whilst protecting sensitive user information.</p>
+<h3 id="support-and-incident-response" tabindex="-1"><a class="header-anchor" href="#support-and-incident-response"><span>Support and Incident Response</span></a></h3>
+<p>Establish clear procedures for handling authentication-related user issues and service incidents. Users may experience authentication problems due to various factors including expired sessions, browser issues, or temporary service disruptions.</p>
+<p><strong>Common User Issues and Resolutions:</strong><br>
+Authentication failures often result from expired sessions, where users have remained on your service longer than ScotAccount’s session lifetime. Implement clear messaging that explains when users need to re-authenticate and provides easy ways to restart the authentication process.</p>
+<p>Browser compatibility issues can affect the authentication flow, particularly with older browsers or those with strict security settings. Provide guidance for users about supported browsers and common browser configuration issues that might prevent successful authentication.</p>
+<p><strong>Service Incident Response:</strong><br>
+Develop procedures for handling ScotAccount service outages or degraded performance. Consider implementing fallback authentication methods for critical services, though these should be designed carefully to maintain security standards. Establish communication procedures with the ScotAccount operations team for reporting and coordinating resolution of service issues.</p>
+<p><strong>Planned Maintenance Coordination:</strong><br>
+Work with the ScotAccount team to understand planned maintenance schedules that might affect your service. Some maintenance activities might require temporary changes to your service behavior or user messaging to minimize impact on user experience.</p>
+<h3 id="security-considerations-for-production" tabindex="-1"><a class="header-anchor" href="#security-considerations-for-production"><span>Security Considerations for Production</span></a></h3>
+<p>Production deployment requires implementing security measures that go beyond the basic integration requirements. These measures protect both your service and your users from various security threats whilst ensuring compliance with relevant security standards.</p>
+<p><strong>Key Management in Production:</strong><br>
+Use dedicated secret management systems that provide encryption at rest, detailed access logging, and integration with your existing security infrastructure. Implement key rotation procedures that allow you to periodically update your cryptographic keys without service interruption. Plan for emergency key replacement procedures in case of suspected key compromise.</p>
+<p><strong>Network Security:</strong><br>
+Ensure all communication with ScotAccount uses current TLS versions and cipher suites. Configure your network infrastructure to prevent unauthorized access to systems that handle authentication tokens or user session information. Implement appropriate firewall rules that restrict access to ScotAccount APIs to only the systems that require it.</p>
+<p><strong>Audit and Compliance:</strong><br>
+Maintain audit logs that support your organization’s compliance requirements whilst protecting user privacy. Ensure that authentication-related data handling complies with relevant data protection regulations and your organization’s data governance policies. Regular review audit logs for unusual patterns that might indicate security issues or compliance concerns.</p>
+<p>Understanding these production considerations helps ensure that your ScotAccount integration operates reliably and securely when serving real users in a live environment. Proper preparation for production deployment reduces the likelihood of issues after go-live and ensures that your service provides a positive user experience with ScotAccount authentication.</p>
 
 
       <!-- Last updated -->
       
       <footer class="content-footer">
-        <p><small>Last updated: 14 August 2025</small></p>
+        <p><small>Last updated: 19 August 2025</small></p>
       </footer>
       
     </main>

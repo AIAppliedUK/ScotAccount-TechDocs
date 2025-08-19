@@ -104,7 +104,11 @@
           </li>
         
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
+            <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">Implementation Guide</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Comprehensive Guide</a>
           </li>
         
           <li class="site-nav__item">
@@ -170,7 +174,16 @@
           <li class="sidebar__nav-item">
             <a href="/sg-identity-techdocs/scotaccount-complete-guide/" 
               class="sidebar__nav-link">
-              Complete Implementation Guide
+              Comprehensive Guide
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/scotaccount-guide/" 
+              class="sidebar__nav-link">
+              Implementation Guide
             </a>
           </li>
           
@@ -218,35 +231,22 @@
       
 
       <!-- Page content -->
-      <p>ScotAccount is Scotland’s centralised digital identity service that provides government services with secure user authentication and access to verified personal information.</p>
-<h2 id="what-scotaccount-provides" tabindex="-1"><a class="header-anchor" href="#what-scotaccount-provides"><span>What ScotAccount Provides</span></a></h2>
+      <h2 id="what-scotaccount-provides" tabindex="-1"><a class="header-anchor" href="#what-scotaccount-provides"><span>What ScotAccount Provides</span></a></h2>
 <p>ScotAccount offers two core capabilities for government services:</p>
 <ul>
 <li><strong>User Authentication</strong> - Verify users have a ScotAccount and receive a persistent user identifier (UUID)</li>
 <li><strong>Verified Attributes</strong> - Access independently verified identity, address, and email data</li>
 </ul>
-<p>All authentication is verified to <strong>GPG45 Medium assurance level</strong> through comprehensive identity verification processes.</p>
+<p>When a use completes the verification process their identity verified to <strong>GPG45 Medium assurance level</strong> through comprehensive identity verification processes.</p>
 <h2 id="get-started-quickly" tabindex="-1"><a class="header-anchor" href="#get-started-quickly"><span>Get Started Quickly</span></a></h2>
-<h3 id="for-developers" tabindex="-1"><a class="header-anchor" href="#for-developers"><span>For Developers</span></a></h3>
 <ul>
-<li><strong><a href="/sg-identity-techdocs/getting-started/">Quick Start Guide</a></strong> - Get a working integration in 30 minutes</li>
-<li><strong><a href="/sg-identity-techdocs/scotaccount-complete-guide/">Complete Guide</a></strong> - Comprehensive implementation guide</li>
+<li><strong><a href="/sg-identity-techdocs/getting-started/">Quick Start Guide</a></strong> - Get a working integration quickly</li>
+<li><strong><a href="/sg-identity-techdocs/scotaccount-guide/">Implementation Guide</a></strong> - High level implementation guide</li>
+<li><strong><a href="/sg-identity-techdocs/scotaccount-complete-guide/">Comprehensive Guide</a></strong> - Comprehensive implementation guide detailing the implementation</li>
 <li><strong><a href="/sg-identity-techdocs/scotaccount-token-validation-module/">Token Validation</a></strong> - Secure token handling</li>
-</ul>
-<h3 id="for-project-managers" tabindex="-1"><a class="header-anchor" href="#for-project-managers"><span>For Project Managers</span></a></h3>
-<ul>
-<li><strong><a href="/sg-identity-techdocs/architecture/">Architecture Overview</a></strong> - Understand the service structure and components</li>
-<li><strong><a href="/sg-identity-techdocs/getting-started/">Planning Your Integration</a></strong> - Requirements and preparation steps</li>
-<li><strong><a href="/sg-identity-techdocs/scotaccount-modular-structure/">Modular Structure</a></strong> - Service organisation and modules</li>
-</ul>
-<h3 id="for-technical-architects" tabindex="-1"><a class="header-anchor" href="#for-technical-architects"><span>For Technical Architects</span></a></h3>
-<ul>
-<li><strong><a href="/sg-identity-techdocs/scotaccount-complete-guide/">Authentication Implementation</a></strong> - Complete technical integration guide</li>
 <li><strong><a href="/sg-identity-techdocs/scotaccount-token-validation-module/">Token Validation Module</a></strong> - Secure token verification</li>
-<li><strong><a href="/sg-identity-techdocs/scotaccount-missing-content-analysis/">Missing Content Analysis</a></strong> - Implementation gaps and solutions</li>
 </ul>
 <h2 id="integration-journey" tabindex="-1"><a class="header-anchor" href="#integration-journey"><span>Integration Journey</span></a></h2>
-<p><strong>Typical Timeline</strong>: 2-4 weeks from planning to production deployment</p>
 <h3 id="phase-1-planning-and-setup" tabindex="-1"><a class="header-anchor" href="#phase-1-planning-and-setup"><span>Phase 1: Planning and Setup</span></a></h3>
 <ol>
 <li>Review architecture and requirements</li>
@@ -261,15 +261,15 @@
 </ol>
 <h3 id="phase-3-testing-and-deployment" tabindex="-1"><a class="header-anchor" href="#phase-3-testing-and-deployment"><span>Phase 3: Testing and Deployment</span></a></h3>
 <ol>
-<li>Test with development environment</li>
-<li>Security and penetration testing</li>
+<li>Test with mock or integration environment</li>
+<li>Verify all of your journeys and scenario permutations.</li>
 <li>Production deployment and monitoring</li>
 </ol>
 <h2 id="core-features" tabindex="-1"><a class="header-anchor" href="#core-features"><span>Core Features</span></a></h2>
 <h3 id="authentication" tabindex="-1"><a class="header-anchor" href="#authentication"><span>Authentication</span></a></h3>
 <ul>
-<li><strong>Persistent User Identity</strong>: Each user receives a UUID that never changes</li>
-<li><strong>GPG45 Medium Assurance</strong>: High confidence in user identity</li>
+<li><strong>Persistent User Identity</strong>: Each user receives a unique UUID that never changes</li>
+<li><strong>GPG45 Medium Assurance</strong>: High confidence in user verified identity</li>
 <li><strong>Single Sign-On</strong>: Users authenticate once across multiple government services</li>
 <li><strong>Secure by Design</strong>: Built on OpenID Connect with PKCE, state management, and JWT validation</li>
 </ul>
@@ -298,14 +298,18 @@
 <td>Email confirmation loop</td>
 <td>Service communications, account recovery</td>
 </tr>
+<tr>
+<td><strong>Mobile</strong></td>
+<td>Text Message confirmation loop</td>
+<td>Service communications, account recovery</td>
+</tr>
 </tbody>
 </table>
 <h3 id="extended-verification-support" tabindex="-1"><a class="header-anchor" href="#extended-verification-support"><span>Extended Verification Support</span></a></h3>
-<p>ScotAccount uniquely handles verification processes that can take days or weeks:</p>
+<p>ScotAccount uniquely handles verification processes that can minutes or days:</p>
 <ul>
-<li>Users can start verification on one device and complete on another</li>
+<li>Users can start verification on one device and verify information on their mobile.</li>
 <li>Progress is automatically saved and resumed</li>
-<li>Cross-device completion is fully supported</li>
 <li>Your service receives results when verification completes</li>
 </ul>
 <h2 id="why-choose-scotaccount" tabindex="-1"><a class="header-anchor" href="#why-choose-scotaccount"><span>Why Choose ScotAccount?</span></a></h2>
@@ -325,7 +329,7 @@
 </ul>
 <h3 id="for-technical-teams" tabindex="-1"><a class="header-anchor" href="#for-technical-teams"><span>For Technical Teams</span></a></h3>
 <ul>
-<li><strong>Standards-Based</strong>: Built on OpenID Connect and OAuth 2.0</li>
+<li><strong>Standards-Based</strong>: Built on OpenID Connect</li>
 <li><strong>Comprehensive Documentation</strong>: Complete guides and working examples</li>
 <li><strong>Testing Tools</strong>: Mock service for rapid development and testing</li>
 <li><strong>Production Support</strong>: Dedicated support for live service operation</li>
@@ -342,10 +346,11 @@
 <strong>Need architecture details?</strong> Review the <a href="/sg-identity-techdocs/architecture/">Architecture Overview</a> to understand system components and data flows.
 </div>
 
+
       <!-- Last updated -->
       
       <footer class="content-footer">
-        <p><small>Last updated: 14 August 2025</small></p>
+        <p><small>Last updated: 19 August 2025</small></p>
       </footer>
       
     </main>

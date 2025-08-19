@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ScotAccount Architecture Overview | ScotAccount Technical Documentation</title>
-  <meta name="description" content="Technical architecture and system components of ScotAccount - Scotland&#39;s digital identity service">
+  <meta name="description" content="Technical architecture and system components of ScotAccount">
   <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/architecture/">
   
   <!-- Scottish Government favicons -->
@@ -19,7 +19,7 @@
   
   <!-- Open Graph -->
   <meta property="og:title" content="ScotAccount Architecture Overview">
-  <meta property="og:description" content="Technical architecture and system components of ScotAccount - Scotland&#39;s digital identity service">
+  <meta property="og:description" content="Technical architecture and system components of ScotAccount">
   <meta property="og:type" content="website">
   <meta property="og:url" content="/architecture/">
   <meta property="og:image" content="apple-touch-icon.png">
@@ -30,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "ScotAccount Architecture Overview",
-    "description": "Technical architecture and system components of ScotAccount - Scotland&#39;s digital identity service",
+    "description": "Technical architecture and system components of ScotAccount",
     "author": {
       "@type": "Organization",
       "name": "Scottish Government",
@@ -104,7 +104,11 @@
           </li>
         
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
+            <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">Implementation Guide</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Comprehensive Guide</a>
           </li>
         
           <li class="site-nav__item">
@@ -170,7 +174,16 @@
           <li class="sidebar__nav-item">
             <a href="/sg-identity-techdocs/scotaccount-complete-guide/" 
               class="sidebar__nav-link">
-              Complete Implementation Guide
+              Comprehensive Guide
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/scotaccount-guide/" 
+              class="sidebar__nav-link">
+              Implementation Guide
             </a>
           </li>
           
@@ -214,11 +227,11 @@
       
       
       
-        <p class="lead">Technical architecture and system components of ScotAccount - Scotland&#39;s digital identity service</p>
+        <p class="lead">Technical architecture and system components of ScotAccount</p>
       
 
       <!-- Page content -->
-      <p>Understanding the ScotAccount architecture is essential for successful integration. This page provides an overview of system components, data flows, and integration points.</p>
+      <p>Understanding the ScotAccount architecture works is helpful for a successful integration. This page provides an overview of system components, data flows, and integration points.</p>
 <h2 id="system-overview" tabindex="-1"><a class="header-anchor" href="#system-overview"><span>System Overview</span></a></h2>
 <p>ScotAccount is part of the Digital Identity Scotland (DIS) ecosystem, providing centralised authentication and verified attribute services for Scottish Government digital services.</p>
 <h3 id="high-level-architecture" tabindex="-1"><a class="header-anchor" href="#high-level-architecture"><span>High-Level Architecture</span></a></h3>
@@ -240,6 +253,7 @@
 <li><strong>Relying Parties</strong>: Government services requiring authentication</li>
 <li><strong>Citizens</strong>: User registration and authentication interface</li>
 <li><strong>mySafe</strong>: Integration for verified attribute retrieval</li>
+<li><strong>VerifyYourIdentity</strong>: Delegation for the user verification journey</li>
 </ul>
 <h3 id="verifyyouridentity-id-and-v-services" tabindex="-1"><a class="header-anchor" href="#verifyyouridentity-id-and-v-services"><span>VerifyYourIdentity (ID&amp;V Services)</span></a></h3>
 <p><strong>Purpose</strong>: Handles identity verification processes to GPG45 Medium assurance level</p>
@@ -256,6 +270,8 @@
 <li><strong>Experian ID&amp;V</strong>: Primary identity verification service</li>
 <li><strong>Experian Mitek</strong>: Biometric verification and document scanning</li>
 <li><strong>Experian PEPS</strong>: PEP and sanctions screening</li>
+<li><strong>ViaEuropa</strong>: Address lookup and verification</li>
+<li><strong><a href="http://Gov.UK">Gov.UK</a> Notify</strong>: SMS and email delivery services</li>
 </ul>
 <h3 id="mysafe-locker-services" tabindex="-1"><a class="header-anchor" href="#mysafe-locker-services"><span>mySafe (Locker Services)</span></a></h3>
 <p><strong>Purpose</strong>: Secure storage and management of verified user attributes</p>
@@ -266,12 +282,6 @@
 <li>Email verification and management</li>
 <li>Consent tracking for data sharing</li>
 <li>Audit logging for compliance</li>
-</ul>
-<p><strong>External Dependencies</strong>:</p>
-<ul>
-<li><strong>ViaEuropa</strong>: Address lookup and verification</li>
-<li><strong><a href="http://Gov.UK">Gov.UK</a> Notify</strong>: SMS and email delivery services</li>
-<li><strong>SG SOC</strong>: Security monitoring and audit logging</li>
 </ul>
 <h2 id="data-flow-patterns" tabindex="-1"><a class="header-anchor" href="#data-flow-patterns"><span>Data Flow Patterns</span></a></h2>
 <h3 id="basic-authentication-flow" tabindex="-1"><a class="header-anchor" href="#basic-authentication-flow"><span>Basic Authentication Flow</span></a></h3>
@@ -406,7 +416,7 @@
       <!-- Last updated -->
       
       <footer class="content-footer">
-        <p><small>Last updated: 14 August 2025</small></p>
+        <p><small>Last updated: 19 August 2025</small></p>
       </footer>
       
     </main>

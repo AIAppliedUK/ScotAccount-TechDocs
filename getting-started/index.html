@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Getting Started with ScotAccount | ScotAccount Technical Documentation</title>
-  <meta name="description" content="Quick start guide for developers integrating with ScotAccount - Scotland&#39;s digital identity service">
+  <meta name="description" content="Quick start guide for developers integrating with ScotAccount">
   <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/getting-started/">
   
   <!-- Scottish Government favicons -->
@@ -19,7 +19,7 @@
   
   <!-- Open Graph -->
   <meta property="og:title" content="Getting Started with ScotAccount">
-  <meta property="og:description" content="Quick start guide for developers integrating with ScotAccount - Scotland&#39;s digital identity service">
+  <meta property="og:description" content="Quick start guide for developers integrating with ScotAccount">
   <meta property="og:type" content="website">
   <meta property="og:url" content="/getting-started/">
   <meta property="og:image" content="apple-touch-icon.png">
@@ -30,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Getting Started with ScotAccount",
-    "description": "Quick start guide for developers integrating with ScotAccount - Scotland&#39;s digital identity service",
+    "description": "Quick start guide for developers integrating with ScotAccount",
     "author": {
       "@type": "Organization",
       "name": "Scottish Government",
@@ -104,7 +104,11 @@
           </li>
         
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Complete Guide</a>
+            <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">Implementation Guide</a>
+          </li>
+        
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Comprehensive Guide</a>
           </li>
         
           <li class="site-nav__item">
@@ -170,7 +174,16 @@
           <li class="sidebar__nav-item">
             <a href="/sg-identity-techdocs/scotaccount-complete-guide/" 
               class="sidebar__nav-link">
-              Complete Implementation Guide
+              Comprehensive Guide
+            </a>
+          </li>
+          
+        
+          
+          <li class="sidebar__nav-item">
+            <a href="/sg-identity-techdocs/scotaccount-guide/" 
+              class="sidebar__nav-link">
+              Implementation Guide
             </a>
           </li>
           
@@ -214,63 +227,68 @@
       
       
       
-        <p class="lead">Quick start guide for developers integrating with ScotAccount - Scotland&#39;s digital identity service</p>
+        <p class="lead">Quick start guide for developers integrating with ScotAccount</p>
       
 
       <!-- Page content -->
-      <p>Get up and running with ScotAccount in 30 minutes. This guide covers the essential steps to integrate Scotland’s digital identity service into your application.</p>
+      <p>Get up and running with ScotAccount in quickly. This guide covers the essential steps to integrate ScotAccount into your application.</p>
 <h2 id="prerequisites" tabindex="-1"><a class="header-anchor" href="#prerequisites"><span>Prerequisites</span></a></h2>
 <p>Before you begin, ensure you have:</p>
 <ul>
 <li><strong>Development environment</strong> set up with HTTPS capability</li>
-<li><strong>RSA 3072-bit or EC P-256 key pair</strong> generated using OpenSSL</li>
-<li><strong>Basic understanding</strong> of OpenID Connect and OAuth 2.0</li>
-<li><strong>Access to ScotAccount</strong> integration environment</li>
+<li><strong>EC P-256 key pair</strong> Eliptic Curve keys generated using OpenSSL</li>
+<li><strong>Basic understanding</strong> of OpenID Connect</li>
+<li><strong>Access to ScotAccount</strong> Mock and Integration environment</li>
 </ul>
 <div class="callout callout--info">
 <strong>Need help with key generation?</strong> See our <a href="/sg-identity-techdocs/scotaccount-complete-guide/#key-generation">complete key generation guide</a> for step-by-step instructions.
 </div>
 <h2 id="quick-start-checklist" tabindex="-1"><a class="header-anchor" href="#quick-start-checklist"><span>Quick Start Checklist</span></a></h2>
 <h3 id="phase-1-setup-and-registration" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-and-registration"><span>Phase 1: Setup &amp; Registration</span></a></h3>
-<ul>
-<li>[ ] <strong>Generate key pair</strong> - Create RSA 3072-bit or EC P-256 keys</li>
-<li>[ ] <strong>Store private key securely</strong> - Use a secrets manager (AWS Secrets Manager, Azure Key Vault)</li>
-<li>[ ] <strong>Determine required scopes</strong> - Basic authentication or verified attributes</li>
-<li>[ ] <strong>Define redirect URIs</strong> - Set up callback URLs for your service</li>
-<li>[ ] <strong>Submit registration</strong> - Provide details to ScotAccount team</li>
-<li>[ ] <strong>Receive client_id</strong> - Get your unique client identifier</li>
-</ul>
+<p>Before you begin, ensure you have completed the following configuration and preparation steps.</p>
+<ol>
+<li><strong>Generate key pair</strong> - Create EC P-256 keys</li>
+<li><strong>Stored private key securely</strong> - Use a secrets manager (AWS Secrets Manager, Azure Key Vault) or suitable alternative</li>
+<li><strong>Determine required scopes</strong> - Basic authentication or verified attributes</li>
+<li><strong>Define redirect URIs</strong> - Set up callback URLs for your service</li>
+<li><strong>Submit registration</strong> - Provide details and public key the to ScotAccount team</li>
+<li><strong>Receive client_id</strong> - Get your unique client identifier</li>
+</ol>
 <h3 id="phase-2-basic-authentication" tabindex="-1"><a class="header-anchor" href="#phase-2-basic-authentication"><span>Phase 2: Basic Authentication</span></a></h3>
-<ul>
-<li>[ ] <strong>Implement discovery endpoint</strong> - Retrieve current configuration automatically</li>
-<li>[ ] <strong>Build PKCE parameters</strong> - Generate code verifier and challenge</li>
-<li>[ ] <strong>Create authorization request</strong> - Build secure authentication URL</li>
-<li>[ ] <strong>Implement callback handler</strong> - Process authentication response</li>
-<li>[ ] <strong>Build JWT client assertion</strong> - Use your private key for token requests</li>
-<li>[ ] <strong>Complete token exchange</strong> - Get access and ID tokens</li>
-<li>[ ] <strong>Validate ID tokens</strong> - Extract and verify user identity</li>
-</ul>
+<p>The first step in your implementation is get the authentication flow working. This will prove connectivity and<br>
+your applications ability to send requests to the ScotAccount serveice and handle the redirects to enable the<br>
+user to complete the login steps necessary to complete authentication.</p>
+<ol>
+<li><strong>Implement discovery endpoint</strong> - Retrieve current configuration automatically</li>
+<li><strong>Build PKCE parameters</strong> - Generate code verifier and challenge</li>
+<li><strong>Create authorization request</strong> - Build secure authentication URL</li>
+<li><strong>Implement callback handler</strong> - Process authentication response</li>
+<li><strong>Build JWT client assertion</strong> - Use your private key for token requests</li>
+<li><strong>Complete token exchange</strong> - Get access and ID tokens</li>
+<li><strong>Validate ID tokens</strong> - Extract and verify user identity</li>
+</ol>
 <h3 id="phase-3-verified-attributes-optional" tabindex="-1"><a class="header-anchor" href="#phase-3-verified-attributes-optional"><span>Phase 3: Verified Attributes (Optional)</span></a></h3>
-<ul>
-<li>[ ] <strong>Choose additional scopes</strong> - Select identity, address, or email verification</li>
-<li>[ ] <strong>Handle attribute requests</strong> - Manage user consent flow</li>
-<li>[ ] <strong>Process attribute responses</strong> - Parse verified claims data</li>
-<li>[ ] <strong>Validate and store data</strong> - Implement secure data handling</li>
-</ul>
+<ol>
+<li><strong>Choose additional scopes</strong> - Select identity, address, or email verification</li>
+<li><strong>Handle attribute requests</strong> - Manage user consent flow</li>
+<li><strong>Process attribute responses</strong> - Parse verified claims data</li>
+<li><strong>Validate and store data</strong> - Implement secure data handling</li>
+</ol>
 <h3 id="phase-4-production-deployment" tabindex="-1"><a class="header-anchor" href="#phase-4-production-deployment"><span>Phase 4: Production Deployment</span></a></h3>
-<ul>
-<li>[ ] <strong>Update to production endpoints</strong> - Switch from integration to live URLs</li>
-<li>[ ] <strong>Implement monitoring</strong> - Add logging and error tracking</li>
-<li>[ ] <strong>Add error handling</strong> - Create user-friendly error messages</li>
-<li>[ ] <strong>Complete security review</strong> - Run penetration testing</li>
-</ul>
+<ol>
+<li><strong>Update to production endpoints</strong> - Switch from integration to live URLs</li>
+<li><strong>Implement monitoring</strong> - Add logging and error tracking</li>
+<li><strong>Add error handling</strong> - Create user-friendly error messages</li>
+<li><strong>Complete security review</strong> - Recommended: Run penetration testing</li>
+</ol>
 <h2 id="core-authentication-flow" tabindex="-1"><a class="header-anchor" href="#core-authentication-flow"><span>Core Authentication Flow</span></a></h2>
 <p>The ScotAccount authentication process follows these key steps:</p>
 <h3 id="1-discovery-configuration" tabindex="-1"><a class="header-anchor" href="#1-discovery-configuration"><span>1. Discovery Configuration</span></a></h3>
 <p>First, retrieve the current configuration:</p>
 <pre class="language-http"><code class="language-http">GET https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration</code></pre>
-<p>This provides all endpoint URLs and supported features.</p>
+<p>This provides all endpoint URLs and supported features. Ensure your application leverages</p>
 <h3 id="2-generate-security-parameters" tabindex="-1"><a class="header-anchor" href="#2-generate-security-parameters"><span>2. Generate Security Parameters</span></a></h3>
+<p>During the first call to scotaccount, your application is responsible for implementing the PKCE client data and security required to succesfully implement an OIDC client.</p>
 <p>Your application must generate:</p>
 <ul>
 <li><strong>Code verifier</strong> - Random string for PKCE security</li>
@@ -353,24 +371,17 @@ code_verifier=your-code-verifier</code></pre>
   <span class="token literal-property property">authenticatedAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">,</span> <span class="token comment">// 1 hour</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<p><img src="/sg-identity-techdocs/assets/diagrams/auth-flow.png" alt="ScotAccount High-Level Architecture"></p>
+<p><em>Figure: Illustration of authentication flow.</em></p>
 <h3 id="logout-implementation" tabindex="-1"><a class="header-anchor" href="#logout-implementation"><span>Logout Implementation</span></a></h3>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Redirect to ScotAccount logout</span>
 <span class="token keyword">const</span> logoutUrl <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://authz.integration.scotaccount.service.gov.scot/authorize/logout?
   id_token_hint=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>idToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&amp;
   post_logout_redirect_uri=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>postLogoutUrl<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&amp;
   state=logout-state</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span></code></pre>
-<h3 id="error-handling" tabindex="-1"><a class="header-anchor" href="#error-handling"><span>Error Handling</span></a></h3>
-<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Handle common error scenarios</span>
-<span class="token keyword">if</span> <span class="token punctuation">(</span>error <span class="token operator">===</span> <span class="token string">"access_denied"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">// User cancelled authentication</span>
-  <span class="token function">showMessage</span><span class="token punctuation">(</span><span class="token string">"Authentication cancelled"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>error <span class="token operator">===</span> <span class="token string">"invalid_request"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">// Check your parameters</span>
-  <span class="token function">logError</span><span class="token punctuation">(</span><span class="token string">"Invalid request parameters"</span><span class="token punctuation">,</span> errorDescription<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
 <h2 id="next-steps" tabindex="-1"><a class="header-anchor" href="#next-steps"><span>Next Steps</span></a></h2>
 <div class="callout callout--success">
-<strong>Ready for detailed implementation?</strong> Move on to the <a href="/sg-identity-techdocs/scotaccount-complete-guide/">Complete Integration Guide</a> for comprehensive technical details.
+<strong>Ready for detailed implementation?</strong> Move on to the <a href="/sg-identity-techdocs/scotaccount-guide/">Implementation Guide</a> for technical details.
 </div>
 <div class="callout callout--info">
 <strong>Need verified attributes?</strong> Learn about <a href="/sg-identity-techdocs/scotaccount-token-validation-module/">token validation</a> and attribute handling.
@@ -378,11 +389,14 @@ code_verifier=your-code-verifier</code></pre>
 <div class="callout callout--warning">
 <strong>Planning for production?</strong> Review the <a href="/sg-identity-techdocs/architecture/">architecture overview</a> to understand system components and scalability considerations.
 </div>
+<div class="callout callout--info">
+<strong>Need a deeper dive on how ScotAcocunt works?</strong> Learn about <a href="/sg-identity-techdocs/scotaccount-complete-guide/">Comprehensive Implementation Guide</a> to understand the details regarding the implementation.
+</div>
 <h2 id="support-and-resources" tabindex="-1"><a class="header-anchor" href="#support-and-resources"><span>Support and Resources</span></a></h2>
 <ul>
 <li><strong>Integration support</strong>: Contact the ScotAccount team for technical assistance</li>
 <li><strong>Testing environment</strong>: Use integration endpoints for development and testing</li>
-<li><strong>Documentation</strong>: Refer to the complete guide for detailed implementation patterns</li>
+<li><strong>Documentation</strong>: Refer to the comprehensive implementation guide for detailed implementation information</li>
 <li><strong>Security</strong>: Follow all security requirements for production deployment</li>
 </ul>
 
@@ -390,7 +404,7 @@ code_verifier=your-code-verifier</code></pre>
       <!-- Last updated -->
       
       <footer class="content-footer">
-        <p><small>Last updated: 14 August 2025</small></p>
+        <p><small>Last updated: 19 August 2025</small></p>
       </footer>
       
     </main>
