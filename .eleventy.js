@@ -16,25 +16,11 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/js");
   eleventyConfig.addPassthroughCopy("src/images");
   eleventyConfig.addPassthroughCopy("src/assets");
-
-  // Copy favicon files to root (Scottish Government style)
-  eleventyConfig.addPassthroughCopy({
-    "src/assets/favicons/favicon.ico": "favicon.ico",
-  });
-  eleventyConfig.addPassthroughCopy({
-    "src/assets/favicons/apple-touch-icon.png": "apple-touch-icon.png",
-  });
-  eleventyConfig.addPassthroughCopy({
-    "src/assets/favicons/favicon-32x32.png": "favicon-32x32.png",
-  });
-  eleventyConfig.addPassthroughCopy({
-    "src/assets/favicons/favicon-16x16.png": "favicon-16x16.png",
-  });
-  eleventyConfig.addPassthroughCopy({
-    "src/assets/favicons/safari-pinned-tab.svg": "safari-pinned-tab.svg",
-  });
-
-  // Copy official Scottish Government assets
+  eleventyConfig.addPassthroughCopy({ "src/assets/favicons/favicon.ico": "favicon.ico" });
+  eleventyConfig.addPassthroughCopy({ "src/assets/favicons/apple-touch-icon.png": "apple-touch-icon.png" });
+  eleventyConfig.addPassthroughCopy({ "src/assets/favicons/favicon-32x32.png": "favicon-32x32.png" });
+  eleventyConfig.addPassthroughCopy({ "src/assets/favicons/favicon-16x16.png": "favicon-16x16.png" });
+  eleventyConfig.addPassthroughCopy({ "src/assets/favicons/safari-pinned-tab.svg": "safari-pinned-tab.svg" });
   eleventyConfig.addPassthroughCopy("src/assets/scottish-government-logo.svg");
   eleventyConfig.addPassthroughCopy("src/assets/scottish-flag.svg");
   eleventyConfig.addPassthroughCopy("src/assets/scottish-gov-logo.svg");
@@ -98,6 +84,7 @@ module.exports = function (eleventyConfig) {
     dataTemplateEngine: "njk",
 
     // Add this for GitHub Pages subdirectory
-    pathPrefix: "/sg-identity-techdocs/"
+    // IMPORTANT: mirror site.pathPrefix
+    pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/sg-identity-techdocs/",
   };
 };
