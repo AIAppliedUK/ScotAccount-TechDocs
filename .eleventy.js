@@ -87,6 +87,6 @@ module.exports = function (eleventyConfig) {
     dataTemplateEngine: "njk",
 
     // MUST match site.pathPrefix in _data/site.js
-    pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/sg-identity-techdocs/",
+    // pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/sg-identity-techdocs/",
   };
 };
