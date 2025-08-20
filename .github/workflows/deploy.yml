@@ -20,6 +20,9 @@ jobs:
         run: npm ci
 
       - name: Build site
+        env:
+          URL: "https://scotaccount.github.io/sg-identity-techdocs/"
+          ELEVENTY_PATH_PREFIX: "/sg-identity-techdocs/"
         run: npm run build
 
       - name: Deploy to GitHub Pages

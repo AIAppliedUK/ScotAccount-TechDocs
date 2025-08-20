@@ -1,21 +1,25 @@
-// src/_data/site.js   (move from .json to .js)
+// src/_data/site.js
 module.exports = () => ({
   title: "ScotAccount Technical Documentation",
-  description: "Technical documentation for ScotAccount - Scottish Government digital identity service",
-  // Public origin used for absolute URLs (canonical, OG, sitemap)
+  description:
+    "Technical documentation for ScotAccount - Scottish Government digital identity service",
+
+  // Used to build absolute URLs (canonical, OG, sitemap)
+  // CI should set URL to your public origin.
   url: process.env.URL || "http://localhost:8080",
 
-  // Project subfolder for GitHub Pages; works locally when using | url
-  // Allow override via env for other deploys
+  // MUST mirror .eleventy.js -> pathPrefix
   pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/sg-identity-techdocs/",
 
   author: "Scottish Government",
   language: "en-GB",
   locale: "en_GB",
+
   organization: {
     name: "Scottish Government",
     url: "https://www.gov.scot",
-    logo: "/assets/scotgovlogo.png"
+    // ensure this file exists in your repo and is copied via passthrough
+    logo: "assets/scotgovlogo.svg",
   },
- 
+
 });
