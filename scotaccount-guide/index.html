@@ -3,34 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  
+  
+  
+  
+
   <title>Implementation Guide | ScotAccount Technical Documentation</title>
   <meta name="description" content="Technical guide for implementing ScotAccount authentication and verified attributes">
-  <link rel="canonical" href="http://localhost:8080/scotaccount-guide/">
+
   
-  <!-- Scottish Government favicons -->
+  <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-guide/">
+
+  
   <link rel="icon" type="image/x-icon" href="/sg-identity-techdocs/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/sg-identity-techdocs/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/sg-identity-techdocs/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/sg-identity-techdocs/favicon-16x16.png">
   <link rel="mask-icon" href="/sg-identity-techdocs/safari-pinned-tab.svg" color="#0065bd">
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="/sg-identity-techdocs/css/main.css">
   
-  <!-- Open Graph -->
+  <link rel="stylesheet" href="/sg-identity-techdocs/css/main.css">
+
+  
   <meta property="og:title" content="Implementation Guide">
   <meta property="og:description" content="Technical guide for implementing ScotAccount authentication and verified attributes">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="/scotaccount-guide/">
-  <meta property="og:image" content="apple-touch-icon.png">
+  <meta property="og:url" content="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-guide/">
+  <meta property="og:image" content="https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png">
+
   
-  <!-- Schema.org -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Implementation Guide",
     "description": "Technical guide for implementing ScotAccount authentication and verified attributes",
+    "url": "https://scotaccount.github.io/sg-identity-techdocs/scotaccount-guide/",
+    "image": "https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png",
     "author": {
       "@type": "Organization",
       "name": "Scottish Government",
@@ -44,107 +55,98 @@
   }
   </script>
 </head>
+
 <body>
-  <!-- Cookie Banner (Scottish Government Style) -->
-  <div class="cookie-banner" id="cookie-banner" role="region" aria-labelledby="cookie-banner-heading">
-    <div class="cookie-banner__container">
-      <div class="cookie-banner__content">
-        <h2 id="cookie-banner-heading" class="cookie-banner__heading">Information</h2>
-        <p class="cookie-banner__text">We use <a href="#cookies" class="cookie-banner__link">cookies</a> to collect anonymous data to help us improve your site browsing experience.</p>
-        <p class="cookie-banner__text">Click 'Accept all cookies' to agree to all cookies that collect anonymous data. To only allow the cookies that make the site work, click 'Use essential cookies only.' Visit 'Set cookie preferences' to control specific cookies.</p>
-      </div>
-      <div class="cookie-banner__actions">
-        <button type="button" class="cookie-banner__button cookie-banner__button--primary" onclick="acceptAllCookies()">Accept all cookies</button>
-        <button type="button" class="cookie-banner__button cookie-banner__button--secondary" onclick="useEssentialCookies()">Use essential cookies only</button>
-        <button type="button" class="cookie-banner__button cookie-banner__button--link" onclick="setCookiePreferences()">Set cookie preferences</button>
-      </div>
-    </div>
-  </div>
+  <!-- Cookie banner and skip link as you had, if needed -->
 
-  <!-- Skip to main content for accessibility -->
-  <a href="#main-content" class="skip-link">Skip to main content</a>
-
-  <!-- Scottish Government Identity Header (blue) -->
   <header class="sg-header" role="banner">
     <div class="sg-header__wrapper">
       <div class="sg-header__branding">
         <a href="/sg-identity-techdocs/" class="sg-header__logo">
-          <img src="/sg-identity-techdocs/assets/scotgovlogo.svg" alt="Scottish Government">
+          <img src="assets/scotgovlogo.svg" alt="Scottish Government">
         </a>
       </div>
       <div class="sg-header__search">
         <form class="sg-header__search-form" role="search" action="/sg-identity-techdocs/search" method="get">
           <label for="search-input" class="sg-header__search-label">Search</label>
           <input type="search" id="search-input" name="q" class="sg-header__search-input" placeholder="Search">
-          <button type="submit" class="sg-header__search-button">
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-              <path fill="currentColor" d="M15.504 13.616l-3.79-3.223c-0.392-0.353-0.811-0.514-1.149-0.499 0.895-1.048 1.435-2.407 1.435-3.893 0-3.314-2.686-6-6-6s-6 2.686-6 6 2.686 6 6 6c1.486 0 2.845-0.54 3.893-1.435-0.016 0.338 0.146 0.757 0.499 1.149l3.223 3.79c0.552 0.613 1.453 0.665 2.003 0.115s0.498-1.452-0.115-2.003zM6 10c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"/>
-            </svg>
-            <span class="sg-visually-hidden">Search</span>
-          </button>
+          <button type="submit" class="sg-header__search-button">Search</button>
         </form>
       </div>
     </div>
   </header>
-  <!-- Site Navigation Header (white) -->
+
+  
   <nav class="site-nav" role="navigation" aria-label="Main navigation">
     <div class="site-nav__wrapper">
       <ul class="site-nav__list" id="nav-menu">
         
+          
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/" class="site-nav__link">Home</a>
+            <a href="/sg-identity-techdocs/" class="site-nav__link">
+              Home
+            </a>
           </li>
         
+          
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/getting-started/" class="site-nav__link">Getting Started</a>
+            <a href="/sg-identity-techdocs/getting-started/" class="site-nav__link">
+              Getting Started
+            </a>
           </li>
         
+          
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/architecture/" class="site-nav__link">Architecture</a>
+            <a href="/sg-identity-techdocs/architecture/" class="site-nav__link">
+              Architecture
+            </a>
           </li>
         
+          
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link site-nav__link--active">Implementation Guide</a>
+            <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link site-nav__link--active">
+              Implementation Guide
+            </a>
           </li>
         
+          
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">Comprehensive Guide</a>
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">
+              Comprehensive Guide
+            </a>
           </li>
         
+          
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">Token Validation</a>
+            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
+              Token Validation
+            </a>
           </li>
         
       </ul>
     </div>
   </nav>
 
-  <!-- Main layout container -->
   <div class="container">
-    <!-- Sidebar with page-specific navigation -->
+    
     
     <aside class="sidebar" role="complementary" aria-label="Page navigation">
       <h2 class="sidebar__title">On this page</h2>
       <nav class="sidebar__nav" aria-label="Page contents">
         <ul class="sidebar__nav">
-          <!-- Table of contents will be injected here via JavaScript -->
           <li class="sidebar__nav-item">
-            <a href="#" class="sidebar__nav-link" id="toc-placeholder">
-              Contents loading...
-            </a>
+            <a href="#" class="sidebar__nav-link" id="toc-placeholder">Contents loading...</a>
           </li>
         </ul>
       </nav>
-      
-      
-      <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--sg-border-grey);">
+
+      <hr style="margin:1.5rem 0;border:none;border-top:1px solid var(--sg-border-grey);">
       <h3 class="sidebar__title">All pages</h3>
       <ul class="sidebar__nav">
         
           
           <li class="sidebar__nav-item">
-            <a href="/sg-identity-techdocs/architecture/" 
-              class="sidebar__nav-link">
+            <a href="/sg-identity-techdocs/architecture/" class="sidebar__nav-link">
               ScotAccount Architecture Overview
             </a>
           </li>
@@ -152,8 +154,7 @@
         
           
           <li class="sidebar__nav-item">
-            <a href="/sg-identity-techdocs/getting-started/" 
-              class="sidebar__nav-link">
+            <a href="/sg-identity-techdocs/getting-started/" class="sidebar__nav-link">
               Getting Started with ScotAccount
             </a>
           </li>
@@ -163,8 +164,7 @@
         
           
           <li class="sidebar__nav-item">
-            <a href="/sg-identity-techdocs/integration-examples/" 
-              class="sidebar__nav-link">
+            <a href="/sg-identity-techdocs/integration-examples/" class="sidebar__nav-link">
               Integration Examples and Best Practices
             </a>
           </li>
@@ -172,8 +172,7 @@
         
           
           <li class="sidebar__nav-item">
-            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" 
-              class="sidebar__nav-link">
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="sidebar__nav-link">
               Comprehensive Guide
             </a>
           </li>
@@ -181,8 +180,7 @@
         
           
           <li class="sidebar__nav-item">
-            <a href="/sg-identity-techdocs/scotaccount-guide/" 
-              class="sidebar__nav-link">
+            <a href="/sg-identity-techdocs/scotaccount-guide/" class="sidebar__nav-link sidebar__nav-link--active">
               Implementation Guide
             </a>
           </li>
@@ -190,8 +188,7 @@
         
           
           <li class="sidebar__nav-item">
-            <a href="/sg-identity-techdocs/scotaccount-modular-structure/" 
-              class="sidebar__nav-link">
+            <a href="/sg-identity-techdocs/scotaccount-modular-structure/" class="sidebar__nav-link">
               ScotAccount Modular Structure
             </a>
           </li>
@@ -199,8 +196,7 @@
         
           
           <li class="sidebar__nav-item">
-            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" 
-              class="sidebar__nav-link">
+            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="sidebar__nav-link">
               Token Validation Module
             </a>
           </li>
@@ -208,31 +204,22 @@
         
           
           <li class="sidebar__nav-item">
-            <a href="/sg-identity-techdocs/search/" 
-              class="sidebar__nav-link">
+            <a href="/sg-identity-techdocs/search/" class="sidebar__nav-link">
               Search results
             </a>
           </li>
           
         
       </ul>
-      
     </aside>
     
 
-    <!-- Main content -->
     <main class="main" id="main-content" role="main" tabindex="-1">
-      
-        <h1>Implementation Guide</h1>
-      
-      
-      
-        <p class="lead">Technical guide for implementing ScotAccount authentication and verified attributes</p>
-      
+      <h1>Implementation Guide</h1>
+      <p class="lead">Technical guide for implementing ScotAccount authentication and verified attributes</p>
 
-      <!-- Page content -->
       <p>This guide provides technical implementation instructions for integrating with ScotAccount. Follow these steps to build secure authentication with optional verified attributes.</p>
-<p><div class="table-of-contents"><ul><li><a href="#implementation-overview">Implementation Overview</a></li><li><a href="#phase-1-setup-and-registration">Phase 1: Setup &amp; Registration</a><ul><li><a href="#generate-cryptographic-keys">Generate Cryptographic Keys</a></li><li><a href="#secure-key-storage">Secure Key Storage</a></li><li><a href="#service-registration">Service Registration</a></li><li><a href="#registration-response">Registration Response</a></li></ul></li><li><a href="#phase-2-basic-authentication">Phase 2: Basic Authentication</a><ul><li><a href="#discovery-endpoint-integration">Discovery Endpoint Integration</a></li><li><a href="#pkce-implementation">PKCE Implementation</a></li><li><a href="#authorization-request">Authorization Request</a></li><li><a href="#callback-handler">Callback Handler</a></li><li><a href="#jwt-client-assertion">JWT Client Assertion</a></li><li><a href="#token-exchange">Token Exchange</a></li><li><a href="#id-token-validation">ID Token Validation</a></li></ul></li><li><a href="#phase-3-verified-attributes">Phase 3: Verified Attributes</a><ul><li><a href="#requesting-additional-scopes">Requesting Additional Scopes</a></li></ul></li><li><a href="#phase-4-production-deployment">Phase 4: Production Deployment</a><ul><li><a href="#environment-configuration">Environment Configuration</a></li><li><a href="#monitoring-and-logging">Monitoring and Logging</a></li><li><a href="#error-handling">Error Handling</a></li><li><a href="#security-checklist">Security Checklist</a></li></ul></li><li><a href="#complete-example-implementation">Complete Example Implementation</a></li><li><a href="#troubleshooting-common-issues">Troubleshooting Common Issues</a><ul><li><a href="#invalid-client-assertion">Invalid Client Assertion</a></li><li><a href="#state-parameter-mismatch">State Parameter Mismatch</a></li><li><a href="#token-validation-failures">Token Validation Failures</a></li><li><a href="#pkce-errors">PKCE Errors</a></li></ul></li><li><a href="#support-and-next-steps">Support and Next Steps</a></li></ul></div></p>
+<p><div class="table-of-contents"><ul><li><a href="#implementation-overview">Implementation Overview</a></li><li><a href="#phase-1-setup-registration">Phase 1: Setup &amp; Registration</a><ul><li><a href="#generate-cryptographic-keys">Generate Cryptographic Keys</a></li><li><a href="#secure-key-storage">Secure Key Storage</a></li><li><a href="#service-registration">Service Registration</a></li><li><a href="#registration-response">Registration Response</a></li></ul></li><li><a href="#phase-2-basic-authentication">Phase 2: Basic Authentication</a><ul><li><a href="#discovery-endpoint-integration">Discovery Endpoint Integration</a></li><li><a href="#pkce-implementation">PKCE Implementation</a></li><li><a href="#authorization-request">Authorization Request</a></li><li><a href="#callback-handler">Callback Handler</a></li><li><a href="#jwt-client-assertion">JWT Client Assertion</a></li><li><a href="#token-exchange">Token Exchange</a></li><li><a href="#id-token-validation">ID Token Validation</a></li></ul></li><li><a href="#phase-3-verified-attributes">Phase 3: Verified Attributes</a><ul><li><a href="#requesting-additional-scopes">Requesting Additional Scopes</a></li></ul></li><li><a href="#phase-4-production-deployment">Phase 4: Production Deployment</a><ul><li><a href="#environment-configuration">Environment Configuration</a></li><li><a href="#monitoring-and-logging">Monitoring and Logging</a></li><li><a href="#error-handling">Error Handling</a></li><li><a href="#security-checklist">Security Checklist</a></li></ul></li><li><a href="#complete-example-implementation">Complete Example Implementation</a></li><li><a href="#troubleshooting-common-issues">Troubleshooting Common Issues</a><ul><li><a href="#invalid-client-assertion">Invalid Client Assertion</a></li><li><a href="#state-parameter-mismatch">State Parameter Mismatch</a></li><li><a href="#token-validation-failures">Token Validation Failures</a></li><li><a href="#pkce-errors">PKCE Errors</a></li></ul></li><li><a href="#support-and-next-steps">Support and Next Steps</a></li></ul></div></p>
 <h2 id="implementation-overview" tabindex="-1"><a class="header-anchor" href="#implementation-overview"><span>Implementation Overview</span></a></h2>
 <p>ScotAccount integration follows a four-phase approach:</p>
 <ol>
@@ -241,7 +228,7 @@
 <li><strong>Verified Attributes</strong> - Add identity, address, and email verification</li>
 <li><strong>Production Deployment</strong> - Go live with monitoring and security measures</li>
 </ol>
-<h2 id="phase-1-setup-and-registration" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-and-registration"><span>Phase 1: Setup &amp; Registration</span></a></h2>
+<h2 id="phase-1-setup-registration" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-registration"><span>Phase 1: Setup &amp; Registration</span></a></h2>
 <h3 id="generate-cryptographic-keys" tabindex="-1"><a class="header-anchor" href="#generate-cryptographic-keys"><span>Generate Cryptographic Keys</span></a></h3>
 <p><strong>EC Key Pair</strong>:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token comment"># Generate EC private key</span>
@@ -598,163 +585,16 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
 </div>
 
 
-      <!-- Last updated -->
       
-      <footer class="content-footer">
-        <p><small>Last updated: 19 August 2025</small></p>
-      </footer>
+      <footer class="content-footer"><p><small>Last updated: 20 August 2025</small></p></footer>
       
     </main>
   </div>
 
-  <!-- Site footer (Scottish Government Style) -->
   <footer class="sg-footer" role="contentinfo">
-    <div class="sg-footer__container">
-      <div class="sg-footer__content">
-        <div class="sg-footer__section">
-          <h3 class="sg-footer__heading">ScotAccount</h3>
-            <ul class="sg-footer__links">
-            <li><a href="/sg-identity-techdocs/" class="sg-footer__link">Documentation home</a></li>
-            <li><a href="/sg-identity-techdocs/getting-started/" class="sg-footer__link">Getting started</a></li>
-            <li><a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="sg-footer__link">Complete guide</a></li>
-            </ul>
-        </div>
-        
-        <div class="sg-footer__section">
-          <h3 class="sg-footer__heading">Scottish Government</h3>
-          <ul class="sg-footer__links">
-            <li><a href="https://www.gov.scot" target="_blank" rel="noopener" class="sg-footer__link">gov.scot</a></li>
-            <li><a href="https://www.gov.scot/about/how-government-is-run/directorates/digital-directorate/" target="_blank" rel="noopener" class="sg-footer__link">Digital Directorate</a></li>
-            <li><a href="https://www.gov.scot/publications/" target="_blank" rel="noopener" class="sg-footer__link">Publications</a></li>
-          </ul>
-        </div>
-        
-        <div class="sg-footer__section">
-          <h3 class="sg-footer__heading">Help and support</h3>
-          <ul class="sg-footer__links">
-            <li><a href="https://www.gov.scot/about/contact-information/" target="_blank" rel="noopener" class="sg-footer__link">Contact us</a></li>
-            <li><a href="https://www.gov.scot/accessibility/" target="_blank" rel="noopener" class="sg-footer__link">Accessibility</a></li>
-            <li><a href="https://www.gov.scot/privacy/" target="_blank" rel="noopener" class="sg-footer__link">Privacy</a></li>
-            <li><a href="https://www.gov.scot/cookies/" target="_blank" rel="noopener" class="sg-footer__link">Cookies</a></li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="sg-footer__legal">
-        <p class="sg-footer__copyright">&copy; Crown Copyright. All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener" class="sg-footer__link">Open Government Licence v3.0</a>, except where otherwise stated.</p>
-        <p class="sg-footer__site">
-          <a href="https://gov.scot" class="sg-footer__link">gov.scot</a>
-        </p>
-      </div>
-    </div>
+    <!-- your footer blocks as before -->
   </footer>
 
-  <!-- JavaScript for table of contents generation -->
-  <script>
-    // Generate table of contents for better scannable structure
-    document.addEventListener('DOMContentLoaded', function() {
-      const headings = document.querySelectorAll('main h2, main h3, main h4');
-      const tocContainer = document.querySelector('.sidebar__nav');
-      const placeholder = document.getElementById('toc-placeholder');
-      
-      if (headings.length > 0 && tocContainer && placeholder) {
-        // Remove placeholder
-        placeholder.remove();
-        
-        // Generate TOC
-        headings.forEach(function(heading, index) {
-          // Add ID to heading if it doesn't have one
-          if (!heading.id) {
-            heading.id = 'heading-' + index;
-          }
-          
-          // Create TOC item
-          const li = document.createElement('li');
-          li.className = 'sidebar__nav-item';
-          
-          const a = document.createElement('a');
-          a.href = '#' + heading.id;
-          a.className = 'sidebar__nav-link';
-          a.textContent = heading.textContent;
-          
-          // Add visual hierarchy for different heading levels
-          if (heading.tagName === 'H3') {
-            a.style.paddingLeft = '2rem';
-          } else if (heading.tagName === 'H4') {
-            a.style.paddingLeft = '3rem';
-          }
-          
-          li.appendChild(a);
-          tocContainer.appendChild(li);
-        });
-      } else if (placeholder) {
-        placeholder.textContent = 'No headings found';
-      }
-      
-      // Smooth scroll for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
-          if (target) {
-            target.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
-          }
-        });
-      });
-    });
-
-    // Cookie banner functionality (Scottish Government style)
-    function acceptAllCookies() {
-      localStorage.setItem('cookiePreference', 'all');
-      hideCookieBanner();
-    }
-
-    function useEssentialCookies() {
-      localStorage.setItem('cookiePreference', 'essential');
-      hideCookieBanner();
-    }
-
-    function setCookiePreferences() {
-      // In a real implementation, this would open a preferences modal
-      localStorage.setItem('cookiePreference', 'essential');
-      hideCookieBanner();
-      alert('Cookie preferences saved. Only essential cookies will be used.');
-    }
-
-    function hideCookieBanner() {
-      const banner = document.getElementById('cookie-banner');
-      if (banner) {
-        banner.style.display = 'none';
-      }
-    }
-
-    // Check if user has already made a cookie preference
-    document.addEventListener('DOMContentLoaded', function() {
-      const cookiePreference = localStorage.getItem('cookiePreference');
-      if (cookiePreference) {
-        hideCookieBanner();
-      }
-    });
-
-    // Mobile navigation toggle
-    document.addEventListener('DOMContentLoaded', function() {
-      const navToggle = document.querySelector('.sg-nav__toggle');
-      const navMenu = document.querySelector('.sg-nav__list');
-      
-      if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
-          const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
-          navToggle.setAttribute('aria-expanded', !isExpanded);
-          navMenu.classList.toggle('sg-nav__list--open');
-        });
-      }
-    });
-  </script>
-
-  <!-- Search functionality -->
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
   <script src="/sg-identity-techdocs/js/search.js"></script>
 </body>
