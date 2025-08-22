@@ -18,57 +18,50 @@ class DocumentationSearch {
   }
 
   async loadSearchData() {
-    // Build search index from pages with dynamic URLs
+    // Build search index from pages
     const pages = [
-      
       {
         title: "Home",
-        url: "/sg-identity-techdocs/",
-        content: "ScotAccount technical documentation Scottish Government identity authentication system getting started architecture"
+        url: "/",
+        content:
+          "ScotAccount technical documentation Scottish Government identity authentication system getting started architecture",
       },
-      
       {
         title: "Getting Started",
-        url: "/sg-identity-techdocs/getting-started/",
-        content: "Quick start guide 30 minutes setup configuration authentication flow token validation OIDC OpenID Connect"
+        url: "/getting-started/",
+        content:
+          "Quick start guide 30 minutes setup configuration authentication flow token validation OIDC OpenID Connect",
       },
-      
       {
         title: "Architecture",
-        url: "/sg-identity-techdocs/architecture/",
-        content: "System architecture components authentication service token validation identity provider OIDC flow sequence diagrams"
+        url: "/architecture/",
+        content:
+          "System architecture components authentication service token validation identity provider OIDC flow sequence diagrams",
       },
-      
-      {
-        title: "Implementation Guide",
-        url: "/sg-identity-techdocs/scotaccount-guide/",
-        content: "Implementation guide setup configuration endpoints authentication flow security best practices"
-      },
-      
       {
         title: "Complete Guide",
-        url: "/sg-identity-techdocs/scotaccount-complete-guide/",
-        content: "Comprehensive implementation guide detailed setup configuration endpoints authentication flow security"
+        url: "/scotaccount-complete-guide/",
+        content:
+          "Comprehensive implementation guide detailed setup configuration endpoints authentication flow security",
       },
-      
       {
         title: "Token Validation Module",
-        url: "/sg-identity-techdocs/scotaccount-token-validation-module/",
-        content: "Token validation JWT verification security JWKS public keys signature validation claims verification"
+        url: "/scotaccount-token-validation-module/",
+        content:
+          "Token validation security JWT verification authentication middleware implementation",
       },
-      
-      {
-        title: "Integration Examples",
-        url: "/sg-identity-techdocs/integration-examples/",
-        content: "Code examples integration patterns Node.js Python Java C# .NET authentication flow implementation"
-      },
-      
       {
         title: "Modular Structure",
-        url: "/sg-identity-techdocs/scotaccount-modular-structure/",
-        content: "ScotAccount modular architecture components services API structure microservices design patterns"
-      }
-      
+        url: "/scotaccount-modular-structure/",
+        content:
+          "Modular architecture design patterns components separation concerns implementation structure",
+      },
+      {
+        title: "Integration Examples",
+        url: "/integration-examples/",
+        content:
+          "Integration examples, practical implementation scenarios, documentation improvement recommendations, real-world use cases, step-by-step guides.",
+      },
     ];
     this.searchData = pages;
   }
@@ -191,7 +184,7 @@ class DocumentationSearch {
       this.searchResults.innerHTML = `
         <div class="search-results__container">
           <div class="search-results__header">
-            <p class="search-results__count">${results.length} result${
+            <p class="search-results__count">${results.length} result$${
         results.length !== 1 ? "s" : ""
       } for "${query}"</p>
           </div>
@@ -234,7 +227,7 @@ class DocumentationSearch {
       container.innerHTML = `
         <div class="search-results__container">
           <div class="search-results__header">
-            <p class="search-results__count">${results.length} result${
+            <p class="search-results__count">${results.length} result$${
         results.length !== 1 ? "s" : ""
       } for "${query}"</p>
           </div>

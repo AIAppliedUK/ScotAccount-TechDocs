@@ -2,22 +2,36 @@
 /* Based on gov.scot design patterns and official design system */
 
 :root {
-  /* Scottish Government Official Colours */
+  /* Scottish Government Official Colours from Design System */
   --sg-blue: #0065bd;
+  --sg-blue-hover: #00437e;
   --sg-dark-blue: #002d54;
-  --sg-light-blue: #e6f0f8;
-  --sg-navy: #333c48;
-  --sg-grey: #727272;
-  --sg-light-grey: #f8f8f8;
-  --sg-border-grey: #d8dde0;
-  --sg-text-black: #2d3436;
+  --sg-light-blue: #d9effc;
+  --sg-brand-secondary: #333e48;
+  
+  /* Text Colors */
+  --sg-text-primary: #1a1a1a;
+  --sg-text-secondary: #5e5e5e;
+  
+  /* Background Colors */
   --sg-white: #ffffff;
-  --sg-focus-yellow: #ffdd00;
-  --sg-error-red: #d4351c;
-  --sg-success-green: #00703c;
+  --sg-background-light: #f8f8f8;
+  --sg-background-grey: #ebebeb;
+  
+  /* Border Colors */
+  --sg-border: #b3b3b3;
+  --sg-border-dark: #1a1a1a;
+  --sg-border-light: #ebebeb;
+  --sg-border-highlight: #0065bd;
+  
+  /* Focus and State Colors */
+  --sg-focus-yellow: #fdd522;
+  --sg-focus-text: #1a1a1a;
+  --sg-positive: #1a7032;
+  --sg-negative: #d32205;
 
-  /* Typography - Gov.scot uses specific font stack */
-  --font-family-primary: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Typography - Official Scottish Government font */
+  --font-family-primary: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   --font-family-mono: "Courier New", Courier, monospace;
   
   /* Spacing system */
@@ -43,12 +57,18 @@ html {
   line-height: 1.6;
 }
 
+/* Import Roboto font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
 body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family-primary);
-  color: var(--sg-text-black);
+  color: var(--sg-text-primary);
   background-color: var(--sg-white);
+  font-size: 19px;
+  line-height: 1.6;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -232,41 +252,83 @@ body {
   margin: 0;
 }
 
-/* --- Search Header Refinement (left align) --- */
+/* --- Search Box - Scottish Government Style --- */
 .sg-header__search-form {
   display: flex;
-  align-items: center;
-  height: 40px;
-  background: #fff;
-  border-radius: 4px;
-  padding: 0 0 0 8px;
-  box-shadow: none;
+  align-items: stretch;
+  height: 44px;
+  background: var(--sg-white);
+  border: 2px solid var(--sg-border);
+  border-radius: 0;
+  padding: 0;
   width: 100%;
   min-width: 0;
+  transition: border-color 0.2s ease;
 }
+
+.sg-header__search-form:focus-within {
+  border-color: var(--sg-border-highlight);
+  outline: 3px solid var(--sg-focus-yellow);
+  outline-offset: 0;
+}
+
+/* Hide the search label visually but keep it accessible for screen readers */
+.sg-header__search-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .sg-header__search-input {
   border: none;
   background: transparent;
-  color: #2d3436;
-  font-size: 1rem;
+  color: var(--sg-text-primary);
+  font-family: var(--font-family-primary);
+  font-size: 16px;
+  font-weight: 400;
   height: 40px;
+  line-height: 40px;
   width: 100%;
   min-width: 0;
-  padding: 0 8px;
+  padding: 0 16px;
   outline: none;
   text-align: left;
+  flex: 1;
 }
+
+.sg-header__search-input::placeholder {
+  color: var(--sg-text-secondary);
+  opacity: 1;
+}
+
 .sg-header__search-button {
-  background: none;
+  background: var(--sg-blue);
   border: none;
-  color: #0065bd;
+  color: var(--sg-white);
   height: 40px;
-  width: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-width: 50px;
+  padding: 0 16px;
+  font-family: var(--font-family-primary);
+  font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sg-header__search-button:hover {
+  background: var(--sg-blue-hover);
+}
+
+.sg-header__search-button:focus {
+  outline: 3px solid var(--sg-focus-yellow);
+  outline-offset: -3px;
 }
 
 .sg-header__nav {
@@ -375,42 +437,57 @@ body {
 }
 
 .main h1 {
-  font-size: 2.25rem;
-  font-weight: bold;
-  color: var(--sg-navy);
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--sg-text-primary);
   margin: 0 0 var(--spacing-md) 0;
-  line-height: 1.2;
+  line-height: 56px;
+  font-family: var(--font-family-primary);
 }
 
 .main h2 {
-  font-size: 1.75rem;
-  font-weight: bold;
-  color: var(--sg-navy);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--sg-text-primary);
   margin: var(--spacing-xl) 0 var(--spacing-md) 0;
-  line-height: 1.3;
+  line-height: 40px;
+  font-family: var(--font-family-primary);
 }
 
 .main h3 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--sg-navy);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--sg-text-primary);
   margin: var(--spacing-lg) 0 var(--spacing-sm) 0;
-  line-height: 1.3;
+  line-height: 32px;
+  font-family: var(--font-family-primary);
 }
 
 .main h4 {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: var(--sg-navy);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--sg-text-primary);
   margin: var(--spacing-lg) 0 var(--spacing-sm) 0;
-  line-height: 1.3;
+  line-height: 32px;
+  font-family: var(--font-family-primary);
+}
+
+.main h5 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sg-text-primary);
+  margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+  line-height: 24px;
+  font-family: var(--font-family-primary);
 }
 
 .lead {
-  font-size: 1.2rem;
-  color: var(--sg-grey);
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--sg-text-secondary);
   margin: 0 0 var(--spacing-lg) 0;
-  line-height: 1.5;
+  line-height: 40px;
+  font-family: var(--font-family-primary);
 }
 
 .main p {
@@ -431,29 +508,33 @@ body {
 .main a {
   color: var(--sg-blue);
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .main a:hover {
-  color: var(--sg-dark-blue);
+  color: var(--sg-blue-hover);
+  text-decoration: underline;
 }
 
 .main a:focus {
   outline: 3px solid var(--sg-focus-yellow);
   outline-offset: 0;
   background-color: var(--sg-focus-yellow);
+  color: var(--sg-focus-text);
+  text-decoration: none;
 }
 
 /* Code blocks */
 .main pre {
-  background-color: var(--sg-light-grey);
-  border: 1px solid var(--sg-border-grey);
-  border-radius: 4px;
+  background-color: var(--sg-background-light);
+  border: 1px solid var(--sg-border-light);
+  border-radius: 0;
   padding: var(--spacing-md);
   overflow-x: auto;
   margin: 0 0 var(--spacing-md) 0;
   font-family: var(--font-family-mono);
-  font-size: 0.9rem;
-  line-height: 1.4;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .main code {
@@ -896,24 +977,31 @@ body {
   align-items: center;
   height: 48px;
   padding: 0 20px;
-  color: #333c48;
+  color: var(--sg-text-primary);
   text-decoration: none;
-  font-size: 1.05rem;
-  font-weight: 500;
-  border-bottom: 2px solid transparent;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: var(--font-family-primary);
+  border-bottom: 4px solid transparent;
   transition: border 0.2s, color 0.2s, background 0.2s;
 }
-.site-nav__link:hover,
+.site-nav__link:hover {
+  color: var(--sg-blue);
+  background: var(--sg-background-light);
+  border-bottom: 4px solid var(--sg-blue);
+  text-decoration: none;
+}
 .site-nav__link:focus {
-  color: #0065bd;
-  background: #f8f8f8;
-  border-bottom: 2px solid #0065bd;
-  outline: none;
+  outline: 3px solid var(--sg-focus-yellow);
+  outline-offset: -3px;
+  background: var(--sg-focus-yellow);
+  color: var(--sg-focus-text);
+  border-bottom: 4px solid var(--sg-blue);
 }
 .site-nav__link--active {
-  color: #0065bd;
-  border-bottom: 2px solid #0065bd;
-  background: #e6f0f8;
+  color: var(--sg-blue);
+  border-bottom: 4px solid var(--sg-blue);
+  background: var(--sg-background-light);
 }
 @media (max-width: 900px) {
   .site-nav__wrapper {

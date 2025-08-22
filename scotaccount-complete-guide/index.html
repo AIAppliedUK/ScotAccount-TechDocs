@@ -63,7 +63,7 @@
     <div class="sg-header__wrapper">
       <div class="sg-header__branding">
         <a href="/sg-identity-techdocs/" class="sg-header__logo">
-          <img src="assets/scotgovlogo.svg" alt="Scottish Government">
+          <img src="/sg-identity-techdocs/assets/scotgovlogo.svg" alt="Scottish Government">
         </a>
       </div>
       <div class="sg-header__search">
@@ -391,7 +391,7 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
 <p>When a user attempts to authenticate with your service via ScotAccount, they’re not providing their credentials directly to your application. Instead, your application redirects them to ScotAccount, where they authenticate using whatever methods ScotAccount supports. Once authentication is complete, ScotAccount provides your application with cryptographic proof that the user has been authenticated, along with a persistent identifier that allows you to recognise that user in future interactions.</p>
 <p>This delegation model provides several crucial benefits that make it superior to traditional authentication approaches. Your application never handles user passwords or other sensitive authentication credentials, reducing your security liability and simplifying compliance requirements. Users benefit from a consistent authentication experience across all government services that use ScotAccount, and they only need to maintain one set of authentication credentials for accessing multiple services.</p>
 <p>The authentication flow incorporates several sophisticated protection mechanisms against common web application attacks. Understanding these mechanisms helps you appreciate why certain steps in the process are mandatory and why attempting to simplify or skip steps can introduce serious security vulnerabilities.</p>
-<p><img src="/sg-identity-techdocs/assets/diagrams/auth-flow.png" alt="ScotAccount High-Level Architecture"></p>
+<p><img src="/sg-identity-techdocs/assets/diagrams/oidc-complete-flow.png" alt="ScotAccount Detailed flow diagram"></p>
 <p><em>Figure: Illustration of authentication flow.</em></p>
 <pre class="language-plantuml"><code class="language-plantuml"><span class="token delimiter punctuation">@startuml</span> OpenID Connect Authentication Flow
 <span class="token preprocessor property">!theme cerulean-outline</span>
@@ -1173,7 +1173,7 @@ Maintain audit logs that support your organization’s compliance requirements w
 
 
       
-      <footer class="content-footer"><p><small>Last updated: 20 August 2025</small></p></footer>
+      <footer class="content-footer"><p><small>Last updated: 22 August 2025</small></p></footer>
       
     </main>
   </div>

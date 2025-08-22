@@ -1,3 +1,7 @@
+---
+permalink: /js/search.js
+eleventyExcludeFromCollections: true
+---
 // Simple client-side search for ScotAccount documentation with Fuse.js fuzzy search
 // Fuse.js is loaded globally via CDN and available as window.Fuse
 
@@ -20,55 +24,13 @@ class DocumentationSearch {
   async loadSearchData() {
     // Build search index from pages with dynamic URLs
     const pages = [
-      
+      {% for page in searchIndex.pages %}
       {
-        title: "Home",
-        url: "/sg-identity-techdocs/",
-        content: "ScotAccount technical documentation Scottish Government identity authentication system getting started architecture"
-      },
-      
-      {
-        title: "Getting Started",
-        url: "/sg-identity-techdocs/getting-started/",
-        content: "Quick start guide 30 minutes setup configuration authentication flow token validation OIDC OpenID Connect"
-      },
-      
-      {
-        title: "Architecture",
-        url: "/sg-identity-techdocs/architecture/",
-        content: "System architecture components authentication service token validation identity provider OIDC flow sequence diagrams"
-      },
-      
-      {
-        title: "Implementation Guide",
-        url: "/sg-identity-techdocs/scotaccount-guide/",
-        content: "Implementation guide setup configuration endpoints authentication flow security best practices"
-      },
-      
-      {
-        title: "Complete Guide",
-        url: "/sg-identity-techdocs/scotaccount-complete-guide/",
-        content: "Comprehensive implementation guide detailed setup configuration endpoints authentication flow security"
-      },
-      
-      {
-        title: "Token Validation Module",
-        url: "/sg-identity-techdocs/scotaccount-token-validation-module/",
-        content: "Token validation JWT verification security JWKS public keys signature validation claims verification"
-      },
-      
-      {
-        title: "Integration Examples",
-        url: "/sg-identity-techdocs/integration-examples/",
-        content: "Code examples integration patterns Node.js Python Java C# .NET authentication flow implementation"
-      },
-      
-      {
-        title: "Modular Structure",
-        url: "/sg-identity-techdocs/scotaccount-modular-structure/",
-        content: "ScotAccount modular architecture components services API structure microservices design patterns"
-      }
-      
+        title: "{{ page.title }}",
+        url: "{{ page.url }}",
+        content: "{{ page.content }}"
+      }{% if not loop.last %},{% endif %}
+      {% endfor %}
     ];
     this.searchData = pages;
   }
