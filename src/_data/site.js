@@ -1,25 +1,55 @@
-// src/_data/site.js
-module.exports = () => ({
-  title: "ScotAccount Technical Documentation",
-  description:
-    "Technical documentation for ScotAccount - Scottish Government digital identity service",
-
-  // Used to build absolute URLs (canonical, OG, sitemap)
-  // CI should set URL to your public origin.
-  url: process.env.URL || "http://localhost:8080",
-
-  // MUST mirror .eleventy.js -> pathPrefix
-  pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/sg-identity-techdocs/",
-
-  author: "Scottish Government",
-  language: "en-GB",
-  locale: "en_GB",
-
-  organization: {
-    name: "Scottish Government",
-    url: "https://www.gov.scot",
-    // ensure this file exists in your repo and is copied via passthrough
-    logo: "assets/scotgovlogo.svg",
-  },
-
-});
+// Dynamic site configuration that handles both public and private GitHub Pages
+module.exports = function() {
+  // Get path prefix from environment or default to "/"
+  const pathPrefix = process.env.ELEVENTY_PATH_PREFIX || "/";
+  
+  // Determine base URL based on deployment context
+  const baseUrl = process.env.URL || "https://scotaccount.github.io/sg-identity-techdocs";
+  
+  return {
+    title: "ScotAccount Technical Documentation",
+    description: "Technical documentation for ScotAccount - Scottish Government digital identity service",
+    url: baseUrl,
+    pathPrefix: pathPrefix,
+    author: "Scottish Government",
+    language: "en-GB",
+    locale: "en_GB",
+    organization: {
+      name: "Scottish Government",
+      url: "https://www.gov.scot",
+      logo: "images/scottish-government-logo.png"
+    },
+    navigation: [
+      {
+        text: "Home",
+        url: "/",
+        key: "home"
+      },
+      {
+        text: "Getting Started",
+        url: "/getting-started/",
+        key: "getting-started"
+      },
+      {
+        text: "Architecture",
+        url: "/architecture/",
+        key: "architecture"
+      },
+      {
+        text: "Implementation Guide",
+        url: "/scotaccount-guide/",
+        key: "implementation-guide"
+      },
+      {
+        text: "Comprehensive Guide",
+        url: "/scotaccount-complete-guide/",
+        key: "complete-guide"
+      },
+      {
+        text: "Token Validation",
+        url: "/scotaccount-token-validation-module/",
+        key: "token-validation"
+      }
+    ]
+  };
+};

@@ -1,8 +1,26 @@
 name: Deploy Eleventy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
+  # Manual trigger with deployment type selection
+  workflow_dispatch:
+    inputs:
+      deployment_type:
+        description: 'Deployment Type'
+        required: true
+        default: 'private'
+        type: choice
+        options:
+          - private
+          - public
+      custom_url:
+        description: 'Custom URL (optional, for private deployments)'
+        required: false
+        default: ''
+        type: string
+
+  # Automatic trigger on push to main (optional - remove if you want manual-only)
+  # push:
+  #   branches: [main]
 
 jobs:
   build-deploy:
@@ -19,11 +37,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build site
+      - name: Build site for Private Deployment
+        if: github.event.inputs.deployment_type == 'private' || github.event_name == 'push'
         env:
+          # No path prefix for private deployment
+          ELEVENTY_PATH_PREFIX: "/"
+          URL: ${{ github.event.inputs.custom_url || '' }}
+        run: |
+          echo "Building for private GitHub Pages deployment..."
+          echo "Path prefix: / (root)"
+          npm run build:private
+
+      - name: Build site for Public Deployment
+        if: github.event.inputs.deployment_type == 'public'
+        env:
+          # Path prefix required for public deployment
           URL: "https://scotaccount.github.io/sg-identity-techdocs/"
           ELEVENTY_PATH_PREFIX: "/sg-identity-techdocs/"
-        run: npm run build
+        run: |
+          echo "Building for public GitHub Pages deployment..."
+          echo "Path prefix: /sg-identity-techdocs/"
+          npm run build:public
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

@@ -5,9 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "eleventy --serve",
-    "build": "eleventy --pathprefix=/sg-identity-techdocs/",
+    "build": "eleventy",
+    "build:public": "ELEVENTY_PATH_PREFIX=/sg-identity-techdocs/ eleventy",
+    "build:private": "ELEVENTY_PATH_PREFIX=/ eleventy",
     "clean": "rm -rf _site",
     "dev": "eleventy --serve --watch",
+    "dev:public": "ELEVENTY_PATH_PREFIX=/sg-identity-techdocs/ eleventy --serve --watch",
+    "dev:private": "ELEVENTY_PATH_PREFIX=/ eleventy --serve --watch",
     "build:production": "NODE_ENV=production eleventy",
     "watch": "eleventy --watch"
   },

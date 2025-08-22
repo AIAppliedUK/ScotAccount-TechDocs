@@ -86,7 +86,9 @@ module.exports = function (eleventyConfig) {
     htmlTemplateEngine: "njk",
     dataTemplateEngine: "njk",
 
-    // MUST match site.pathPrefix in _data/site.js
-    // pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/sg-identity-techdocs/",
+    // Path prefix is now handled via environment variable or command line
+    // For public GitHub Pages: use ELEVENTY_PATH_PREFIX env var or --pathprefix flag
+    // For private GitHub Pages: don't set any prefix (defaults to "/")
+    pathPrefix: process.env.ELEVENTY_PATH_PREFIX || "/",
   };
 };
