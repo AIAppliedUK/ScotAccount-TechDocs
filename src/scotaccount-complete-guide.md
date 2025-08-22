@@ -279,7 +279,7 @@ This delegation model provides several crucial benefits that make it superior to
 
 The authentication flow incorporates several sophisticated protection mechanisms against common web application attacks. Understanding these mechanisms helps you appreciate why certain steps in the process are mandatory and why attempting to simplify or skip steps can introduce serious security vulnerabilities.
 
-![ScotAccount High-Level Architecture]({{ '/assets/diagrams/auth-flow.png' | url }})
+![ScotAccount Detailed flow diagram]({{ '/assets/diagrams/oidc-complete-flow.png' | url }})
 
 _Figure: Illustration of authentication flow._
 
