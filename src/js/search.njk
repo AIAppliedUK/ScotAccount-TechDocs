@@ -26,11 +26,11 @@ class DocumentationSearch {
     const pages = [
       {% for page in fullSearchIndex.pages %}
       {
-        title: "{{ page.title | safe }}",
-        url: "{{ page.url | safe }}",
-        content: "{{ page.content | safe }}",
-        summary: "{{ page.summary | safe }}",
-        keywords: "{{ page.keywords | safe }}"
+        title: {{ page.title | dump | safe }},
+        url: {{ page.url | dump | safe }},
+        content: {{ page.content | dump | safe }},
+        summary: {{ page.summary | dump | safe }},
+        keywords: {{ page.keywords | dump | safe }}
       }{% if not loop.last %},{% endif %}
       {% endfor %}
     ];
@@ -45,12 +45,12 @@ class DocumentationSearch {
         { name: "content", weight: 1 },    // Full content search
         { name: "summary", weight: 0.8 }   // Summary is less important
       ],
-      threshold: 0.3,           // More accurate matching
+      threshold: 0.4,           // Balance between precision and recall
       minMatchCharLength: 2,    // Minimum 2 characters
       includeScore: true,
       ignoreLocation: true,     // Search anywhere in content
-      useExtendedSearch: true,  // Enable advanced search operators
-      findAllMatches: true      // Find all matches in content
+      findAllMatches: true,     // Find all matches in content
+      shouldSort: true          // Sort results by score
     });
   }
 
@@ -123,11 +123,14 @@ class DocumentationSearch {
 
   performSearch(query, renderToPage = false) {
     if (!this.fuse) return;
-    const results = this.fuse.search(query).map((r) => r.item);
+    
+    const results = this.fuse.search(query);
+    const items = results.map((r) => r.item);
+    
     if (renderToPage && document.getElementById("search-results-page")) {
-      this.displayResultsPage(results, query);
+      this.displayResultsPage(items, query);
     } else {
-      this.displayResults(results, query);
+      this.displayResults(items, query);
     }
   }
 

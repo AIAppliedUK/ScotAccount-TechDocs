@@ -450,6 +450,21 @@ body {
   background-color: var(--sg-background-light);
 }
 
+/* Table of contents indentation for nested levels */
+.sidebar__nav-item--level-3 {
+  margin-left: 1rem;
+}
+
+.sidebar__nav-item--level-4 {
+  margin-left: 2rem;
+}
+
+.sidebar__nav-item--level-3 .sidebar__nav-link,
+.sidebar__nav-item--level-4 .sidebar__nav-link {
+  font-size: 16px;
+  padding: 0.5rem 0.75rem;
+}
+
 /* Main content */
 .main {
   min-width: 0; /* Prevents overflow issues in grid */

@@ -97,23 +97,13 @@
   </nav>
 
   <div class="container">
-    {# Optional sidebar (unchanged if you use it) #}
-    {% if collections.all | length > 1 %}
+    {# Table of Contents sidebar #}
     <aside class="sidebar" role="complementary" aria-label="Page navigation">
-      <h3 class="sidebar__title">All pages</h3>
-      <ul class="sidebar__nav">
-        {% for p in collections.all %}
-          {% if p.url and p.url != "/" %}
-          <li class="sidebar__nav-item">
-            <a href="{{ p.url | url }}" class="sidebar__nav-link{% if p.url == page.url %} sidebar__nav-link--active{% endif %}">
-              {{ p.data.title or p.data.eleventyNavigation.title or "Untitled" }}
-            </a>
-          </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
+      <h3 class="sidebar__title">On this page</h3>
+      <div class="sidebar__toc" id="page-toc">
+        {# TOC will be generated via JavaScript from page headings #}
+      </div>
     </aside>
-    {% endif %}
 
     <main class="main" id="main-content" role="main" tabindex="-1">
       {% if title %}<h1>{{ title }}</h1>{% endif %}
@@ -133,5 +123,86 @@
 
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
   <script src="{{ '/js/search.js' | url }}"></script>
+  
+  {# Generate table of contents from page headings #}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tocContainer = document.getElementById('page-toc');
+      const main = document.querySelector('.main');
+      
+      if (tocContainer && main) {
+        // Find all h2, h3, and h4 headings with IDs
+        const headings = main.querySelectorAll('h2[id], h3[id], h4[id]');
+        
+        if (headings.length > 0) {
+          const tocList = document.createElement('ul');
+          tocList.className = 'sidebar__nav';
+          
+          headings.forEach(heading => {
+            const level = parseInt(heading.tagName.charAt(1));
+            const listItem = document.createElement('li');
+            listItem.className = 'sidebar__nav-item sidebar__nav-item--level-' + level;
+            
+            const link = document.createElement('a');
+            link.href = '#' + heading.id;
+            link.className = 'sidebar__nav-link';
+            link.textContent = heading.textContent.replace('#', '').trim();
+            
+            // Add click handler for smooth scrolling
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              heading.scrollIntoView({ behavior: 'smooth' });
+              // Update URL without jumping
+              history.pushState(null, null, '#' + heading.id);
+            });
+            
+            listItem.appendChild(link);
+            tocList.appendChild(listItem);
+          });
+          
+          tocContainer.appendChild(tocList);
+          
+          // Highlight current section on scroll
+          let ticking = false;
+          function updateTOC() {
+            const scrollPosition = window.scrollY + 100;
+            let currentSection = null;
+            
+            headings.forEach(heading => {
+              if (heading.offsetTop <= scrollPosition) {
+                currentSection = heading.id;
+              }
+            });
+            
+            // Update active link
+            tocContainer.querySelectorAll('.sidebar__nav-link').forEach(link => {
+              link.classList.remove('sidebar__nav-link--active');
+              if (currentSection && link.getAttribute('href') === '#' + currentSection) {
+                link.classList.add('sidebar__nav-link--active');
+              }
+            });
+            
+            ticking = false;
+          }
+          
+          window.addEventListener('scroll', function() {
+            if (!ticking) {
+              window.requestAnimationFrame(updateTOC);
+              ticking = true;
+            }
+          });
+          
+          // Initial update
+          updateTOC();
+        } else {
+          // No headings found, hide the sidebar
+          const sidebar = document.querySelector('.sidebar');
+          if (sidebar) {
+            sidebar.style.display = 'none';
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
