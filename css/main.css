@@ -195,14 +195,14 @@ body {
 
 /* --- Scottish Government Header: Match www.gov.scot --- */
 .sg-header {
-  background-color: #0065bd;
-  color: #fff;
+  background-color: var(--sg-white);
+  color: var(--sg-text-primary);
   height: 64px;
   display: flex;
   align-items: center;
   width: 100%;
   box-shadow: none;
-  border: none;
+  border-bottom: 1px solid var(--sg-border-light);
   margin: 0;
   padding: 0;
 }
@@ -312,14 +312,20 @@ body {
   border: none;
   color: var(--sg-white);
   height: 40px;
-  min-width: 50px;
-  padding: 0 16px;
-  font-family: var(--font-family-primary);
-  font-size: 16px;
-  font-weight: 500;
+  width: 44px;
+  padding: 0;
   cursor: pointer;
   transition: background-color 0.2s ease;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sg-header__search-button svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
 .sg-header__search-button:hover {
@@ -391,10 +397,12 @@ body {
 }
 
 .sidebar__title {
-  font-size: 1.1rem;
-  font-weight: bold;
+  font-size: 22px;
+  font-weight: 700;
   margin: 0 0 var(--spacing-sm) 0;
-  color: var(--sg-navy);
+  color: var(--sg-text-primary);
+  font-family: var(--font-family-primary);
+  line-height: 32px;
 }
 
 .sidebar__nav {
@@ -404,31 +412,57 @@ body {
 }
 
 .sidebar__nav-item {
-  margin: 0;
+  margin: 0 0 4px 0;
 }
 
 .sidebar__nav-link {
   display: block;
-  padding: 0.5rem 0;
+  padding: 0.625rem 0.75rem;
   color: var(--sg-blue);
   text-decoration: none;
-  font-size: 0.9rem;
-  border-left: 3px solid transparent;
-  padding-left: 0.75rem;
+  font-size: 18px;
+  font-weight: 400;
+  font-family: var(--font-family-primary);
+  line-height: 28px;
+  border-left: 4px solid transparent;
+  padding-left: 1rem;
   transition: all 0.2s;
 }
 
 .sidebar__nav-link:hover {
-  color: var(--sg-dark-blue);
+  color: var(--sg-blue-hover);
   border-left-color: var(--sg-blue);
-  background-color: rgba(0, 101, 189, 0.05);
+  background-color: var(--sg-background-light);
+  text-decoration: none;
+}
+
+.sidebar__nav-link:focus {
+  outline: 3px solid var(--sg-focus-yellow);
+  outline-offset: -3px;
+  background-color: var(--sg-focus-yellow);
+  color: var(--sg-focus-text);
 }
 
 .sidebar__nav-link--active {
-  color: var(--sg-dark-blue);
-  font-weight: bold;
+  color: var(--sg-text-primary);
+  font-weight: 600;
   border-left-color: var(--sg-blue);
-  background-color: rgba(0, 101, 189, 0.1);
+  background-color: var(--sg-background-light);
+}
+
+/* Table of contents indentation for nested levels */
+.sidebar__nav-item--level-3 {
+  margin-left: 1rem;
+}
+
+.sidebar__nav-item--level-4 {
+  margin-left: 2rem;
+}
+
+.sidebar__nav-item--level-3 .sidebar__nav-link,
+.sidebar__nav-item--level-4 .sidebar__nav-link {
+  font-size: 16px;
+  padding: 0.5rem 0.75rem;
 }
 
 /* Main content */
@@ -568,6 +602,14 @@ body {
   background-color: var(--sg-light-grey);
   font-weight: bold;
   color: var(--sg-navy);
+}
+
+/* Images and Diagrams */
+.main img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: var(--spacing-md) 0;
 }
 
 /* Scottish Government Footer */
@@ -895,6 +937,13 @@ body {
   line-height: 1.4;
   color: #727272;
   text-align: left;
+}
+
+.search-results__section {
+  color: var(--sg-blue);
+  font-size: 0.85rem;
+  font-weight: normal;
+  font-style: italic;
 }
 
 .search-results__empty {
