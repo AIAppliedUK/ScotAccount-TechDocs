@@ -30,7 +30,8 @@ class DocumentationSearch {
         url: {{ page.url | dump | safe }},
         content: {{ page.content | dump | safe }},
         summary: {{ page.summary | dump | safe }},
-        keywords: {{ page.keywords | dump | safe }}
+        keywords: {{ page.keywords | dump | safe }},
+        sections: {{ page.sections | dump | safe }}
       }{% if not loop.last %},{% endif %}
       {% endfor %}
     ];
@@ -134,6 +135,41 @@ class DocumentationSearch {
     }
   }
 
+  findBestSection(result, query) {
+    if (!result.sections || result.sections.length === 0) {
+      return null;
+    }
+    
+    const queryLower = query.toLowerCase();
+    let bestSection = null;
+    let bestScore = -1;
+    
+    // Find the section with the best match
+    result.sections.forEach(section => {
+      const sectionContent = section.content.toLowerCase();
+      const headingContent = section.heading.toLowerCase();
+      
+      // Higher score if query matches in heading
+      if (headingContent.includes(queryLower)) {
+        const score = 10;
+        if (score > bestScore) {
+          bestScore = score;
+          bestSection = section;
+        }
+      }
+      // Lower score if query matches in content
+      else if (sectionContent.includes(queryLower)) {
+        const score = 5;
+        if (score > bestScore) {
+          bestScore = score;
+          bestSection = section;
+        }
+      }
+    });
+    
+    return bestSection;
+  }
+
   displayResults(results, query) {
     if (!this.searchResults) return;
 
@@ -149,17 +185,29 @@ class DocumentationSearch {
     } else {
       const resultsHTML = results
         .map(
-          (result) => `
+          (result) => {
+            // Find the best matching section for deep linking
+            const bestSection = this.findBestSection(result, query);
+            const targetUrl = bestSection ? 
+              `${result.url}#${bestSection.id}` : 
+              result.url;
+            const sectionInfo = bestSection ? 
+              ` <span class="search-results__section">→ ${bestSection.heading}</span>` : 
+              '';
+            
+            return `
         <div class="search-results__item">
-          <a href="${result.url}" class="search-results__link">
-            <h3 class="search-results__title">${result.title}</h3>
+          <a href="${targetUrl}" class="search-results__link">
+            <h3 class="search-results__title">${result.title}${sectionInfo}</h3>
             <p class="search-results__summary">${this.getSearchSummary(
               result,
-              query
+              query,
+              bestSection
             )}</p>
           </a>
         </div>
-      `
+      `;
+          }
         )
         .join("");
 
@@ -193,17 +241,29 @@ class DocumentationSearch {
     } else {
       const resultsHTML = results
         .map(
-          (result) => `
+          (result) => {
+            // Find the best matching section for deep linking
+            const bestSection = this.findBestSection(result, query);
+            const targetUrl = bestSection ? 
+              `${result.url}#${bestSection.id}` : 
+              result.url;
+            const sectionInfo = bestSection ? 
+              ` <span class="search-results__section">→ ${bestSection.heading}</span>` : 
+              '';
+            
+            return `
         <div class="search-results__item">
-          <a href="${result.url}" class="search-results__link">
-            <h3 class="search-results__title">${result.title}</h3>
+          <a href="${targetUrl}" class="search-results__link">
+            <h3 class="search-results__title">${result.title}${sectionInfo}</h3>
             <p class="search-results__summary">${this.getSearchSummary(
               result,
-              query
+              query,
+              bestSection
             )}</p>
           </a>
         </div>
-      `
+      `;
+          }
         )
         .join("");
       container.innerHTML = `
@@ -219,17 +279,18 @@ class DocumentationSearch {
     }
   }
 
-  getSearchSummary(result, query) {
-    // Extract relevant snippet from content
-    const content = result.content.toLowerCase();
+  getSearchSummary(result, query, bestSection) {
+    // Use section content if available, otherwise use page content
+    const searchContent = bestSection ? bestSection.content : result.content;
+    const content = searchContent.toLowerCase();
     const queryLower = query.toLowerCase();
     const index = content.indexOf(queryLower);
 
-    if (index === -1) return result.content.substring(0, 120) + "...";
+    if (index === -1) return searchContent.substring(0, 120) + "...";
 
     const start = Math.max(0, index - 40);
     const end = Math.min(content.length, index + query.length + 40);
-    let snippet = result.content.substring(start, end);
+    let snippet = searchContent.substring(start, end);
 
     if (start > 0) snippet = "..." + snippet;
     if (end < content.length) snippet = snippet + "...";

@@ -146,7 +146,11 @@
             const link = document.createElement('a');
             link.href = '#' + heading.id;
             link.className = 'sidebar__nav-link';
-            link.textContent = heading.textContent.replace('#', '').trim();
+            // Get text from the heading, excluding the anchor symbol
+            const headingText = heading.querySelector('span') ? 
+              heading.querySelector('span').textContent : 
+              heading.textContent;
+            link.textContent = headingText.replace('#', '').trim();
             
             // Add click handler for smooth scrolling
             link.addEventListener('click', function(e) {

@@ -939,6 +939,13 @@ body {
   text-align: left;
 }
 
+.search-results__section {
+  color: var(--sg-blue);
+  font-size: 0.85rem;
+  font-weight: normal;
+  font-style: italic;
+}
+
 .search-results__empty {
   text-align: center;
   padding: var(--spacing-lg);

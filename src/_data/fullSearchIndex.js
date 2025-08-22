@@ -31,6 +31,43 @@ module.exports = function() {
   const srcDir = path.join(__dirname, '..');
   const pages = [];
   
+  // Helper to extract sections with their headings
+  const extractSections = (content) => {
+    const sections = [];
+    const lines = content.split('\n');
+    let currentSection = { heading: '', id: '', content: '', level: 0 };
+    
+    lines.forEach(line => {
+      // Check for markdown headings
+      const headingMatch = line.match(/^(#{2,4})\s+(.+)$/);
+      if (headingMatch) {
+        // Save previous section if it has content
+        if (currentSection.content) {
+          sections.push({...currentSection});
+        }
+        // Start new section
+        const level = headingMatch[1].length;
+        const heading = headingMatch[2];
+        // Generate ID similar to markdown-it-anchor
+        const id = heading.toLowerCase()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/^-+|-+$/g, '');
+        currentSection = { heading, id, content: '', level };
+      } else {
+        // Add content to current section
+        currentSection.content += line + '\n';
+      }
+    });
+    
+    // Don't forget the last section
+    if (currentSection.content) {
+      sections.push(currentSection);
+    }
+    
+    return sections;
+  };
+  
   // Define the pages and their files
   const pageFiles = [
     { file: 'index.md', url: '/', title: 'Home' },
@@ -60,13 +97,22 @@ module.exports = function() {
         // Extract first 200 characters for summary
         const summary = cleanedContent.substring(0, 200) + '...';
         
+        // Extract sections for deep linking
+        const sections = extractSections(content);
+        
         pages.push({
           title: title,
           url: prefixUrl(page.url),
           content: cleanedContent,
           summary: summary,
           // Add keywords from headers
-          keywords: content.match(/^#{1,3}\s+(.+)$/gm)?.map(h => h.replace(/^#+\s+/, '').toLowerCase()).join(' ') || ''
+          keywords: content.match(/^#{1,3}\s+(.+)$/gm)?.map(h => h.replace(/^#+\s+/, '').toLowerCase()).join(' ') || '',
+          // Add sections for deep linking
+          sections: sections.map(s => ({
+            heading: s.heading,
+            id: s.id,
+            content: cleanContent(s.content)
+          }))
         });
       }
     } catch (error) {
