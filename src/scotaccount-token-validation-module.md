@@ -356,7 +356,7 @@ describe("Token Validation", () => {
 
 ## Production Considerations
 
-### Performance Optimization
+### Performance Optimisation
 
 - **Cache JWKS keys** with appropriate TTL
 - **Implement connection pooling** for HTTP requests

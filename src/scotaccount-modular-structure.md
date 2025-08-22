@@ -1,13 +1,13 @@
 ---
 layout: base.njk
 title: "ScotAccount Modular Structure"
-description: "Understanding the modular structure and service organization of ScotAccount components"
+description: "Understanding the modular structure and service organisation of ScotAccount components"
 eleventyNavigation:
   key: modular-structure
   order: 6
 ---
 
-ScotAccount is built using a modular architecture that separates concerns and enables flexible integration patterns. This page explains the service organization and how different modules work together.
+ScotAccount is built using a modular architecture that separates concerns and enables flexible integration patterns. This page explains the service organisation and how different modules work together.
 
 ## Service Modules Overview
 
@@ -81,7 +81,7 @@ User → VerifyYourIdentity → External Verification → mySafe → Attributes
 
 - Encrypted storage of verified data
 - Consent tracking and enforcement
-- Data retrieval for authorized requests
+- Data retrieval for authorised requests
 - Audit logging and compliance
 - Data retention and deletion
 

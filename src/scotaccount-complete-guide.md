@@ -909,7 +909,7 @@ Once your service receives verified attributes, you need to consider how to stor
 
 Consider implementing appropriate data retention policies based on your service's specific requirements and legal obligations. Some verified attributes may remain valid for extended periods, whilst others may require periodic re-verification. The verification metadata can help inform these decisions by providing information about when attributes were last verified.
 
-Implement secure storage practices that protect verified attributes both at rest and in transit. This includes using appropriate encryption, access controls, and audit logging to ensure that verified information is only accessed by authorized personnel for legitimate purposes.
+Implement secure storage practices that protect verified attributes both at rest and in transit. This includes using appropriate encryption, access controls, and audit logging to ensure that verified information is only accessed by authorised personnel for legitimate purposes.
 
 Consider the relationship between ScotAccount's verification and your service's ongoing data management needs. While ScotAccount provides initial verification of attributes, your service may need to implement additional validation or updating processes based on its specific requirements and use patterns.
 
@@ -1149,10 +1149,10 @@ Common authorization errors:
 
 Common token errors:
 
-- `invalid_client`: Your client_id is not recognized or client assertion validation failed
+- `invalid_client`: Your client_id is not recognised or client assertion validation failed
 - `invalid_grant`: Authorization code expired, already used, or doesn't match your client
 - `invalid_request`: Missing required parameters or malformed request
-- `unauthorized_client`: Your client isn't authorized for the requested grant type
+- `unauthorized_client`: Your client isn't authorised for the requested grant type
 
 **Attribute Endpoint Errors:**
 
@@ -1163,7 +1163,7 @@ Common token errors:
 
 **Resolution Guide:**
 
-**invalid_client errors** typically indicate that your client_id is not recognized by ScotAccount or that your client authentication is failing. Verify that:
+**invalid_client errors** typically indicate that your client_id is not recognised by ScotAccount or that your client authentication is failing. Verify that:
 
 - Your client_id matches exactly what was registered
 - Your client assertion JWT is properly signed with your registered private key
@@ -1198,7 +1198,7 @@ Common token errors:
 
 Moving from development and testing to production involves several important changes that affect both security and operational considerations. The production environment implements stricter security controls and requires additional configuration that isn't necessary during development.
 
-The most significant difference is the IP allowlisting requirement for production deployments. Unlike the integration environment where any IP address can connect for testing purposes, production requires that you register all IP addresses that will communicate with ScotAccount's APIs. This security measure helps protect against unauthorized access and provides an additional audit trail for all API communications.
+The most significant difference is the IP allowlisting requirement for production deployments. Unlike the integration environment where any IP address can connect for testing purposes, production requires that you register all IP addresses that will communicate with ScotAccount's APIs. This security measure helps protect against unauthorised access and provides an additional audit trail for all API communications.
 
 Production endpoints use different URLs from the integration environment, and you'll need to update your configuration accordingly. Your redirect URIs must use HTTPS in production (localhost HTTP URIs are not permitted), and your logout URIs must also be publicly accessible HTTPS endpoints.
 
@@ -1276,7 +1276,7 @@ Browser compatibility issues can affect the authentication flow, particularly wi
 Develop procedures for handling ScotAccount service outages or degraded performance. Consider implementing fallback authentication methods for critical services, though these should be designed carefully to maintain security standards. Establish communication procedures with the ScotAccount operations team for reporting and coordinating resolution of service issues.
 
 **Planned Maintenance Coordination:**
-Work with the ScotAccount team to understand planned maintenance schedules that might affect your service. Some maintenance activities might require temporary changes to your service behavior or user messaging to minimize impact on user experience.
+Work with the ScotAccount team to understand planned maintenance schedules that might affect your service. Some maintenance activities might require temporary changes to your service behaviour or user messaging to minimise impact on user experience.
 
 ### Security Considerations for Production
 
@@ -1286,9 +1286,9 @@ Production deployment requires implementing security measures that go beyond the
 Use dedicated secret management systems that provide encryption at rest, detailed access logging, and integration with your existing security infrastructure. Implement key rotation procedures that allow you to periodically update your cryptographic keys without service interruption. Plan for emergency key replacement procedures in case of suspected key compromise.
 
 **Network Security:**
-Ensure all communication with ScotAccount uses current TLS versions and cipher suites. Configure your network infrastructure to prevent unauthorized access to systems that handle authentication tokens or user session information. Implement appropriate firewall rules that restrict access to ScotAccount APIs to only the systems that require it.
+Ensure all communication with ScotAccount uses current TLS versions and cipher suites. Configure your network infrastructure to prevent unauthorised access to systems that handle authentication tokens or user session information. Implement appropriate firewall rules that restrict access to ScotAccount APIs to only the systems that require it.
 
 **Audit and Compliance:**
-Maintain audit logs that support your organization's compliance requirements whilst protecting user privacy. Ensure that authentication-related data handling complies with relevant data protection regulations and your organization's data governance policies. Regular review audit logs for unusual patterns that might indicate security issues or compliance concerns.
+Maintain audit logs that support your organisation's compliance requirements whilst protecting user privacy. Ensure that authentication-related data handling complies with relevant data protection regulations and your organisation's data governance policies. Regular review audit logs for unusual patterns that might indicate security issues or compliance concerns.
 
 Understanding these production considerations helps ensure that your ScotAccount integration operates reliably and securely when serving real users in a live environment. Proper preparation for production deployment reduces the likelihood of issues after go-live and ensures that your service provides a positive user experience with ScotAccount authentication.
