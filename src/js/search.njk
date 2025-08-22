@@ -22,13 +22,15 @@ class DocumentationSearch {
   }
 
   async loadSearchData() {
-    // Build search index from pages with dynamic URLs
+    // Build search index from pages with full content
     const pages = [
-      {% for page in searchIndex.pages %}
+      {% for page in fullSearchIndex.pages %}
       {
-        title: "{{ page.title }}",
-        url: "{{ page.url }}",
-        content: "{{ page.content }}"
+        title: "{{ page.title | safe }}",
+        url: "{{ page.url | safe }}",
+        content: "{{ page.content | safe }}",
+        summary: "{{ page.summary | safe }}",
+        keywords: "{{ page.keywords | safe }}"
       }{% if not loop.last %},{% endif %}
       {% endfor %}
     ];
@@ -37,10 +39,18 @@ class DocumentationSearch {
 
   setupFuse() {
     this.fuse = new window.Fuse(this.searchData, {
-      keys: ["title", "content"],
-      threshold: 0.4, // Lower = stricter, higher = fuzzier
-      minMatchCharLength: 2,
+      keys: [
+        { name: "title", weight: 2 },     // Title matches are more important
+        { name: "keywords", weight: 1.5 }, // Keywords are fairly important
+        { name: "content", weight: 1 },    // Full content search
+        { name: "summary", weight: 0.8 }   // Summary is less important
+      ],
+      threshold: 0.3,           // More accurate matching
+      minMatchCharLength: 2,    // Minimum 2 characters
       includeScore: true,
+      ignoreLocation: true,     // Search anywhere in content
+      useExtendedSearch: true,  // Enable advanced search operators
+      findAllMatches: true      // Find all matches in content
     });
   }
 
