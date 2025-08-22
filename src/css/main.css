@@ -589,6 +589,14 @@ body {
   color: var(--sg-navy);
 }
 
+/* Images and Diagrams */
+.main img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: var(--spacing-md) 0;
+}
+
 /* Scottish Government Footer */
 .sg-footer {
   background-color: var(--sg-navy);
