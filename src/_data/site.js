@@ -17,7 +17,7 @@ module.exports = function() {
     organization: {
       name: "Scottish Government",
       url: "https://www.gov.scot",
-      logo: "images/scottish-government-logo.png"
+      logo: "/assets/scotgovlogo.svg"
     },
     navigation: [
       {
