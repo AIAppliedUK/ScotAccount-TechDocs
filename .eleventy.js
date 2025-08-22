@@ -32,7 +32,7 @@ module.exports = function (eleventyConfig) {
 
   // --- Passthroughs ---
   eleventyConfig.addPassthroughCopy("src/css");
-  eleventyConfig.addPassthroughCopy("src/js");
+  // Don't copy src/js since search.js is generated from search.njk template
   eleventyConfig.addPassthroughCopy("src/images");
   eleventyConfig.addPassthroughCopy("src/assets");
 
